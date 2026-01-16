@@ -1,0 +1,253 @@
+# GoKoncentrate In-App Token System (PRD – Revised)
+
+## Feature Name
+**Koncentrate Tokens**
+
+---
+
+## 1. Purpose & Vision
+
+Koncentrate Tokens are a **non-cash, in-app access currency** that allows users to unlock premium GoKoncentrate content incrementally.
+
+Tokens represent **earned access value**, not money, while being internally valued in U.S. dollar equivalents for clarity, pricing consistency, and sustainability.
+
+This system rewards engagement without introducing speculation, trading, or financial payouts.
+
+---
+
+## 2. Core Principles
+
+- Tokens are **earned**, not purchased (v1)
+- Tokens are **non-transferable**
+- Tokens have **internal USD equivalence**, not cash redemption
+- Tokens unlock **premium access**, not financial assets
+- Tokens preserve the value of premium content
+
+---
+
+## 3. Token Definition & Valuation
+
+### Koncentrate Token (KT)
+
+- **1 KT = $1.00 USD (internal valuation)**
+- Valuation is for pricing clarity only
+- Tokens cannot be:
+  - Withdrawn
+  - Exchanged for cash
+  - Transferred between users
+  - Traded externally
+
+This allows:
+- Transparent pricing
+- Predictable content valuation
+- Simple mental model for users
+
+---
+
+## 4. Token Accrual Model (Primary Mechanism)
+
+### Time-Based Engagement Earning
+
+Tokens are earned through **active, verified content consumption**.
+
+#### Base Rate
+- **$0.01 (1 cent) earned per 10 seconds of qualified viewing**
+- Equivalent to:
+  - $0.06 per minute
+  - $3.60 per hour of completed viewing
+
+#### Conversion
+- 100 cents = 1 Koncentrate Token (KT)
+- Tokens accrue continuously and round up upon completion thresholds
+
+---
+
+## 5. Qualified Viewing Criteria
+
+Tokens are awarded only when:
+
+- Video is actively playing
+- Playback is uninterrupted
+- Audio/video is not muted beyond allowed thresholds
+- App is foregrounded or in approved Focus Mode
+- Viewer meets minimum attention heuristics
+
+> Passive background farming is intentionally prevented.
+
+---
+
+## 6. Completion Bonuses (Optional Enhancers)
+
+To reward **depth over duration**, the system may grant bonuses for:
+
+- Completing full videos
+- Completing Focus Mode sessions
+- Completing full magazine issues
+- Completing series episodes
+
+Example:
+- +$0.25 bonus for completing a long-form interview
+- +$0.50 bonus for completing a Focus session
+
+Bonuses are configurable and adjustable.
+
+---
+
+## 7. Token Accumulation Safeguards
+
+To prevent abuse:
+
+- Daily soft earning caps (e.g., $5–$10/day)
+- Diminishing returns on repetitive content
+- No rewards for replaying identical content within a defined window
+- Anti-bot and session validation checks
+
+---
+
+## 8. How Tokens Are Used
+
+### Premium Content Unlocking (Core Use Case)
+
+Tokens can be redeemed to unlock:
+
+- Premium video episodes
+- Premium magazine issues
+- Premium miniseries content
+- Premium documentaries
+
+Once unlocked:
+- Access is **permanent**
+- Content remains available across devices
+
+---
+
+## 9. Premium Content Pricing Model
+
+All premium content is priced in **Koncentrate Tokens**, with transparent USD equivalence.
+
+### Example Pricing
+
+- Premium article: **$1–$2 (1–2 KT)**
+- Premium episode: **$3–$5 (3–5 KT)**
+- Premium documentary: **$10–$15 (10–15 KT)**
+- Full miniseries: **$30–$50 (30–50 KT)**
+
+Pricing tiers:
+- Light
+- Standard
+- Flagship
+
+Prices can be adjusted without breaking user trust due to fixed valuation logic.
+
+---
+
+## 10. User Experience Flow
+
+### Token Visibility
+- Token balance visible in:
+  - Profile
+  - Premium unlock modals
+  - Focus tab (optional summary)
+
+### Unlock Flow
+1. User selects premium content
+2. Modal displays:
+   - Token cost
+   - Current balance
+   - Time required to earn remaining tokens (if applicable)
+3. User unlocks or chooses to earn more
+
+This reinforces transparency and agency.
+
+---
+
+## 11. Subscription Coexistence
+
+Subscriptions remain available and offer:
+
+- Unlimited premium access
+- No token deductions
+- Optional monthly token bonus (e.g., $10 KT/month)
+
+Tokens serve as:
+- A trial pathway
+- A bridge to subscription conversion
+- A retention mechanism for free users
+
+---
+
+## 12. Editorial & Creator Alignment
+
+Creators benefit because:
+
+- Premium work maintains perceived value
+- Unlock behavior reflects genuine interest
+- Token economics encourage completion, not skimming
+
+This avoids race-to-the-bottom content valuation.
+
+---
+
+## 13. Technical Implementation (High-Level)
+
+### Required Data
+- User token balance (decimal-friendly)
+- Accrued cents buffer
+- Content token cost
+- Unlock history
+
+### Events
+- Token accrual events
+- Bonus award events
+- Token spend events
+
+No blockchain, no financial rails required.
+
+---
+
+## 14. Compliance & Risk Positioning
+
+- Tokens are **utility-based**
+- No expectation of profit
+- No real-money exchange
+- No speculative mechanics
+
+This positions tokens as **digital access credits**, not financial instruments.
+
+---
+
+## 15. Rollout Strategy
+
+### Phase 1
+- Time-based earning
+- Premium unlocks
+
+### Phase 2
+- Focus Mode bonuses
+- Series completion incentives
+
+### Phase 3 (Optional)
+- Partner content
+- Creator-curated unlocks
+- Loyalty multipliers
+
+---
+
+## 16. Success Metrics
+
+- Token earn rate vs spend rate
+- Premium unlock conversion
+- Subscription lift
+- Content completion rates
+- Retention delta
+
+---
+
+## 17. Internal Positioning Statement
+
+Koncentrate Tokens convert attention into access — transparently, fairly, and without exploitation.
+
+They reward patience, focus, and curiosity.
+
+---
+

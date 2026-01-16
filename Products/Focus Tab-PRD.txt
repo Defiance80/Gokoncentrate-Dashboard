@@ -1,0 +1,168 @@
+# GoKoncentrate — Focus Tab Specification  
+**Purpose:** Provide a hands-free, audio-first experience that respects user attention while enabling personalized, continuous listening using existing media and data structures.
+
+---
+
+## 1. Core Concept
+
+**Focus** is not a new content type or player.  
+It is a **mode of consumption**.
+
+The Focus tab enables **Listening Mode**, allowing users to consume select media hands-free (cooking, driving, working) where visuals are optional and audio carries the experience.
+
+---
+
+## 2. Eligibility Rule (Hard Requirement)
+
+Only media tagged with the **genre `Focus`** qualifies for Focus Mode behavior.
+
+- No other genres are eligible
+- No auto-inference at v1
+- Editorial tagging is the source of truth
+
+This keeps the system deterministic, safe, and easy to curate.
+
+---
+
+## 3. Focus Tab Entry Behavior
+
+When a user opens the Focus tab:
+
+### If a session exists
+- Show **Resume Listening**
+
+### If no session exists
+- Show **Start Focus Session**
+
+The app must remember:
+- Last Focus media played
+- Queue position
+- Playback progress
+
+---
+
+## 4. Listening Mode Behavior
+
+When Listening Mode is active:
+
+- Audio-first playback
+- Video minimized or hidden
+- Screen interaction optional
+- Background audio supported (OS permitting)
+- Auto-advance to next Focus-tagged media
+- No non-Focus content allowed in queue
+
+This ensures continuity and cognitive safety.
+
+---
+
+## 5. Personalized Focus Streaming
+
+Focus Mode playback is **personalized per user** using existing signals.
+
+### Personalization Inputs (in priority order)
+
+1. **Watchlist**
+   - Strongest explicit interest signal
+2. **Watch History**
+   - Creators frequently watched
+   - Categories frequently consumed
+3. **Search History**
+   - Intent-driven topics and keywords
+
+No new schema required.
+
+---
+
+## 6. Ranking Model (v1 — Deterministic)
+
+Each eligible Focus media item receives a score per user.
+
+### Scoring Weights (example)
+
+- +5 → Focus item is in user Watchlist
+- +4 → Same creator as frequently watched
+- +3 → Matches frequent categories
+- +3 → Matches search history topics
+- +2 → Adjacent to last Focus item played
+- −3 → Previously completed
+- −5 → Previously skipped quickly
+
+Queue is sorted by descending score.
+
+---
+
+## 7. Queue Composition Rule
+
+To prevent repetition:
+
+- 70% → Strong interest matches
+- 20% → Adjacent/related content
+- 10% → Wildcard (editor pick / new / trending)
+
+This keeps Focus streams fresh but aligned.
+
+---
+
+## 8. Cold Start Handling (New Users)
+
+If insufficient history exists:
+
+1. Trending Focus-tagged content
+2. Editor-curated Focus picks
+3. Newest Focus content
+4. Optional onboarding interest selection (future)
+
+No empty states.
+
+---
+
+## 9. Focus Tab UI Layout (Minimal)
+
+1. **Primary CTA**
+   - Resume Listening
+   - or Start Focus Session
+
+2. **Secondary Section**
+   - Recently played Focus items
+   - Saved Focus items
+
+3. **Micro-copy**
+   > Designed for hands-free moments.
+
+No feeds.  
+No infinite scroll.  
+No visual overload.
+
+---
+
+## 10. Allowed Enhancements (Non-Breaking)
+
+These may be added later without refactor risk:
+
+- Session duration presets (15 / 30 / 60 min)
+- Headphone disconnect auto-pause
+- Soft session completion cues
+- Light “More like this / Less like this” weighting controls
+
+---
+
+## 11. Explicit Non-Goals
+
+- No AI auto-classification at v1
+- No new media types
+- No schema changes
+- No separate Focus player
+- No visual-first UI
+
+---
+
+## 12. Strategic Outcome
+
+Focus Mode transforms GoKoncentrate from:
+
+> A place users scroll  
+into  
+> A space that accompanies their life
+
+It reduces cognitive load, builds

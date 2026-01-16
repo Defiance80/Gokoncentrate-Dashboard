@@ -53,4 +53,11 @@ return [
     'media_management'=>'Media Management',
     'system_setting'=>'System Setting',
 
+    // Token System
+    'token_system' => 'Token System',
+    'tokens' => 'Tokens',
+    'token_settings' => 'Token Settings',
+    'token_users' => 'Token Users',
+    'rent_history'=>'Rent History',
+
 ];

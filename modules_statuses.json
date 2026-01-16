@@ -27,5 +27,6 @@
     "FAQ": true,
     "Frontend": true,
     "Install": true,
-    "Installer": true
+    "Installer": true,
+    "Tokens": true
 }

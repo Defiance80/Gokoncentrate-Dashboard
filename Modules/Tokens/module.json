@@ -1,0 +1,13 @@
+{
+    "name": "Tokens",
+    "alias": "tokens",
+    "description": "GoKoncentrate Token Management System",
+    "keywords": ["tokens", "kt", "virtual currency"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Tokens\\Providers\\TokensServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

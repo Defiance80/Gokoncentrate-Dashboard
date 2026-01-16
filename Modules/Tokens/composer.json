@@ -1,0 +1,22 @@
+{
+    "name": "gokoncentrate/tokens",
+    "description": "GoKoncentrate Token Management System",
+    "type": "laravel-module",
+    "authors": [
+        {
+            "name": "GoKoncentrate",
+            "email": "hello@gokoncentrate.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Tokens\\": ""
+        }
+    }
+}

@@ -276,12 +276,42 @@ class GenerateMenus
             ]);
 
            $this->mainRoute($menu, [
-    'icon' => 'ph ph-star-half', 
+    'icon' => 'ph ph-star-half',
     'title' => __('sidebar.review'),
     'route' => 'backend.reviews.index',
     'active' => ['app/reviews'],
     'order' => 0,
 ]);
+
+            // Token System Menu
+            if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('demo_admin')) {
+                $this->staticMenu($menu, ['title' => __('sidebar.token_system'), 'order' => 0]);
+            }
+
+            $tokens_menu = $this->parentMenu($menu, [
+                'icon' => 'ph ph-coins',
+                'title' => __('sidebar.tokens'),
+                'nickname' => 'tokens',
+                'order' => 0,
+            ]);
+
+            $this->childMain($tokens_menu, [
+                'icon' => 'ph ph-gear',
+                'title' => __('sidebar.token_settings'),
+                'route' => 'backend.token-settings.index',
+                'active' => ['app/token-settings'],
+                'shortTitle' => 'TS',
+                'order' => 0,
+            ]);
+
+            $this->childMain($tokens_menu, [
+                'icon' => 'ph ph-users',
+                'title' => __('sidebar.token_users'),
+                'route' => 'backend.token-users.index',
+                'active' => ['app/token-users'],
+                'shortTitle' => 'TU',
+                'order' => 0,
+            ]);
 
             $permissionsToCheck = ['view_taxes','view_page','view_setting'];
 

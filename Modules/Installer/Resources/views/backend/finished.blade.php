@@ -13,7 +13,7 @@
 @section('container')
 
 <h6 class="setup-title">Admin Login Credentials</h6>
-<p class="text-center">Email: <b>Superadmin@salon.com</b></p>
+<p class="text-center">Email: <b>admin@GoKoncentrate.com</b></p>
 <p class="text-center">Password: <b>12345678</b></p>
 
  <div class="setup-actions">

@@ -5,7 +5,7 @@
     <div class="d-flex justify-content-between  flex-md-row flex-column-reverse">
         <div class="about-content p-5">  
                     <h4>{{$about_us}}</h4>
-                    <p>Streamit is your go-to destination for an immersive and personalized entertainment experience. With a
+                    <p>GoKoncentrate is your go-to destination for an immersive and personalized entertainment experience. With a
                         vast library of movies, TV shows, documentaries, and original content, we offer something for
                         everyone.</p>
                         <div class="about-btn">
@@ -62,20 +62,20 @@
     <div class="section-spacing-bottom">
         <div class="container">
             <div>
-                <h4 class="fw-medium text-center mb-4">The Passionate People Powering Streamit</h4>
+                <h4 class="fw-medium text-center mb-4">The Passionate People Powering GoKoncentrate</h4>
             </div>
             <div class="row gy-4 row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
                 <div class="col">
-                    @include('frontend::components.card.card_passionate_people',['card_passionate_people' => 'The Passionate People Powering Streamit'])
+                    @include('frontend::components.card.card_passionate_people',['card_passionate_people' => 'The Passionate People Powering GoKoncentrate'])
                 </div>
                 <div class="col">
-                    @include('frontend::components.card.card_passionate_people',['card_passionate_people' => 'The Passionate People Powering Streamit'])
+                    @include('frontend::components.card.card_passionate_people',['card_passionate_people' => 'The Passionate People Powering GoKoncentrate'])
                 </div>
                 <div class="col">
-                    @include('frontend::components.card.card_passionate_people',['card_passionate_people' => 'The Passionate People Powering Streamit'])
+                    @include('frontend::components.card.card_passionate_people',['card_passionate_people' => 'The Passionate People Powering GoKoncentrate'])
                 </div>
                 <div class="col">
-                    @include('frontend::components.card.card_passionate_people',['card_passionate_people' => 'The Passionate People Powering Streamit'])
+                    @include('frontend::components.card.card_passionate_people',['card_passionate_people' => 'The Passionate People Powering GoKoncentrate'])
                 </div>
             </div>
         </div>

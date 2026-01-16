@@ -50,10 +50,10 @@ class ProcessFileUpload implements ShouldQueue
                     ->usingFileName($this->filemanager->file_name)
                     ->toMediaCollection('filemanager');
 
-                $folderPath = 'public/streamit-laravel/' . $this->filemanager->file_name;
+                $folderPath = 'public/GoKoncentrate-laravel/' . $this->filemanager->file_name;
                 Storage::disk('local')->put($folderPath, $file);
             } else {
-                $folderPath = 'streamit-laravel/' . $this->filemanager->file_name;
+                $folderPath = 'GoKoncentrate-laravel/' . $this->filemanager->file_name;
                 Storage::disk($this->diskType)->put($folderPath, $file);
             }
 

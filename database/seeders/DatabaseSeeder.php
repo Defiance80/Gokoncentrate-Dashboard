@@ -8,6 +8,10 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Schema;
 use Modules\LiveTV\database\seeders\LiveTvCategoryTableSeeder;
 use Modules\LiveTV\database\seeders\LiveTvChannelTableSeeder;
+use Modules\Ad\database\seeders\VastAdsSettingTableSeeder;
+use Modules\Ad\database\seeders\CustomAdsSettingTableSeeder;
+use Database\Seeders\ClipsTableSeeder;
+use Modules\Coupon\database\seeders\CouponDatabaseSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -76,11 +80,20 @@ class DatabaseSeeder extends Seeder
             $this->call(LiveTvCategoryTableSeeder::class);
             $this->call(LiveTvChannelTableSeeder::class);
             $this->call(MobileSettingsTableSeeder::class);
+            $this->call(VastAdsSettingTableSeeder::class);
+            $this->call(CustomAdsSettingTableSeeder::class);
+            $this->call(\Modules\Subscriptions\database\seeders\PayPerViewSeeder::class);
+            $this->call(\Database\Seeders\ClipsTableSeeder::class);
+            $this->call(\Modules\Onboarding\database\seeders\OnboardingDatabaseSeeder::class);
+            $this->call(\Modules\Coupon\database\seeders\CouponDatabaseSeeder::class);
             Schema::enableForeignKeyConstraints();
             \Artisan::call('cache:clear');
         }
 
         \Artisan::call('cache:clear');
         \Artisan::call('storage:link');
+
+        // chmod(storage_path('app/public/avatars'), 0775);
+        // chmod(storage_path('app/public/GoKoncentrate-laravel'), 0775);
     }
 }

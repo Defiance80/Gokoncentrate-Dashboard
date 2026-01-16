@@ -16,6 +16,21 @@ trait AuthTrait
         $password = $request->password;
         $remember = $request->remember_me;
 
+        // Check if demo login is disabled and user is trying to login as demo/super admin
+        $demoLoginEnabled = setting('demo_login', 0);
+        if ($demoLoginEnabled != 1) {
+            // Block known demo/super admin seeded credentials
+            if ($email === 'demo@GoKoncentrate.com') {
+                return ['status' => 403, 'message' => __('messages.demo_login_disabled')];
+            }
+
+            // Also check by user_type if user exists
+            $user = User::where('email', $email)->first();
+            if ($user && $user->user_type === 'demo_admin') {
+                return ['status' => 403, 'message' => __('messages.demo_login_disabled')];
+            }
+        }
+
         if (Auth::attempt(['email' => $email, 'password' => $password, 'status' => 1], $remember)) {
             $user = auth()->user();
             if($user->hasRole('user')){
@@ -38,16 +53,33 @@ trait AuthTrait
                 'last_name' => ['required', 'string', 'max:191'],
                 'email' => ['required', 'string', 'email', 'max:191'],
                 'password' => ['required', Rules\Password::defaults()],
+                'mobile' => ['required'],
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json(['message' => $e->errors()], 422);
+            $errors = $e->errors();
+            $firstError = collect($errors)->flatten()->first();
+            return response()->json([
+                'status' => false,
+                'message' => $firstError ?? 'Validation failed.'
+            ], 422);
         }
 
         $emailExists = User::where('email', $request->email)->exists();
 
         if ($emailExists) {
-            return response()->json(['message' => 'The email has already been taken.'], 422);
+            return response()->json(['message' => __('messages.email_already_taken')], 422);
         }
+
+        $mobileExists = User::where('mobile', $request->mobile)->exists();
+
+        if ($mobileExists) {
+            return response()->json(['message' => __('messages.mobile_already_taken')], 422);
+        }
+
+        if($request->is_ajax == "1"){
+            $request->mobile = '+'.$request->country_code.$request->mobile;
+        }
+        
         $arr = [
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -60,6 +92,8 @@ trait AuthTrait
             'password' => Hash::make($request->password),
             'user_type' => 'user',
             'login_type' => $request->login_type,
+            'gender' => $request->gender,
+            'country_code' => $request->country_code,
         ];
         if (isset($model)) {
             $user = $model::create($arr);

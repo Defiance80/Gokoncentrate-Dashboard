@@ -100,7 +100,7 @@ class SettingSeeder extends Seeder
             array(
                 'id' => 6,
                 'name' => 'app_name',
-                'val' => 'Streamit: Your Ultimate Entertainment Hub',
+                'val' => 'GoKoncentrate: Your Ultimate Entertainment Hub',
                 'type' => 'bussiness',
                 'datatype' => 'bussiness',
                 'created_by' => 2,
@@ -114,7 +114,7 @@ class SettingSeeder extends Seeder
             array(
                 'id' => 7,
                 'name' => 'user_app_name',
-                'val' => 'Streamit: Your Ultimate Entertainment Hub',
+                'val' => 'GoKoncentrate: Your Ultimate Entertainment Hub',
                 'type' => 'bussiness',
                 'datatype' => 'bussiness',
                 'created_by' => 2,
@@ -156,7 +156,7 @@ class SettingSeeder extends Seeder
             array(
                 'id' => 10,
                 'name' => 'short_description',
-                'val' => 'StreamIt: Your Ultimate Destination for Unlimited Movies and Shows!',
+                'val' => 'GoKoncentrate: Your Ultimate Destination for Unlimited Movies and Shows!',
                 'type' => 'bussiness',
                 'datatype' => 'bussiness',
                 'created_by' => 2,
@@ -760,7 +760,7 @@ class SettingSeeder extends Seeder
             array(
                 'id' => 52,
                 'name' => 'android_url',
-                'val' => 'https://play.google.com/store/apps/details?id=com.iqonic.streamitlaravel&pcampaignid=web_share',
+                'val' => 'https://play.google.com/store/apps/details?id=com.iqonic.GoKoncentratelaravel&pcampaignid=web_share',
                 'type' => 'appconfig',
                 'datatype' => NULL,
                 'created_by' => 2,
@@ -986,8 +986,8 @@ class SettingSeeder extends Seeder
         foreach ($data as $setting) {
             $service = Setting::create($setting);
         }
-        $sourceFilePath = base_path('public/dummy-images/json-file/streamit-laravel-flutter-firebase-adminsdk-czzah-2c84a7b029.json');
-        $destinationPath = storage_path('app/data/streamit-laravel-flutter-firebase-adminsdk-czzah-2c84a7b029.json');
+        $sourceFilePath = base_path('public/dummy-images/json-file/GoKoncentrate-laravel-flutter-firebase-adminsdk-czzah-2c84a7b029.json');
+        $destinationPath = storage_path('app/data/GoKoncentrate-laravel-flutter-firebase-adminsdk-czzah-2c84a7b029.json');
 
         // Check if the file exists in the source location
         if (File::exists($sourceFilePath)) {

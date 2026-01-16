@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Facade;
 
 return [
 
-    'version' => '1.5.1',
+    'version' => '2.0.0',
 
     /*
     |--------------------------------------------------------------------------
@@ -17,7 +17,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Streamit-Laravel'),
+    'name' => env('APP_NAME', 'GoKoncentrate-Laravel'),
 
     /*
     |--------------------------------------------------------------------------
@@ -205,7 +205,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
-        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         App\Providers\ConfigServiceProvider::class,
         App\Providers\CurrencyServiceProvider::class,
         Modules\Genres\Providers\RouteServiceProvider::class,

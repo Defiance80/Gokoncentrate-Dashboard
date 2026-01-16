@@ -1,0 +1,259 @@
+<?php
+
+namespace App\Exports;
+
+use Modules\Coupon\Models\Coupon;
+use Carbon\Carbon;
+use Modules\Currency\Models\Currency;
+use App\Currency\CurrencyChange;
+use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use Illuminate\Support\Facades\Auth;
+
+class CouponExport extends BaseExport
+{
+    protected $currencyFormatter;
+
+    public function __construct($columns, $dateRange = [], $type = 'coupon')
+    {
+        parent::__construct($columns, $dateRange, $type, __('messages.lbl_coupons'));
+        $this->currencyFormatter = new CurrencyChange();
+    }
+
+    public function headings(): array
+    {
+        $modifiedHeadings = [];
+
+        foreach ($this->columns as $column) {
+            switch ($column) {
+                case 'code':
+                    $modifiedHeadings[] = __('messages.coupon_code');
+                    break;
+                case 'discount_type':
+                    $modifiedHeadings[] = __('messages.discount_type');
+                    break;
+                case 'discount':
+                    $modifiedHeadings[] = __('messages.discount');
+                    break;
+                case 'subscription_type':
+                    $modifiedHeadings[] = __('messages.subscription_type');
+                    break;
+                case 'start_date':
+                    $modifiedHeadings[] = __('messages.start_date_coupon');
+                    break;
+                case 'expire_date':
+                    $modifiedHeadings[] = __('messages.expire_date');
+                    break;
+                case 'status':
+                    $modifiedHeadings[] = __('messages.lbl_status');
+                    break;
+                case 'is_expired':
+                    $modifiedHeadings[] = __('messages.is_expired');
+                    break;
+                default:
+                    $modifiedHeadings[] = ucwords(str_replace('_', ' ', $column));
+                    break;
+            }
+        }
+
+        return $modifiedHeadings;
+    }
+
+    public function collection()
+    {
+        $query = Coupon::with('subscriptionPlans')->orderBy('updated_at', 'desc')->get();
+
+        return $query->map(function ($row) {
+            $selectedData = [];
+
+            foreach ($this->columns as $column) {
+                switch ($column) {
+                    case 'status':
+                        $selectedData[$column] = $row[$column] ? __('messages.active') : __('messages.inactive');
+                        break;
+
+                    case 'start_date':
+                    case 'expire_date':
+                    case 'created_at':
+                    case 'updated_at':
+                        $selectedData[$column] = $row[$column] ? formatDate($row[$column]) : '';
+                        break;
+
+                    case 'discount':
+                        $selectedData[$column] = $row->discount_type === 'percentage'
+                            ? $row[$column] . '%'
+                            : $this->currencyFormatter->format($row[$column]);
+                        break;
+
+                    case 'subscription_type':
+                        $selectedData[$column] = $row->subscriptionPlans->pluck('name')->join(', ');
+                        break;
+
+                    case 'is_expired':
+                        $selectedData[$column] = $row[$column] ? 'Yes' : 'No';
+                        break;
+
+                    default:
+                        $selectedData[$column] = $row[$column];
+                        break;
+                }
+            }
+
+            return $selectedData;
+        });
+    }
+
+    /**
+     * Override registerEvents to set proper margins and column widths for Coupon Report
+     * to utilize full width of the page with proper margins
+     */
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                $sheet = $event->sheet;
+                $worksheet = $sheet->getDelegate();
+
+                // Get all the parent class properties and methods we need
+                $generatedBy = Auth::user()->first_name . ' ' . Auth::user()->last_name ?? 'System';
+                $generatedAt = now()->format('d M Y, h:i A');
+                $lastColumn = $this->getLastColumn();
+
+                // Set report info (same as parent)
+                $sheet->mergeCells("A1:{$lastColumn}1");
+                $sheet->setCellValue('A1', $this->reportName);
+
+                $currentRow = 2;
+                if (!empty($this->type)) {
+                    $sheet->mergeCells("A{$currentRow}:{$lastColumn}{$currentRow}");
+                    $sheet->setCellValue("A{$currentRow}", 'Type: ' . ucfirst($this->type));
+                    $currentRow++;
+                }
+
+                $sheet->mergeCells("A{$currentRow}:{$lastColumn}{$currentRow}");
+                $sheet->setCellValue("A{$currentRow}", 'Generated By: ' . $generatedBy);
+                $currentRow++;
+
+                $sheet->mergeCells("A{$currentRow}:{$lastColumn}{$currentRow}");
+                $sheet->setCellValue("A{$currentRow}", 'Generated On: ' . $generatedAt);
+
+                // Apply styles (same as parent)
+                $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+                $sheet->getStyle("A1:A{$currentRow}")->getAlignment()->setHorizontal('left');
+                $headingsRow = !empty($this->type) ? 5 : 4;
+                $sheet->getStyle("A{$headingsRow}:{$lastColumn}{$headingsRow}")->getFont()->setBold(true);
+
+                // Remove borders from report info section (same as parent)
+                $sheet->getStyle("A1:{$lastColumn}{$currentRow}")->applyFromArray([
+                    'borders' => [
+                        'allBorders' => [
+                            'borderStyle' => Border::BORDER_NONE,
+                        ],
+                    ],
+                ]);
+
+                // Page setup - use landscape for multiple columns to utilize full width
+                $columnCount = count($this->columns);
+                $pageSetup = $worksheet->getPageSetup();
+
+                // Force landscape for 7 or more columns to prevent cutting
+                $orientation = $columnCount >= 7 ? PageSetup::ORIENTATION_LANDSCAPE : PageSetup::ORIENTATION_PORTRAIT;
+
+                $pageSetup->setPaperSize(PageSetup::PAPERSIZE_A4)
+                    ->setOrientation($orientation)
+                    ->setHorizontalCentered(true);
+
+                // Set proper margins on both sides (left and right) - auto margins
+                $worksheet->getPageMargins()
+                    ->setTop(0.5)
+                    ->setBottom(0.5)
+                    ->setLeft(0.5)
+                    ->setRight(0.5);
+
+                // Print area
+                $lastRow = $worksheet->getHighestRow();
+                $worksheet->getPageSetup()->setPrintArea("A1:{$lastColumn}{$lastRow}");
+
+                // Wrap text for all data cells
+                $sheet->getStyle("A{$headingsRow}:{$lastColumn}{$lastRow}")
+                    ->getAlignment()
+                    ->setWrapText(true)
+                    ->setVertical('top');
+
+                $worksheet->getDefaultRowDimension()->setRowHeight(-1);
+
+                // Set optimized column widths for Coupon export - reduced to fit all columns
+                $lastColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($lastColumn);
+                $columnWidthMap = [
+                    'code' => 12,
+                    'description' => 25, // Reduced to fit all columns
+                    'start_date' => 16,
+                    'expire_date' => 16,
+                    'discount' => 14,
+                    'subscription_type' => 22, // Reduced to fit all columns
+                    'status' => 14, // Reduced but still sufficient for "Status" and "Active"
+                    'created_at' => 16,
+                    'updated_at' => 16,
+                ];
+
+                // Map columns to their widths
+                for ($col = 1; $col <= $lastColumnIndex; $col++) {
+                    $idx = $col - 1;
+                    $columnKey = $this->columns[$idx] ?? '';
+
+                    if ($columnKey && array_key_exists($columnKey, $columnWidthMap)) {
+                        $width = $columnWidthMap[$columnKey];
+                        // Ensure status column has minimum width of 14
+                        if ($columnKey === 'status' && $width < 14) {
+                            $width = 14;
+                        }
+                        $worksheet->getColumnDimensionByColumn($col)
+                            ->setAutoSize(false)
+                            ->setWidth($width);
+                    } else {
+                        // Auto-size for columns not in the map
+                        $worksheet->getColumnDimensionByColumn($col)->setAutoSize(true);
+                    }
+                }
+
+                // Double-check status column width - force it if needed
+                $statusColumnIndex = null;
+                foreach ($this->columns as $idx => $colName) {
+                    if ($colName === 'status') {
+                        $statusColumnIndex = $idx + 1; // +1 because columns are 1-indexed
+                        break;
+                    }
+                }
+                if ($statusColumnIndex !== null) {
+                    $worksheet->getColumnDimensionByColumn($statusColumnIndex)
+                        ->setAutoSize(false)
+                        ->setWidth(14); // Force status column to 14 characters
+                }
+
+                // Use scaling for 7+ columns to ensure all fit without cutting
+                // Set scaling after column widths are determined
+                if ($columnCount >= 7) {
+                    // For 7+ columns, use aggressive scaling to fit all columns
+                    // Scale based on column count: 8+ columns = 70%, 7 columns = 75%
+                    $scale = $columnCount >= 8 ? 70 : 75;
+                    $pageSetup->setFitToWidth(false)
+                        ->setFitToHeight(false)
+                        ->setScale($scale);
+                } else {
+                    // For fewer columns, use fit-to-width
+                    $pageSetup->setFitToWidth(1)
+                        ->setFitToHeight(0)
+                        ->setScale(100);
+                }
+
+                // Auto-height rows for wrapped text
+                for ($row = $headingsRow; $row <= $lastRow; $row++) {
+                    $worksheet->getRowDimension($row)->setRowHeight(-1);
+                }
+            },
+        ];
+    }
+}
+
+

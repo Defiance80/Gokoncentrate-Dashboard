@@ -24,7 +24,7 @@ return [
                 'label' => 'User App Name', // you know what label it is
                 'rules' => 'required|min:2|max:50', // validation rule of laravel
                 'class' => '', // any class for input
-                'value' => 'Streamit', // default value if you want
+                'value' => 'GoKoncentrate', // default value if you want
                 'datatype' => 'bussiness',
             ],
             [
@@ -34,7 +34,7 @@ return [
                 'label' => 'User App Name', // you know what label it is
                 'rules' => 'required|min:2', // validation rule of laravel
                 'class' => '', // any class for input
-                'value' => 'Streamit', // default value if you want
+                'value' => 'GoKoncentrate', // default value if you want
                 'datatype' => 'bussiness',
             ],
 
@@ -56,7 +56,7 @@ return [
                 'label' => 'Email', // you know what label it is
                 'rules' => 'required|min:2', // validation rule of laravel
                 'class' => '', // any class for input
-                'value' => 'admin@streamit.com', // default value if you want
+                'value' => 'admin@GoKoncentrate.com', // default value if you want
                 'datatype' => 'bussiness',
             ],
             [
@@ -67,6 +67,44 @@ return [
                 'rules' => 'required|min:2', // validation rule of laravel
                 'class' => '', // any class for input
                 'value' => 'Dummy Text ', // default value if you want
+                'datatype' => 'bussiness',
+            ],
+            [
+                'type' => 'text', // input fields type
+                'data' => 'bussiness', // data type, string, int, boolean
+                'name' => 'facebook_url', // unique name for field
+                'label' => 'Facebook URL', // you know what label it is
+                'rules' => 'required|url|max:191', // validation rule of laravel
+                'class' => '', // any class for input
+                'value' =>  'https://www.facebook.com/iqonicdesign', // default value if you want
+                'datatype' => 'bussiness',
+            ],
+            [
+                'type' => 'text', // input fields type
+                'data' => 'bussiness', // data type, string, int, boolean
+                'name' => 'x_url', // unique name for field
+                'label' => 'X (Twitter) URL', // you know what label it is
+                'rules' => 'required|url|max:191', // validation rule of laravel
+                'class' => '', // any class for input
+                'value' => 'https://twitter.com/iqonicdesign', // default value if you want
+                'datatype' => 'bussiness',
+            ], [
+                'type' => 'text', // input fields type
+                'data' => 'bussiness', // data type, string, int, boolean
+                'name' => 'instagram_url', // unique name for field
+                'label' => 'Instagram URL', // you know what label it is
+                'rules' => 'required|url|max:191', // validation rule of laravel
+                'class' => '', // any class for input
+                'value' => 'https://www.instagram.com/iqonicdesign', // default value if you want
+                'datatype' => 'bussiness',
+            ], [
+                'type' => 'text', // input fields type
+                'data' => 'bussiness', // data type, string, int, boolean
+                'name' => 'youtube_url', // unique name for field
+                'label' => 'YouTube URL', // you know what label it is
+                'rules' => 'required|url|max:191', // validation rule of laravel  max:191   url
+                'class' => '', // any class for input
+                'value' => 'https://www.youtube.com/c/IqonicDesign', // default value if you want
                 'datatype' => 'bussiness',
             ],
             [
@@ -124,6 +162,18 @@ return [
                 'rules' => 'nullable|image|mimes:jpg,png,gif', // validation rule of laravel
                 'class' => '', // any class for input
                 'value' => 'img/logo/light_logo.png', // default value if you want
+                'help' => '', // Help text for the input field.
+                'display' => 'raw', // Help text for the input field.
+                'datatype' => 'bussiness',
+            ],
+            [
+                'type' => 'file', // input fields type
+                'data' => 'string', // data type, string, int, boolean
+                'name' => 'loader_gif', // unique name for field
+                'label' => 'Loader GIF', // you know what label it is
+                'rules' => 'nullable|image|mimes:gif', // validation rule of laravel
+                'class' => '', // any class for input
+                'value' => 'img/logo/loader.gif', // default value with full URL
                 'help' => '', // Help text for the input field.
                 'display' => 'raw', // Help text for the input field.
                 'datatype' => 'bussiness',
@@ -274,66 +324,22 @@ return [
                 'value' => '',
                 'help' => 'Paste your Firebase server key here.',
             ],
+            [
+                'type' => 'checkbox',
+                'data' => 'module_settings',
+                'name' => 'demo_login',
+                'label' => 'Demo Login',
+                'rules' => 'boolean',
+                'class' => '',
+                'value' => '0',
+                'help' => 'Enable demo login functionality.',
+            ],
 
 
         ],
 
     ],
 
-    'social' => [
-        'title' => 'Social Profiles',
-        'desc' => 'Link of all the social profiles.',
-        'icon' => 'fas fa-users',
-
-        'elements' => [
-            [
-                'type' => 'text', // input fields type
-                'data' => 'string', // data type, string, int, boolean
-                'name' => 'facebook_url', // unique name for field
-                'label' => 'Facebook Page URL', // you know what label it is
-                'rules' => 'required|max:191', // validation rule of laravel
-                'class' => '', // any class for input
-                'value' => '#', // default value if you want
-            ],
-            [
-                'type' => 'text', // input fields type
-                'data' => 'string', // data type, string, int, boolean
-                'name' => 'twitter_url', // unique name for field
-                'label' => 'Twitter Profile URL', // you know what label it is
-                'rules' => 'required|nullable|max:191', // validation rule of laravel
-                'class' => '', // any class for input
-                'value' => '#', // default value if you want
-            ],
-            [
-                'type' => 'text', // input fields type
-                'data' => 'string', // data type, string, int, boolean
-                'name' => 'instagram_url', // unique name for field
-                'label' => 'Instagram Account URL', // you know what label it is
-                'rules' => 'required|nullable|max:191', // validation rule of laravel
-                'class' => '', // any class for input
-                'value' => '#', // default value if you want
-            ],
-            [
-                'type' => 'text', // input fields type
-                'data' => 'string', // data type, string, int, boolean
-                'name' => 'linkedin_url', // unique name for field
-                'label' => 'LinkedIn URL', // you know what label it is
-                'rules' => 'required|nullable|max:191', // validation rule of laravel
-                'class' => '', // any class for input
-                'value' => '#', // default value if you want
-            ],
-            [
-                'type' => 'text', // input fields type
-                'data' => 'string', // data type, string, int, boolean
-                'name' => 'youtube_url', // unique name for field
-                'label' => 'Youtube Channel URL', // you know what label it is
-                'rules' => 'required|nullable|max:191', // validation rule of laravel
-                'class' => '', // any class for input
-                'value' => '#', // default value if you want
-            ],
-        ],
-
-    ],
     'misc' => [
         'title' => 'Misc ',
         'desc' => 'Application Data',
@@ -368,11 +374,52 @@ return [
                 'data' => 'misc', // data type, string, int, boolean
                 'name' => 'data_table_limit', // unique name for field
                 'label' => 'Datatable Limit', // you know what label it is
-                'rules' => 'required', // validation rule of laravel
+                'rules' => '', // validation rule of laravel
                 'class' => '', // any class for input
                 'value' => '10', // default value if you want
                 'datatype' => 'misc',
             ],
+            [
+                'type' => 'text', // input fields type
+                'data' => 'misc', // data type, string, int, boolean
+                'name' => 'default_date_format', // unique name for field
+                'label' => 'Date Format', // you know what label it is
+                'rules' => '', // validation rule of laravel
+                'class' => '', // any class for input
+                'value' => '10', // default value if you want
+                'datatype' => 'misc',
+            ],
+             [
+                'type' => 'text', // input fields type
+                'data' => 'misc', // data type, string, int, boolean
+                'name' => 'default_time_format', // unique name for field
+                'label' => 'Time Format', // you know what label it is
+                'rules' => '', // validation rule of laravel
+                'class' => '', // any class for input
+                'value' => '10', // default value if you want
+                'datatype' => 'misc',
+            ],
+            [
+                'type' => 'number', // input fields type
+                'data' => 'misc', // data type, string, int, boolean
+                'name' => 'forward_seconds', // unique name for field
+                'label' => 'Forward Seconds', // you know what label it is
+                'rules' => 'required|integer|min:1|max:60', // validation rule of laravel
+                'class' => '', // any class for input
+                'value' => '', // default value if you want
+                'datatype' => 'misc',
+            ],
+            [
+                'type' => 'number', // input fields type
+                'data' => 'misc', // data type, string, int, boolean
+                'name' => 'backward_seconds', // unique name for field
+                'label' => 'Backward Seconds', // you know what label it is
+                'rules' => 'required|integer|min:1|max:60', // validation rule of laravel
+                'class' => '', // any class for input
+                'value' => '', // default value if you want
+                'datatype' => 'misc',
+            ],
+
 
 
 
@@ -681,6 +728,16 @@ return [
                 'value' => '',
                 'help' => 'Enter URL for Android app if applicable.',
             ],
+             [
+                'type' => 'text',
+                'data' => 'appconfig',
+                'name' => 'android_tv_url',
+                'label' => 'Android tv URL',
+                'rules' => 'nullable|url',
+                'class' => '',
+                'value' => '',
+                'help' => 'Enter URL for Android tv if applicable.',
+            ],
             [
                 'type' => 'checkbox',
                 'data' => 'appconfig',
@@ -733,6 +790,136 @@ return [
                 'help' => 'Paste your ChatGPT server key here.',
 
             ],
+            [
+                'type' => 'text',
+                'data' => 'appconfig',
+                'name' => 'banner_ad_id',
+                'label' => 'Banner Ad ID',
+                'rules' => 'nullable|string|max:255',
+                'class' => '',
+                'value' => '',
+                'help' => 'Enter the Banner Ad ID for Android platform.',
+            ],
+            [
+                'type' => 'text',
+                'data' => 'appconfig',
+                'name' => 'ios_banner_id',
+                'label' => 'iOS Banner Ad ID',
+                'rules' => 'nullable|string|max:255',
+                'class' => '',
+                'value' => '',
+                'help' => 'Enter the Banner Ad ID for iOS platform.',
+            ],
+            [
+                'type' => 'checkbox',
+                'data' => 'appconfig',
+                'name' => 'force_update_android_app',
+                'label' => 'Force Update Android App',
+                'rules' => 'boolean',
+                'class' => '',
+                'value' => '0',
+                'help' => 'Force users to update the app.',
+            ],
+            [
+                'type' => 'checkbox',
+                'data' => 'appconfig',
+                'name' => 'force_update_ios_app',
+                'label' => 'Force Update iOS App',
+                'rules' => 'boolean',
+                'class' => '',
+                'value' => '0',
+                'help' => 'Force users to update the app.',
+            ],
+             [
+                'type' => 'checkbox',
+                'data' => 'appconfig',
+                'name' => 'force_update_tv_app',
+                'label' => 'Force Update TV App',
+                'rules' => 'boolean',
+                'class' => '',
+                'value' => '0',
+                'help' => 'Force users to update the app.',
+            ],
+              [
+                'type' => 'checkbox',
+                'data' => 'appconfig',
+                'name' => 'mobile_app',
+                'label' => 'Mobile Application',
+                'rules' => 'boolean',
+                'class' => '',
+                'value' => '0',
+                'help' => 'Enable version control and force update settings for mobile applications.',
+            ],
+               [
+                'type'  => 'text',
+                'data'  => 'appconfig',
+                'name'  => 'android_minimum_required_version',
+                'label' => 'Android App Minimum Version',
+                'rules' => 'required_if:mobile_app,1',
+                'class' => '',
+                'value' => '',
+                'help'  => 'Enter the minimum Android app version required to continue using the app.',
+             ],[
+                'type' => 'text',
+                'data' => 'appconfig',
+                'name' => 'android_latest_version',
+                'label' => 'Android App Latest Version',
+                'rules' => 'required_if:mobile_app,1',
+                'class' => '',
+                'value' => '',
+                'help' => 'Enter the latest available Android app version on the Play Store.',
+
+            ],
+             [
+                'type'  => 'text',
+                'data'  => 'appconfig',
+                'name'  => 'ios_minimum_required_version',
+                'label' => 'ios App Minimum Version',
+                'rules' => 'required_if:mobile_app,1',
+                'class' => '',
+                'value' => '',
+                'help'  => 'Enter the minimum ios app version required to continue using the app.',
+             ],[
+                'type' => 'text',
+                'data' => 'appconfig',
+                'name' => 'ios_latest_version',
+                'label' => 'ios App Latest Version',
+                'rules' => 'required_if:mobile_app,1',
+                'class' => '',
+                'value' => '',
+                'help' => 'Enter the latest available ios app version on the apple Store.',
+            ],
+              [
+                'type' => 'checkbox',
+                'data' => 'appconfig',
+                'name' => 'tv_app',
+                'label' => 'TV Application',
+                'rules' => 'boolean',
+                'class' => '',
+                'value' => '0',
+                'help' => 'Enable version control and force update settings for tv applications.',
+            ],
+               [
+                'type'  => 'text',
+                'data'  => 'appconfig',
+                'name'  => 'android_tv_minimum_required_version',
+                'label' => 'Android TV App Mininum Version',
+                'rules' => 'required_if:tv_app,1',
+                'class' => '',
+                'value' => '',
+                'help'  => 'Enter the minimum Android tv app version required to continue using the app.',
+             ],[
+                'type' => 'text',
+                'data' => 'appconfig',
+                'name' => 'android_tv_latest_version',
+                'label' => 'Android TV App Latest Version',
+                'rules' => 'required_if:tv_app,1',
+                'class' => '',
+                'value' => '',
+                'help' => 'Enter the latest available Android tv app version on continue using the app.',
+
+            ],
+
         ],
     ],
 
@@ -912,7 +1099,7 @@ return [
                 'label' => 'From Name', // you know what label it is
                 'rules' => 'required', // validation rule of laravel
                 'class' => '', // any class for input
-                'value' => 'Streamit-Laravel', // default value if you wantPassword
+                'value' => 'GoKoncentrate-Laravel', // default value if you wantPassword
             ],
         ],
 
@@ -1289,6 +1476,16 @@ return [
             'value' => '', // default value if you want
             'help' => 'Paste the only the Measurement Id of Google Analytics stream.', // Help text for the input field.
         ],
+         [
+            'type' => 'text', // input fields type
+            'data' => 'midtrans_payment_method', // data type, string, int, boolean
+            'name' => 'midtrans_server_key', // unique name for field
+            'label' => 'midtranspayment', // you know what label it is
+            'rules' => 'required|max:191', // validation rule of laravel
+            'class' => '', // any class for input
+            'value' => '', // default value if you want
+            'help' => 'Paste the only the Measurement Id of Google Analytics stream.', // Help text for the input field.
+        ],
         [
             'type' => 'checkbox', // input fields type
             'data' => 'inapppurchase', // data type, string, int, boolean
@@ -1300,8 +1497,8 @@ return [
         ],
         [
             'type' => 'text', // input fields type
-            'data' => 'iap_entertainment_id', // data type, string, int, boolean
-            'name' => 'entertainment_id', // unique name for field
+            'data' => 'iap_entitlement_id', // data type, string, int, boolean
+            'name' => 'iap_entitlement_id', // unique name for field
             'label' => 'Entertainment ID', // label for the field
             'rules' => 'required|max:191', // validation rule of laravel
             'class' => '', // any class for input
@@ -1311,7 +1508,7 @@ return [
         [
             'type' => 'text', // input fields type
             'data' => 'iap_apple_api_key', // data type, string, int, boolean
-            'name' => 'apple_api_key', // unique name for field
+            'name' => 'iap_apple_api_key', // unique name for field
             'label' => 'Apple API Key', // label for the field
             'rules' => 'required|max:191', // validation rule of laravel
             'class' => '', // any class for input
@@ -1321,7 +1518,7 @@ return [
         [
             'type' => 'text', // input fields type
             'data' => 'iap_google_api_key', // data type, string, int, boolean
-            'name' => 'google_api_key', // unique name for field
+            'name' => 'iap_google_api_key', // unique name for field
             'label' => 'Google API Key', // label for the field
             'rules' => 'required|max:191', // validation rule of laravel
             'class' => '', // any class for input
@@ -1425,6 +1622,16 @@ return [
             'value' => 0, // default value
             'datatype' => 'storageconfig',
         ],
+        [
+            'type' => 'checkbox', // input field type
+            'data' => 'storage_settings', // data type, boolean
+            'name' => 'bunny', // unique name for the field
+            'label' => 'Enable Bunny CDN Storage', // label for the field
+            'rules' => 'boolean', // validation rules
+            'class' => '', // any class for input
+            'value' => 0, // default value
+            'datatype' => 'storageconfig',
+        ],
 
         [
             'type' => 'text', // input field type
@@ -1475,6 +1682,86 @@ return [
             'class' => '', // any class for input
             'value' => 'false', // default value
             'options' => ['false' => 'False', 'true' => 'True'], // select options
+            'datatype' => 'storageconfig',
+        ],
+        [
+            'type' => 'text', // input field type
+            'data' => 'storage_settings', // data type, string
+            'name' => 'bunny_storage_zone', // unique name for the field
+            'label' => 'Bunny Storage Zone', // label for the field
+            'rules' => '', // validation rules
+            'class' => '', // any class for input
+            'value' => '', // default value
+            'datatype' => 'storageconfig',
+        ],
+        [
+            'type' => 'text', // input field type
+            'data' => 'storage_settings', // data type, string
+            'name' => 'bunny_api_key', // unique name for the field
+            'label' => 'Bunny API Key', // label for the field
+            'rules' => '', // validation rules
+            'class' => '', // any class for input
+            'value' => '', // default value
+            'datatype' => 'storageconfig',
+        ],
+        [
+            'type' => 'text', // input field type
+            'data' => 'storage_settings', // data type, string
+            'name' => 'bunny_cdn_url', // unique name for the field
+            'label' => 'Bunny CDN URL', // label for the field
+            'rules' => '', // validation rules
+            'class' => '', // any class for input
+            'value' => '', // default value
+            'datatype' => 'storageconfig',
+        ],
+        [
+            'type' => 'text', // input field type
+            'data' => 'storage_settings', // data type, string
+            'name' => 'bunny_region', // unique name for the field
+            'label' => 'Bunny Region', // label for the field
+            'rules' => '', // validation rules
+            'class' => '', // any class for input
+            'value' => '', // default value
+            'datatype' => 'storageconfig',
+        ],
+        [
+            'type' => 'text', // input field type
+            'data' => 'storage_settings', // data type, string
+            'name' => 'bunny_stream_api_key', // unique name for the field
+            'label' => 'Bunny Stream API Key', // label for the field
+            'rules' => '', // validation rules
+            'class' => '', // any class for input
+            'value' => '', // default value
+            'datatype' => 'storageconfig',
+        ],
+        [
+            'type' => 'text', // input field type
+            'data' => 'storage_settings', // data type, string
+            'name' => 'bunny_video_key', // unique name for the field
+            'label' => 'Bunny Video Key', // label for the field
+            'rules' => '', // validation rules
+            'class' => '', // any class for input
+            'value' => '', // default value
+            'datatype' => 'storageconfig',
+        ],
+        [
+            'type' => 'text', // input field type
+            'data' => 'storage_settings', // data type, string
+            'name' => 'bunny_cdn_hostname', // unique name for the field
+            'label' => 'Bunny CDN Hostname', // label for the field
+            'rules' => '', // validation rules
+            'class' => '', // any class for input
+            'value' => '', // default value
+            'datatype' => 'storageconfig',
+        ],
+        [
+            'type' => 'text', // input field type
+            'data' => 'storage_settings', // data type, string
+            'name' => 'bunny_stream_pull_zone', // unique name for the field
+            'label' => 'Bunny Stream Pull Zone', // label for the field
+            'rules' => '', // validation rules
+            'class' => '', // any class for input
+            'value' => '', // default value
             'datatype' => 'storageconfig',
         ],
     ],

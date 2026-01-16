@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Setting;
 
+
 class SettingSeeder extends Seeder
 {
     /**
@@ -25,9 +26,9 @@ class SettingSeeder extends Seeder
         //     ];
         //     $service = Setting::create($service);
         // }
-        $data = (array(
+        $data = (array (    
             0 =>
-            array(
+            array (
                 'id' => 1,
                 'name' => 'movie',
                 'val' => '1',
@@ -41,7 +42,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             1 =>
-            array(
+            array (
                 'id' => 2,
                 'name' => 'tvshow',
                 'val' => '1',
@@ -55,7 +56,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             2 =>
-            array(
+            array (
                 'id' => 3,
                 'name' => 'livetv',
                 'val' => '1',
@@ -69,7 +70,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             3 =>
-            array(
+            array (
                 'id' => 4,
                 'name' => 'video',
                 'val' => '1',
@@ -83,7 +84,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             4 =>
-            array(
+            array (
                 'id' => 5,
                 'name' => 'enable_tmdb_api',
                 'val' => '1',
@@ -97,10 +98,10 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             5 =>
-            array(
+            array (
                 'id' => 6,
                 'name' => 'app_name',
-                'val' => 'Streamit: Your Ultimate Entertainment Hub',
+                'val' => 'GoKoncentrate: Your Ultimate Entertainment Hub',
                 'type' => 'bussiness',
                 'datatype' => 'bussiness',
                 'created_by' => 2,
@@ -111,10 +112,10 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             6 =>
-            array(
+            array (
                 'id' => 7,
                 'name' => 'user_app_name',
-                'val' => 'Streamit: Your Ultimate Entertainment Hub',
+                'val' => 'GoKoncentrate: Your Ultimate Entertainment Hub',
                 'type' => 'bussiness',
                 'datatype' => 'bussiness',
                 'created_by' => 2,
@@ -125,7 +126,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             7 =>
-            array(
+            array (
                 'id' => 8,
                 'name' => 'helpline_number',
                 'val' => '+15265897485',
@@ -139,7 +140,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             8 =>
-            array(
+            array (
                 'id' => 9,
                 'name' => 'inquriy_email',
                 'val' => 'hello@iqonic.design',
@@ -153,10 +154,10 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             9 =>
-            array(
+            array (
                 'id' => 10,
                 'name' => 'short_description',
-                'val' => 'StreamIt: Your Ultimate Destination for Unlimited Movies and Shows!',
+                'val' => 'GoKoncentrate: Your Ultimate Destination for Unlimited Movies and Shows!',
                 'type' => 'bussiness',
                 'datatype' => 'bussiness',
                 'created_by' => 2,
@@ -167,7 +168,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             10 =>
-            array(
+            array (
                 'id' => 11,
                 'name' => 'google_analytics',
                 'val' => 'Google Analytics',
@@ -181,7 +182,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             11 =>
-            array(
+            array (
                 'id' => 12,
                 'name' => 'default_language',
                 'val' => 'en',
@@ -195,7 +196,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             12 =>
-            array(
+            array (
                 'id' => 13,
                 'name' => 'default_time_zone',
                 'val' => 'Asia/Kolkata',
@@ -209,7 +210,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             13 =>
-            array(
+            array (
                 'id' => 14,
                 'name' => 'disc_type',
                 'val' => 'local',
@@ -223,7 +224,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             14 =>
-            array(
+            array (
                 'id' => 15,
                 'name' => 'cash_payment_method',
                 'val' => '1',
@@ -237,7 +238,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             15 =>
-            array(
+            array (
                 'id' => 16,
                 'name' => 'razor_payment_method',
                 'val' => '1',
@@ -251,7 +252,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             16 =>
-            array(
+            array (
                 'id' => 17,
                 'name' => 'razorpay_secretkey',
                 'val' => '',
@@ -265,7 +266,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             17 =>
-            array(
+            array (
                 'id' => 18,
                 'name' => 'razorpay_publickey',
                 'val' => '',
@@ -279,7 +280,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             18 =>
-            array(
+            array (
                 'id' => 19,
                 'name' => 'str_payment_method',
                 'val' => '1',
@@ -293,7 +294,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             19 =>
-            array(
+            array (
                 'id' => 20,
                 'name' => 'stripe_secretkey',
                 'val' => '',
@@ -307,7 +308,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             20 =>
-            array(
+            array (
                 'id' => 21,
                 'name' => 'stripe_publickey',
                 'val' => '',
@@ -321,7 +322,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             21 =>
-            array(
+            array (
                 'id' => 22,
                 'name' => 'paystack_payment_method',
                 'val' => '1',
@@ -335,7 +336,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             22 =>
-            array(
+            array (
                 'id' => 23,
                 'name' => 'paystack_secretkey',
                 'val' => '',
@@ -349,7 +350,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             23 =>
-            array(
+            array (
                 'id' => 24,
                 'name' => 'paystack_publickey',
                 'val' => '',
@@ -363,7 +364,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             24 =>
-            array(
+            array (
                 'id' => 25,
                 'name' => 'paypal_payment_method',
                 'val' => '1',
@@ -377,7 +378,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             25 =>
-            array(
+            array (
                 'id' => 26,
                 'name' => 'paypal_secretkey',
                 'val' => '',
@@ -391,7 +392,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             26 =>
-            array(
+            array (
                 'id' => 27,
                 'name' => 'paypal_clientid',
                 'val' => '',
@@ -405,7 +406,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             27 =>
-            array(
+            array (
                 'id' => 28,
                 'name' => 'flutterwave_payment_method',
                 'val' => '1',
@@ -419,7 +420,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             28 =>
-            array(
+            array (
                 'id' => 29,
                 'name' => 'flutterwave_secretkey',
                 'val' => '',
@@ -433,7 +434,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             29 =>
-            array(
+            array (
                 'id' => 30,
                 'name' => 'flutterwave_publickey',
                 'val' => '',
@@ -447,7 +448,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             30 =>
-            array(
+            array (
                 'id' => 31,
                 'name' => 'cinet_payment_method',
                 'val' => '0',
@@ -461,7 +462,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             31 =>
-            array(
+            array (
                 'id' => 32,
                 'name' => 'sadad_payment_method',
                 'val' => '0',
@@ -475,7 +476,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             32 =>
-            array(
+            array (
                 'id' => 33,
                 'name' => 'airtel_payment_method',
                 'val' => '0',
@@ -489,7 +490,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             33 =>
-            array(
+            array (
                 'id' => 34,
                 'name' => 'phonepe_payment_method',
                 'val' => '0',
@@ -503,7 +504,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             34 =>
-            array(
+            array (
                 'id' => 35,
                 'name' => 'midtrans_payment_method',
                 'val' => '0',
@@ -517,7 +518,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             35 =>
-            array(
+            array (
                 'id' => 36,
                 'name' => 'local',
                 'val' => '1',
@@ -531,7 +532,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             36 =>
-            array(
+            array (
                 'id' => 37,
                 'name' => 's3',
                 'val' => '0',
@@ -545,7 +546,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             37 =>
-            array(
+            array (
                 'id' => 38,
                 'name' => 'aws_access_key',
                 'val' => null,
@@ -559,7 +560,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             38 =>
-            array(
+            array (
                 'id' => 39,
                 'name' => 'aws_secret_key',
                 'val' => null,
@@ -573,7 +574,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             39 =>
-            array(
+            array (
                 'id' => 40,
                 'name' => 'aws_region',
                 'val' => null,
@@ -587,7 +588,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             40 =>
-            array(
+            array (
                 'id' => 41,
                 'name' => 'aws_bucket',
                 'val' => null,
@@ -601,7 +602,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             41 =>
-            array(
+            array (
                 'id' => 42,
                 'name' => 'aws_path_style',
                 'val' => 'false',
@@ -616,7 +617,7 @@ class SettingSeeder extends Seeder
             ),
 
             41 =>
-            array(
+            array (
                 'id' => 42,
                 'name' => 'tmdb_api_key',
                 'val' => '',
@@ -631,7 +632,7 @@ class SettingSeeder extends Seeder
             ),
 
             42 =>
-            array(
+            array (
                 'id' => 43,
                 'name' => 'is_social_login',
                 'val' => '1',
@@ -645,7 +646,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             43 =>
-            array(
+            array (
                 'id' => 44,
                 'name' => 'is_google_login',
                 'val' => '1',
@@ -659,7 +660,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             44 =>
-            array(
+            array (
                 'id' => 45,
                 'name' => 'is_otp_login',
                 'val' => '1',
@@ -673,7 +674,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             45 =>
-            array(
+            array (
                 'id' => 46,
                 'name' => 'is_apple_login',
                 'val' => '1',
@@ -687,7 +688,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             46 =>
-            array(
+            array (
                 'id' => 47,
                 'name' => 'is_firebase_notification',
                 'val' => '1',
@@ -701,7 +702,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             47 =>
-            array(
+            array (
                 'id' => 48,
                 'name' => 'firebase_key',
                 'val' => '',
@@ -715,7 +716,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             48 =>
-            array(
+            array (
                 'id' => 49,
                 'name' => 'is_user_push_notification',
                 'val' => '1',
@@ -729,7 +730,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             49 =>
-            array(
+            array (
                 'id' => 50,
                 'name' => 'is_application_link',
                 'val' => '1',
@@ -743,10 +744,10 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             50 =>
-            array(
+            array (
                 'id' => 51,
                 'name' => 'ios_url',
-                'val' => null,
+                'val' => 'https://apps.apple.com/us/app/GoKoncentrate-laravel/id6736365806',
                 'type' => 'appconfig',
                 'datatype' => NULL,
                 'created_by' => 2,
@@ -757,10 +758,10 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             51 =>
-            array(
+            array (
                 'id' => 52,
                 'name' => 'android_url',
-                'val' => 'https://play.google.com/store/apps/details?id=com.iqonic.streamitlaravel&pcampaignid=web_share',
+                'val' => 'https://play.google.com/store/apps/details?id=com.iqonic.GoKoncentratelaravel&pcampaignid=web_share',
                 'type' => 'appconfig',
                 'datatype' => NULL,
                 'created_by' => 2,
@@ -771,7 +772,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             52 =>
-            array(
+            array (
                 'id' => 53,
                 'name' => 'force_update',
                 'val' => '0',
@@ -785,7 +786,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             53 =>
-            array(
+            array (
                 'id' => 54,
                 'name' => 'app_version',
                 'val' => null,
@@ -799,7 +800,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             54 =>
-            array(
+            array (
                 'id' => 55,
                 'name' => 'is_ChatGPT_integration',
                 'val' => '1',
@@ -813,7 +814,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             55 =>
-            array(
+            array (
                 'id' => 56,
                 'name' => 'ChatGPT_key',
                 'val' => '',
@@ -827,7 +828,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             56 =>
-            array(
+            array (
                 'id' => 57,
                 'name' => 'google_client_id',
                 'val' => '',
@@ -841,7 +842,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             57 =>
-            array(
+            array (
                 'id' => 58,
                 'name' => 'google_client_secret',
                 'val' => '',
@@ -855,7 +856,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             58 =>
-            array(
+            array (
                 'id' => 59,
                 'name' => 'google_redirect_uri',
                 'val' => '',
@@ -869,7 +870,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             59 =>
-            array(
+            array (
                 'id' => 60,
                 'name' => 'apiKey',
                 'val' => '',
@@ -883,7 +884,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             60 =>
-            array(
+            array (
                 'id' => 61,
                 'name' => 'authDomain',
                 'val' => '',
@@ -897,7 +898,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             61 =>
-            array(
+            array (
                 'id' => 62,
                 'name' => 'databaseURL',
                 'val' => '',
@@ -911,7 +912,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             62 =>
-            array(
+            array (
                 'id' => 63,
                 'name' => 'projectId',
                 'val' => '',
@@ -925,7 +926,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             63 =>
-            array(
+            array (
                 'id' => 64,
                 'name' => 'storageBucket',
                 'val' => '',
@@ -939,7 +940,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             64 =>
-            array(
+            array (
                 'id' => 65,
                 'name' => 'messagingSenderId',
                 'val' => '',
@@ -953,7 +954,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             65 =>
-            array(
+            array (
                 'id' => 66,
                 'name' => 'appId',
                 'val' => '',
@@ -967,7 +968,7 @@ class SettingSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             66 =>
-            array(
+            array (
                 'id' => 67,
                 'name' => 'measurementId',
                 'val' => '',
@@ -980,14 +981,159 @@ class SettingSeeder extends Seeder
                 'updated_at' => '2024-08-08 10:38:37',
                 'deleted_at' => NULL,
             ),
+            67 =>
+            array (
+                'id' => 68,
+                'name' => 'demo_login',
+                'val' => '1',
+                'type' => 'module_settings',
+                'datatype' => NULL,
+                'created_by' => 1,
+                'updated_by' => 1,
+                'deleted_by' => NULL,
+                'created_at' => '2024-08-08 05:27:31',
+                'updated_at' => '2024-08-08 05:27:31',
+                'deleted_at' => NULL,
+            ),
+            68 =>
+            array (
+                'id' => 69,
+                'name' => 'facebook_url',
+                'val' => 'https://www.facebook.com/iqonicdesign',
+                'type' => 'bussiness',
+                'datatype' => 'bussiness',
+                'created_by' => 2,
+                'updated_by' => 2,
+                'deleted_by' => NULL,
+                'created_at' => '2024-08-08 10:12:31',
+                'updated_at' => '2024-08-08 10:12:31',
+                'deleted_at' => NULL,
+            ),
+            69 =>
+            array (
+                'id' => 70,
+                'name' => 'x_url',
+                'val' => 'https://twitter.com/iqonicdesign',
+                'type' => 'bussiness',
+                'datatype' => 'bussiness',
+                'created_by' => 2,
+                'updated_by' => 2,
+                'deleted_by' => NULL,
+                'created_at' => '2024-08-08 10:12:31',
+                'updated_at' => '2024-08-08 10:12:31',
+                'deleted_at' => NULL,
+            ),
 
+            70 =>
+            array (
+                'id' => 71,
+                'name' => 'instagram_url',
+                'val' => 'https://www.instagram.com/iqonicdesign',
+                'type' => 'bussiness',
+                'datatype' => 'bussiness',
+                'created_by' => 2,
+                'updated_by' => 2,
+                'deleted_by' => NULL,
+                'created_at' => '2024-08-08 10:12:31',
+                'updated_at' => '2024-08-08 10:12:31',
+                'deleted_at' => NULL,
+            ),
+            71 => array (
+                'id' => 72,
+                'name' => 'youtube_url',    
+                'val' => 'https://www.youtube.com/c/IqonicDesign',
+                'type' => 'bussiness',
+                'datatype' => 'bussiness',
+                'created_by' => 2,
+                'updated_by' => 2,
+                'deleted_by' => NULL,
+                'created_at' => '2024-08-08 10:12:31',
+                'updated_at' => '2024-08-08 10:12:31',
+                'deleted_at' => NULL,
+            ),  
+            72 => array (
+                'id' => 73,
+                'name' => 'backward_seconds',
+                'val' => '10',
+                'type' => 'misc',
+                'datatype' => 'misc',
+                'created_by' => 2,
+                'updated_by' => 2,
+                'deleted_by' => NULL,
+                'created_at' => '2024-08-08 10:31:01',
+                'updated_at' => '2024-08-08 10:31:01',
+                'deleted_at' => NULL,
+            ),
+            73 => array (
+                'id' => 74,
+                'name' => 'forward_seconds',
+                'val' => '10',
+                'type' => 'misc',
+                'datatype' => 'misc',
+                'created_by' => 2,
+                'updated_by' => 2,
+                'deleted_by' => NULL,
+                'created_at' => '2024-08-08 10:31:01',
+                'updated_at' => '2024-08-08 10:31:01',
+                'deleted_at' => NULL,
+            ),
+            74 => array (
+                'id' => 75,
+                'name' => 'mini_logo',
+                'val' => 'img/logo/mini_logo.png',
+                'type' => 'mini_logo',
+                'datatype' => 'mini_logo',
+                'created_by' => 2,
+                'updated_by' => 2,
+                'deleted_by' => NULL,
+                'created_at' => '2024-08-08 10:31:01',
+                'updated_at' => '2024-08-08 10:31:01',
+                'deleted_at' => NULL,
+            ),
 
+            75 => array (
+                'id' => 76,
+                'name' => 'dark_logo',
+                'val' => 'img/logo/dark_logo.png',
+                'type' => 'dark_logo',
+                'datatype' => 'dark_logo',
+                'created_by' => 2,
+                'updated_by' => 2,
+                'deleted_by' => NULL,   
+                'created_at' => '2024-08-08 10:31:01',
+                'updated_at' => '2024-08-08 10:31:01',
+                'deleted_at' => NULL,
+
+            ),
+            76 => array (
+                'id' => 77,
+                'name' => 'loader_gif',
+                'val' => 'img/logo/loader.gif',
+                'type' => 'loader_gif',
+                'datatype' => 'loader_gif',
+                'created_by' => 2,
+                'updated_by' => 2,
+                'deleted_by' => NULL,
+                'created_at' => '2024-08-08 10:31:01',
+                'updated_at' => '2024-08-08 10:31:01',
+                'deleted_at' => NULL,
+            ),
+            77 => array (
+                'id' => 78,
+                'name' => 'favicon',
+                'val' => 'img/logo/favicon.png',
+                'type' => 'favicon',
+                'datatype' => 'favicon',
+                'created_by' => 2,
+                'updated_by' => 2,
+                'deleted_by' => NULL,
+                'created_at' => '2024-08-08 10:31:01',
+                'updated_at' => '2024-08-08 10:31:01',
+                'deleted_at' => NULL,
+            ),
         ));
-        foreach ($data as $setting) {
-            $service = Setting::create($setting);
-        }
-        $sourceFilePath = base_path('public/dummy-images/json-file/streamit-laravel-flutter-firebase-adminsdk-czzah-2c84a7b029.json');
-        $destinationPath = storage_path('app/data/streamit-laravel-flutter-firebase-adminsdk-czzah-2c84a7b029.json');
+        $sourceFilePath = base_path('public/dummy-images/json-file/GoKoncentrate-laravel-flutter-firebase-adminsdk-czzah-2c84a7b029.json');
+        $destinationPath = storage_path('app/data/GoKoncentrate-laravel-flutter-firebase-adminsdk-czzah-2c84a7b029.json');
 
         // Check if the file exists in the source location
         if (File::exists($sourceFilePath)) {
@@ -1002,5 +1148,69 @@ class SettingSeeder extends Seeder
         } else {
             $this->command->error('Firebase JSON file not found at ' . $sourceFilePath);
         }
+    
+
+    if (env('IS_DUMMY_DATA')) {
+        foreach ($data as $setting) {
+            \Log::info('Processing setting: ' . ($setting['name'] ?? 'unknown'));
+            if (isset($setting['name']) && $setting['name'] === 'mini_logo') {
+                \Log::info('Mini logo found: ' . ($setting['val'] ?? 'no value'));
+                $miniLogo = $this->uploadToSpaces($setting['val'], 'logos');
+                if ($miniLogo) {
+                    $filename = extractFileNameFromUrl($miniLogo, 'logos');
+                    $setting['val'] = 'img/logo/' . $filename;
+                }
+            }
+            if (isset($setting['name']) && $setting['name'] === 'dark_logo') {
+                \Log::info('Dark logo found: ' . ($setting['val'] ?? 'no value'));
+                $darkLogo = $this->uploadToSpaces($setting['val'], 'logos');
+                if ($darkLogo) {
+                    $filename = extractFileNameFromUrl($darkLogo, 'logos');
+                    $setting['val'] = 'img/logo/' . $filename;
+                }
+            }
+            if (isset($setting['name']) && $setting['name'] === 'favicon') {
+                \Log::info('Favicon found: ' . ($setting['val'] ?? 'no value'));
+                $favicon = $this->uploadToSpaces($setting['val'], 'logos');
+                if ($favicon) {
+                    $filename = extractFileNameFromUrl($favicon, 'logos');
+                    $setting['val'] = 'img/logo/' . $filename;
+                }
+            }
+            if (isset($setting['name']) && $setting['name'] === 'loader_gif') {
+                \Log::info('Loader GIF found: ' . ($setting['val'] ?? 'no value'));
+                $loaderGif = $this->uploadToSpaces($setting['val'], 'logos');
+                if ($loaderGif) {
+                    $filename = extractFileNameFromUrl($loaderGif, 'logos');
+                    $setting['val'] = 'img/logo/' . $filename;
+                }
+            }
+           
+            $setting = Setting::create($setting);
+        }
+    }
+    }
+    
+
+    private function uploadToSpaces($publicPath, $pageType)
+    {
+  
+        $localFilePath = public_path($publicPath);
+        $remoteFilePath = $pageType . '/image/' . basename($publicPath);
+        if (file_exists($localFilePath)) {
+            // Get the active storage disk from the environment
+            $disk = env('ACTIVE_STORAGE', 'local');
+            if ($disk === 'local') {
+                // Store in the public directory for local storage
+                Storage::disk($disk)->put('public/' . $remoteFilePath, file_get_contents($localFilePath));
+                return asset('storage/' . $remoteFilePath);
+            } else {
+                // Upload to the specified storage disk
+                Storage::disk($disk)->put($remoteFilePath, file_get_contents($localFilePath));
+                return Storage::disk($disk)->url($remoteFilePath);
+            }
+        }
+
+        return false;
     }
 }

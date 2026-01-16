@@ -36,6 +36,24 @@ class EpisodeService
         $data['video_url_input'] = ($data['video_upload_type'] == 'Local') ? $data['video_file_input'] : $data['video_url_input'];
        $episode = $this->episodeRepository->create($data);
 
+       if(env('ACTIVE_STORAGE') == 'bunny'){
+        $pullBase = rtrim(env('BUNNY_PULL_ZONE', 'https://GoKoncentrate-demo.b-cdn.net'), '/');
+
+        if (($data['video_upload_type'] ?? null) == 'Local' && !empty($data['video_url_input'])) {
+            $filename = basename(parse_url($data['video_url_input'], PHP_URL_PATH));
+            $sourceUrl = $pullBase.'/tvshow/episode/video/'.$filename;
+            $m3u8 = bunnyIngestAndGetM3u8($sourceUrl, $filename);
+            if ($m3u8) { $episode->update(['bunny_video_url' => $m3u8]); }
+        }
+
+        if (($data['trailer_url_type'] ?? null) == 'Local' && !empty($data['trailer_url'])) {
+            $tfile = basename(parse_url($data['trailer_url'], PHP_URL_PATH));
+            $sourceUrl = $pullBase.'/tvshow/episode/video/'.$tfile;
+            $m3u8 = bunnyIngestAndGetM3u8($sourceUrl, $tfile);
+            if ($m3u8) { $episode->update(['bunny_trailer_url' => $m3u8]); }
+        }
+    }
+
        if(isset($data['enable_quality']) && $data['enable_quality'] == 1) {
         $this->episodeRepository->saveQualityMappings(
             $episode->id,
@@ -59,7 +77,33 @@ class EpisodeService
         $data['trailer_url'] = ($data['trailer_url_type'] == 'Local') ? $data['trailer_video'] : $data['trailer_url'];
 
         $data['video_url_input'] = ($data['video_upload_type'] == 'Local') ? $data['video_file_input'] : $data['video_url_input'];
-        return $this->episodeRepository->update($id, $data);
+        $updated =  $this->episodeRepository->update($id, $data);
+
+        if(env('ACTIVE_STORAGE') == 'bunny'){
+            $pullBase = rtrim(env('BUNNY_PULL_ZONE', 'https://GoKoncentrate-demo.b-cdn.net'), '/');
+
+            if (($data['video_upload_type'] ?? null) == 'Local' && !empty($data['video_url_input'])) {
+                $filename = basename(parse_url($data['video_url_input'], PHP_URL_PATH));
+                $sourceUrl = $pullBase.'/tvshow/episode/video/'.$filename;
+                $m3u8 = bunnyIngestAndGetM3u8($sourceUrl, $filename);
+                if ($m3u8) {
+                    $updated->update(['bunny_video_url' => $m3u8]);
+                }
+
+            }
+
+            if (($data['trailer_url_type'] ?? null) == 'Local' && !empty($data['trailer_url'])) {
+                $tfile = basename(parse_url($data['trailer_url'], PHP_URL_PATH));
+                $sourceUrl = $pullBase.'/tvshow/episode/video/'.$tfile;
+                $m3u8 = bunnyIngestAndGetM3u8($sourceUrl, $tfile);
+                if ($m3u8) {
+                    $updated->update(['bunny_trailer_url' => $m3u8]);
+                }
+
+            }
+        }
+
+        return $updated;
     }
 
     public function delete($id)
@@ -91,12 +135,26 @@ class EpisodeService
 
     public function getDataTable(Datatables $datatable, $filter)
     {
-        $query = $this->getFilteredData($filter);
+        $query = $this->getFilteredData($filter)->withCount('entertainmentView');
         return $datatable->eloquent($query)
+        ->filter(function ($query) {
+            if (request()->has('search') && !empty(request()->get('search')['value'])) {
+                $searchValue = request()->get('search')['value'];
+                $query->where(function ($q) use ($searchValue) {
+                    $q->where('name', 'like', '%' . $searchValue . '%')
+                      ->orWhereHas('seasondata', function ($seasonQuery) use ($searchValue) {
+                          $seasonQuery->where('name', 'like', '%' . $searchValue . '%');
+                      })
+                      ->orWhereHas('entertainmentdata', function ($entertainmentQuery) use ($searchValue) {
+                          $entertainmentQuery->where('name', 'like', '%' . $searchValue . '%');
+                      });
+                });
+            }
+        })
         ->editColumn('poster_url', function ($data) {
             $seasonName = optional($data->seasondata)->name;
             $type = 'episode';
-            $imageUrl = setBaseUrlWithFileName($data->poster_url);
+            $imageUrl = setBaseUrlWithFileName($data->poster_url, 'image', 'episode');
             return view('components.media-item', ['thumbnail' => $imageUrl, 'name' => $data->name, 'seasonName' => $seasonName, 'type' => $type])->render();
         })
 
@@ -119,7 +177,7 @@ class EpisodeService
         })
 
         ->editColumn('plan_id', function ($data) {
-            return optional($data->plan)->name ?? '-';
+            return $data->access === 'pay-per-view' ? '-' : optional($data->plan)->name ?? '-';
         })
 
 
@@ -166,12 +224,32 @@ class EpisodeService
                 </div>
             ';
         })
+
+
+        ->editColumn('is_restricted', function ($row) {
+            $checked = $row->is_restricted ? 'checked' : '';
+            $disabled = $row->trashed() ? 'disabled' : '';
+
+            return '
+                <div class="form-check form-switch">
+                    <input type="checkbox"
+                        class="switch-status-change form-check-input"
+                        data-id="' . $row->id . '"
+                        data-url="' . route('backend.episodes.update_is_restricted', $row->id) . '"
+                        data-token="' . csrf_token() . '"
+                        ' . $checked . ' ' . $disabled . '>
+                </div>';
+        })
         ->orderColumn('status', function ($query, $order) {
             $query->orderBy('status', $order);
         })
+        ->addColumn('watch_count', function ($data) {
+            return $data->entertainment_view_count > 0 ? $data->entertainment_view_count : '-';
+        })
+        ->orderColumn('watch_count', 'entertainment_view_count $1')
           ->editColumn('updated_at', fn($data) =>formatUpdatedAt($data->updated_at))
             ->orderColumns(['id'], '-:column $1')
-            ->rawColumns(['action', 'status', 'check','poster_url','entertainment_id','season_id','plan_id'])
+            ->rawColumns(['action', 'status', 'check','poster_url','entertainment_id','season_id','plan_id','is_restricted'])
             ->toJson();
     }
 

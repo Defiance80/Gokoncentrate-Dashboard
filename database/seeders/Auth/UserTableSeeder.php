@@ -41,7 +41,7 @@ class UserTableSeeder extends Seeder
                 [
                     'first_name' => 'Super',
                     'last_name' => 'Admin',
-                    'email' => 'admin@streamit.com',
+                    'email' => 'admin@GoKoncentrate.com',
                     'password' => Hash::make('12345678'),
                     'mobile' => '+12123567890',
                     'date_of_birth' => fake()->date,
@@ -56,7 +56,7 @@ class UserTableSeeder extends Seeder
                 [
                     'first_name' => 'Ivan',
                     'last_name' => 'Norris',
-                    'email' => 'demo@streamit.com',
+                    'email' => 'demo@GoKoncentrate.com',
                     'password' => Hash::make('12345678'),
                     'mobile' => '+12124567899',
                     'date_of_birth' => fake()->date,
@@ -82,7 +82,7 @@ class UserTableSeeder extends Seeder
                 [
                     'first_name' => 'Super',
                     'last_name' => 'Admin',
-                    'email' => 'admin@streamit.com',
+                    'email' => 'admin@GoKoncentrate.com',
                     'password' => Hash::make('12345678'),
                     'mobile' => '+12123567890',
                     'date_of_birth' => fake()->date,
@@ -97,7 +97,7 @@ class UserTableSeeder extends Seeder
                 [
                     'first_name' => 'Ivan',
                     'last_name' => 'Norris',
-                    'email' => 'demo@streamit.com',
+                    'email' => 'demo@GoKoncentrate.com',
                     'password' => Hash::make('12345678'),
                     'mobile' => '+12124567899',
                     'date_of_birth' => fake()->date,
@@ -115,7 +115,7 @@ class UserTableSeeder extends Seeder
                 // [
                 //     'first_name' => 'John',
                 //     'last_name' => 'Doe',
-                //     'email' => 'john@streamit.com',
+                //     'email' => 'john@GoKoncentrate.com',
                 //     'password' => Hash::make('12345678'),
                 //     'mobile' => '1-4578952512',
                 //     'date_of_birth' =>fake()->date, // Replacefake()->date with the actual date of birth
@@ -383,7 +383,7 @@ class UserTableSeeder extends Seeder
     {
 
         $localFilePath = public_path($publicPath);
-        $remoteFilePath = 'streamit-laravel/' . basename($publicPath);
+        $remoteFilePath = 'GoKoncentrate-laravel/' . basename($publicPath);
 
 
 

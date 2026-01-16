@@ -67,9 +67,9 @@
 
       <select name="select"  id="SelectUser"  id="select" class="form-control selectpiker" onchange="getSelectedOption()">
           <option value="">Select Role</option>
-          <option value="12345678,admin@streamit.com">Admin</option>
-          <option value="12345678,demo@streamit.com"  selected>Demo Admin</option>
-          <option value="secret,john@streamit.com">User</option>
+          <option value="12345678,admin@GoKoncentrate.com">Admin</option>
+          <option value="12345678,demo@GoKoncentrate.com"  selected>Demo Admin</option>
+          <option value="secret,john@GoKoncentrate.com">User</option>
       </select>
 
 </div>
@@ -80,7 +80,7 @@
       <h6 class="text-center border-top py-3 mt-3">Demo Accounts</h6>
       <div class="d-flex justify-content-between">
         <div>
-          <p class="mb-0" id="admin_email">admin@streamit.com</p>
+          <p class="mb-0" id="admin_email">admin@GoKoncentrate.com</p>
           <p id="admin_password">12345678</p>
         </div>
         <div>
@@ -95,7 +95,7 @@
       </div>
       <div class="d-flex justify-content-between">
         <div>
-          <p class="mb-0" id="employee_email">john@streamit.com</p>
+          <p class="mb-0" id="employee_email">john@GoKoncentrate.com</p>
           <p id="employee_password">secret</p>
         </div>
         <div>

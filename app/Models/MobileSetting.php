@@ -26,6 +26,15 @@ class MobileSetting extends Model
         return $setting ? $setting->value : null;
     }
 
+    public static function getNameAndValueBySlug($slug)
+    {
+        // Retrieve the setting by slug
+        $setting = self::where('slug', $slug)->first();
+
+        // If the setting exists, return name and value, otherwise return null
+        return $setting ? ['name' => $setting->name, 'value' => $setting->value] : null;
+    }
+
     public static function getCacheValueBySlug($slug)
     {
         if (!Cache::has('setting')) {

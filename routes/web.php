@@ -172,16 +172,4 @@ Route::group(['prefix' => 'app', ['middleware' => ['auth','admin']]], function (
 
 });
 
-Route::middleware(['web'])->group(function () {
-    // Public routes
-    Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-    Route::post('login', 'Auth\LoginController@login');
-
-    // Protected routes with auth
-    Route::middleware(['auth'])->group(function () {
-        Route::post('logout', 'Auth\LoginController@logout')->name('logout');
-        // Other protected routes...
-    });
-});
-
 });

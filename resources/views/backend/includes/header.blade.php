@@ -182,7 +182,7 @@ $navbarClass = $navbarHide ? 'd-none' : (!empty(getCustomizationSetting('navbar_
                         aria-haspopup="true" aria-expanded="false">
                         <div class="avatar avatar-md">
                             <img class="avatar avatar-40 img-fluid rounded-pill"
-                                src="{{ setBaseUrlWithFileName(auth()->user()->file_url, 'image', 'users') }}"
+                                src="{{ auth()->user()->profile_image ?? default_user_avatar() }}"
                                 alt="{{ auth()->user()->name ?? default_user_name() }}" loading="lazy">
                         </div>
                     </a>
@@ -190,7 +190,7 @@ $navbarClass = $navbarHide ? 'd-none' : (!empty(getCustomizationSetting('navbar_
                         <div class="dropdown-header bg-primary-subtle py-3 rounded">
                             <div class="d-flex gap-2">
                                 <img class="avatar avatar-40 img-fluid rounded-pill"
-                                    src="{{ setBaseUrlWithFileName(auth()->user()->file_url, 'image', 'users') }}" />
+                                    src="{{ auth()->user()->profile_image ?? default_user_avatar() }}" />
                                 <div class="d-flex flex-column align-items-start">
                                     <h5 class="m-0 text-primary">{{ Auth::user()->full_name ?? default_user_name() }}
                                     </h5>

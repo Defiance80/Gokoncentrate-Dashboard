@@ -206,7 +206,7 @@ class SubscriptionController extends Controller
              $user = optional($data->user);
              $url = $user && $user->id ? route('backend.users.details', ['id' => $user->id, 'type' => 'rent']) : null;
              return view('components.user-detail-card', [
-                'image' => setBaseUrlWithFileName($user->file_url ?? null,'image','users') ?? default_user_avatar(),
+                'image' => $user->profile_image ?? default_user_avatar(),
                 'name' => $user->full_name ?? default_user_name(),
                 'email' => $user->email ?? '-',
                 'url' => $url,
@@ -493,7 +493,7 @@ class SubscriptionController extends Controller
                 $url = $user && $user->id ? route('backend.users.details', ['id' => $user->id, 'type' => 'subscription']) : null;
 
                 return view('components.user-detail-card', [
-                    'image' => setBaseUrlWithFileName(optional($user)->file_url, 'image', 'users') ?? default_user_avatar(),
+                    'image' => optional($user)->profile_image ?? default_user_avatar(),
                     'name' => optional($user)->full_name ?? default_user_name(),
                     'email' => optional($user)->email ?? '-',
                     'url' => $url,

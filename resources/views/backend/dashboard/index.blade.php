@@ -488,7 +488,7 @@
                                                     @if ($review->user)
                                                         <a href="{{ url('/app/users/details/' . $review->user->id) }}"
                                                             class="d-flex gap-3 align-items-center text-decoration-none">
-                                                            <img src="{{ setBaseUrlWithFileName($review->user->file_url, 'image', 'users') ?? default_user_avatar() }}"
+                                                            <img src="{{ $review->user->profile_image ?? default_user_avatar() }}"
                                                                 alt="avatar" class="avatar avatar-40 rounded-pill">
                                                             <div class="text-start">
                                                                 <h6 class="m-0">
@@ -603,7 +603,7 @@
                                                     <td>
                                                         <a href="{{ $subscription->user ? route('backend.users.details', $subscription->user->id) : '#' }}"
                                                             class="d-flex gap-3 align-items-center text-decoration-none text-dark {{ $subscription->user ? '' : 'disabled' }}">
-                                                            <img src="{{ setBaseUrlWithFileName(optional($subscription->user)->file_url, 'image', 'users') ?? default_user_avatar() }}"
+                                                            <img src="{{ optional($subscription->user)->profile_image ?? default_user_avatar() }}"
                                                                 alt="avatar" class="avatar avatar-40 rounded-pill">
                                                             <div class="text-start">
                                                                 <h6 class="m-0">

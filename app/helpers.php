@@ -760,10 +760,26 @@ function storeMediaFile($module, $files, $key = 'file_url')
 function getMediaUrls($searchQuery = null, $perPage = 21, $page = 1)
 {
     // $activeDisk = DB::table('settings')->where('name', 'disc_type')->value('val') ?? env('ACTIVE_STORAGE','local');
-    $activeDisk = env('ACTIVE_STORAGE'); // set on live server
+    $activeDisk = env('ACTIVE_STORAGE', config('filesystems.default', 'local')); // set on live server
+    if (!is_string($activeDisk) || $activeDisk === '') {
+        $activeDisk = 'local';
+    }
 
     $folder = $activeDisk === 'local' ? 'public/' : '';
     $files = Storage::disk($activeDisk)->allFiles($folder);
+
+    // Only show common media types (images/videos) in the media picker/library.
+    $allowedExtensions = [
+        'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'tif', 'tiff', 'ico',
+        'mp4', 'mov', 'avi', 'webm', 'mkv', 'm4v',
+    ];
+    $files = array_values(array_filter($files, function ($file) use ($allowedExtensions) {
+        if (!is_string($file) || $file === '') {
+            return false;
+        }
+        $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+        return in_array($ext, $allowedExtensions, true);
+    }));
 
     if ($searchQuery) {
         $files = array_filter($files, function ($file) use ($searchQuery) {
@@ -1209,7 +1225,6 @@ function copyImageToFolder($fileUrl, $folder = 'other')
 
 function setBaseUrlWithFileName($url = '', $type = 'image', $page_type = 'other')
 {
-
     // Return a default image if the URL is empty
     if (empty($url)) {
         return setDefaultImage();
@@ -1228,43 +1243,25 @@ function setBaseUrlWithFileName($url = '', $type = 'image', $page_type = 'other'
 
     // Handle remote URL
     if ($isRemote) {
-        // Return immediately if the remote image exists
         return $url;
-
-        return checkImageExists($url) ? $url : setDefaultImage();
     }
 
     // Extract the file name
     $fileName = basename($url);
 
-    $activeDisk =  env('ACTIVE_STORAGE', 'local');
+    $activeDisk = env('ACTIVE_STORAGE', 'local');
 
-    // Handle local storage
+    // Handle local storage - return URL directly without file_exists check
+    // (file_exists can fail on shared hosting due to symlink path resolution)
     if ($activeDisk === 'local') {
-        $filePath = public_path("storage/$page_type/$type/$fileName");
-        // Return local asset path if the file exists
-        if (file_exists($filePath)) {
-            return asset("storage/$page_type/$type/$fileName");
-        }
+        return asset("storage/$page_type/$type/$fileName");
     } elseif ($activeDisk == 'bunny') {
         $baseUrl = env('BUNNY_PULL_ZONE');
-        $filePath = "$baseUrl/$page_type/$type/$fileName";
-        return $filePath;
-
+        return "$baseUrl/$page_type/$type/$fileName";
     } else {
-
         $baseUrl = rtrim(env('DO_SPACES_URL'), '/');
-        $filePath = "$baseUrl/$page_type/$type/$fileName";
-
-        if (checkImageExists($filePath)) {
-            return $filePath;
-        }
+        return "$baseUrl/$page_type/$type/$fileName";
     }
-
-
-    // Return a default image as fallback
-   return setDefaultImage();
-
 }
 
 function setBaseUrlWithFileNameV2($url = '')

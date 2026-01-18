@@ -152,9 +152,19 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
 
     protected function getProfileImageAttribute()
     {
+        // First check Spatie Media Library
         $media = $this->getFirstMediaUrl('profile_image');
+        if (isset($media) && !empty($media)) {
+            return $media;
+        }
 
-        return isset($media) && ! empty($media) ? $media : asset(config('app.avatar_base_path').'avatar.webp');
+        // Fall back to file_url field if it exists
+        if (!empty($this->file_url)) {
+            return setBaseUrlWithFileName($this->file_url, 'image', 'users');
+        }
+
+        // Default avatar
+        return asset(config('app.avatar_base_path').'avatar.webp');
     }
 
 

@@ -77,10 +77,9 @@
                         aria-labelledby="nav-media-library-tab" style="position: relative;">
                         <div class="media-scroll pe-3">
                             <h6 id="no_data" class="text-center"></h6>
-                            <div class="" id="media-container">
+                            <div class="d-flex flex-wrap gap-3" id="media-container">
                                 {{-- <div class="d-flex gap-5 flex-wrap justify-content-center" id="media-container"> --}}
-
-                                @include('components.folder-browser')
+                                @include('filemanager::backend.filemanager.partial', ['mediaUrls' => $mediaUrls])
                             </div>
                         </div>
 

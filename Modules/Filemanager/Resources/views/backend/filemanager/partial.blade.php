@@ -1,127 +1,45 @@
-    @php
-        $storagePath = storage_path('app/public');
-        $folders = [];
-        $selectedFolder = request('folder', '');
-        $folderContents = [];
+@php
+    $mediaUrls = $mediaUrls ?? [];
+    $videoExtensions = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'm4v'];
+    $imageExtensions = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'bmp', 'tif', 'tiff', 'ico'];
+@endphp
 
-        if (is_dir($storagePath)) {
-            $items = scandir($storagePath);
-            foreach ($items as $item) {
-                if ($item !== '.' && $item !== '..' && is_dir($storagePath . '/' . $item)) {
-                    $folders[$item] = ucfirst(str_replace(['-', '_'], ' ', $item));
-                }
-            }
-        }
+@if (empty($mediaUrls))
+    <div class="text-center text-muted py-3">{{ __('messages.no_data_available') }}</div>
+@else
+    @foreach ($mediaUrls as $mediaUrl)
+        @php
+            $mediaPath = parse_url($mediaUrl, PHP_URL_PATH) ?? '';
+            $extension = strtolower(pathinfo($mediaPath, PATHINFO_EXTENSION));
+            $fileName = basename($mediaPath);
+            $folderName = trim(dirname($mediaPath), '/');
+            $folderName = $folderName !== '.' ? basename($folderName) : 'default';
+            $type = in_array($extension, $videoExtensions, true) ? 'video' : (in_array($extension, $imageExtensions, true) ? 'image' : 'file');
+        @endphp
 
-        // Get contents of selected folder
-        if ($selectedFolder && is_dir($storagePath . '/' . $selectedFolder)) {
-            $contents = scandir($storagePath . '/' . $selectedFolder);
-            foreach ($contents as $item) {
-                if ($item !== '.' && $item !== '..') {
-                    $itemPath = $storagePath . '/' . $selectedFolder . '/' . $item;
-                    $folderContents[] = [
-                        'name' => $item,
-                        'path' => $itemPath,
-                        'is_dir' => is_dir($itemPath),
-                        'size' => is_file($itemPath) ? filesize($itemPath) : 0,
-                        'modified' => filemtime($itemPath),
-                    ];
-                }
-            }
-        }
-    @endphp
+        <div class="iq-media-images position-relative mb-3" id="media-images" title="{{ $fileName }}">
+            <button type="button"
+                class="btn btn-sm btn-danger iq-button-delete position-absolute top-0 end-0 m-1"
+                onclick="deleteImage(@json($mediaUrl), @json($type), @json($fileName), @json($folderName))"
+                aria-label="{{ __('frontend.delete') }}">
+                <i class="ph ph-trash"></i>
+            </button>
 
-    @if (count($folders) > 0)
-        @foreach ($folders as $folder => $folderName)
-            <div id="folder-section" class="mb-3">
-                <div class="iq-folder-item position-relative border rounded p-3">
-                    <div class="d-flex align-items-center">
-                        <div class="folder-icon me-3">
-                            <i class="ph ph-folder text-primary" style="font-size: 2rem;"></i>
-                        </div>
-                        <div class="folder-info flex-grow-1">
-                            <h6 class="mb-1 folder-name">{{ $folderName }}</h6>
-                            <small class="text-muted">storage/app/{{ $folder }}/</small>
-                        </div>
-                        <div class="folder-actions">
-                            <button class="btn btn-sm btn-outline-primary me-2"
-                                onclick="openFolder('{{ $folder }}')">
-                                <i class="ph ph-eye"></i> {{ __('frontend.view') }}
-                            </button>
-                            <button class="btn btn-sm btn-outline-info" onclick="browseFolder('{{ $folder }}')">
-                                <i class="ph ph-folder-open"></i> {{ __('frontend.browse') }}
-                            </button>
-                        </div>
+            @if ($type === 'video')
+                <video class="img-fluid" controls preload="metadata" style="max-width: 10rem; max-height: 10rem;">
+                    <source src="{{ $mediaUrl }}">
+                </video>
+            @elseif ($type === 'image')
+                <img src="{{ $mediaUrl }}" class="img-fluid" loading="lazy"
+                    style="max-width: 10rem; max-height: 10rem; object-fit: cover;" alt="{{ $fileName }}">
+            @else
+                <div class="border rounded p-3 bg-light text-muted" style="width: 10rem;">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="ph ph-file"></i>
+                        <span class="media-title">{{ $fileName }}</span>
                     </div>
                 </div>
-            </div>
-        @endforeach
-
-        <script>
-            var baseUrl = document.querySelector('meta[name="base-url"]').getAttribute('content');
-
-            function openFolder(folderName) {
-                // Open folder in new tab
-                window.open(`${baseUrl}/storage/app/${folderName}`, '_blank');
-            }
-
-            function browseFolder(folderName) {
-                // Navigate to folder contents
-                window.location.href = `${baseUrl}/app/filemanager/browse?folder=storage/app/public/${folderName}`;
-            }
-
-            function deleteImage(url) {
-                Swal.fire({
-                        title: "{{ __('frontend.delete_confirm_title', ['type' => __('frontend.media')]) }}",
-                        icon: "warning",
-                        showCancelButton: true,
-                        showCloseButton: true,
-                        closeButtonAriaLabel: "{{ __('frontend.close') }}",
-                        confirmButtonColor: "#3085d6",
-                        cancelButtonColor: "#d33",
-                        confirmButtonText: "{{ __('frontend.delete_confirm_ok') }}",
-                        showCloseButton: true,
-                        closeButtonAriaLabel: "{{ __('frontend.close') }}",
-                        reverseButtons: true,
-                    })
-                    .then((result) => {
-                        if (result.isConfirmed) {
-                            fetch(`${baseUrl}/app/media-library/destroy`, {
-                                    method: 'DELETE',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                    },
-                                    body: JSON.stringify({
-                                        url: url
-                                    })
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.success) {
-                                        const mediaContainer = document.querySelector(
-                                            `img[src="${url}"], video source[src="${url}"]`);
-                                        if (mediaContainer) {
-                                            mediaContainer.closest('#media-images').remove();
-                                        }
-                                        Swal.fire({
-                                            title: "{{ __('frontend.deleted_title') }}",
-                                            text: "{{ __('frontend.your_media_deleted') }}",
-                                            icon: 'success',
-                                            showConfirmButton: false,
-                                            timer: 3000,
-                                            timerProgressBar: true
-                                        });
-                                    } else {
-                                        Swal.fire(
-                                            "{{ __('frontend.delete_error_title') }}",
-                                            "{{ __('frontend.there_was_problem_deleting_media') }}",
-                                            'error'
-                                        );
-                                    }
-                                });
-                        }
-                    });
-            }
-        </script>
-    @endif
+            @endif
+        </div>
+    @endforeach
+@endif

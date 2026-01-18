@@ -803,14 +803,22 @@ class SettingsController extends Controller
         ]);
         $user = Auth::user();
         $data = User::findOrFail($user->id);
-        $request_data = $request->except('profile_image');
+        $request_data = $request->except(['profile_image', 'file_url', 'castcrew_input']);
         $data->update($request_data);
 
         if ($request->custom_fields_data) {
             $data->updateCustomFieldData(json_decode($request->custom_fields_data));
         }
 
-        if ($request->file('profile_image')) {
+        // Handle profile image from media library URL
+        if ($request->filled('file_url')) {
+            $fileUrl = $request->input('file_url');
+            if (!empty($fileUrl)) {
+                // Store the full URL so it can be used directly
+                $data->file_url = $fileUrl;
+                $data->save();
+            }
+        } elseif ($request->file('profile_image')) {
             storeMediaFile($data, $request->file('profile_image'), 'profile_image');
         }
 

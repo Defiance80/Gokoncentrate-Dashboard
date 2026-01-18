@@ -160,6 +160,10 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
 
         // Fall back to file_url field if it exists
         if (!empty($this->file_url)) {
+            // Check if file_url is already a full URL
+            if (filter_var($this->file_url, FILTER_VALIDATE_URL)) {
+                return $this->file_url;
+            }
             return setBaseUrlWithFileName($this->file_url, 'image', 'users');
         }
 

@@ -1,0 +1,10 @@
+{
+    "name": "gokoncentrate/media-radar",
+    "description": "Media Radar discovery, editorial review and publishing module",
+    "type": "laravel-module",
+    "autoload": {
+        "psr-4": {
+            "Modules\\MediaRadar\\": ""
+        }
+    }
+}

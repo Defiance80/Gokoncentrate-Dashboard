@@ -96,5 +96,100 @@ Transaction log for all token movements (audit trail).
 
 ---
 
+---
+
+## Magazine / MagCloud Print (Video Magazines + Print Orders)
+
+Video Magazines are managed in the dashboard; the app shows issues with an optional “Print” tab. Print checkout happens on MagCloud; we track intent and redirect via our own URL.
+
+### Public API (no auth required for read)
+
+**List magazine series**
+- `GET /api/magazines`
+- Returns: list of series (minimal: id, title, slug, cover_image_url, status).
+
+**List issues for a series**
+- `GET /api/magazines/{slug}/issues?status=published`
+- Returns: issue cards including `print: { enabled, cta_label }` (no MagCloud URLs in list).
+
+**Issue detail**
+- `GET /api/magazine-issues/{slug}` (or `GET /api/magazine-issues/{id}` by id)
+- Returns: issue with assets, access rules, and **print** (only when print enabled):
+  - `print.enabled`, `print.cta_label`, `print.magcloud_product_url`, `print.magcloud_viewer_url` (optional)
+  - For app: prefer opening **redirect URL** for tracking (see below).
+
+### Tracking and redirect
+
+**Print redirect (tracking + safe redirect)**
+- `GET /r/magazine/{id}/print` or `GET /api/r/magazine/{id}/print`
+- Server logs a `click_print` event (optional: session_id, user_id if logged in), then **redirects 302** to the stored MagCloud product URL for that issue.
+- Clients should open this URL (in-app browser / WebView or new tab) so all print traffic is tracked and URLs stay server-side.
+
+**Post print event (optional, for app analytics)**
+- `POST /api/magazine-issues/{id}/print/events`
+- Body: `{ "event": "click_print" | "return_from_magcloud" | "copied_link", "session_id": "..." }`
+- Auth: optional (sanctum); `user_id` stored when present.
+
+### Response shape (issue detail, print fragment)
+
+```json
+{
+  "issue": {
+    "id": 1,
+    "title": "Koncentrate Vol. 3 — The Builders",
+    "slug": "koncentrate-vol-3-builders",
+    "print": {
+      "enabled": true,
+      "cta_label": "Order Collector Print",
+      "magcloud_product_url": "https://www.magcloud.com/...",
+      "magcloud_viewer_url": "https://www.magcloud.com/...",
+      "redirect_url": "https://your-domain.com/r/magazine/1/print"
+    }
+  }
+}
+```
+
+When `print.enabled` is false, omit `magcloud_*` and `redirect_url` or return `print: { enabled: false }`.
+
+### Admin (dashboard)
+
+- Magazine series: CRUD (title, slug, cover, description, status).
+- Issue editor: basics (title, slug, release date, cover, summary), content (assets), access, and **Print (MagCloud)**:
+  - Toggle: Print enabled.
+  - If enabled: MagCloud product URL (required, HTTPS, optionally validate host contains `magcloud.com`).
+  - Optional: MagCloud viewer/preview URL, CTA label (dropdown or custom).
+  - “Test Open” opens redirect URL in new tab.
+
+### Security
+
+- MagCloud URLs stored and validated server-side only; redirect endpoint uses stored URL (no client-supplied URL).
+- Auth not shared with MagCloud; no PII passed in query params.
+
+---
+
+---
+
+## Media Radar (automated YouTube / Vimeo discovery)
+
+Media Radar is an **admin-only** feature. It adds no new mobile endpoints and no
+new contract for the Flutter app.
+
+Approved candidates are published through the existing publishing pipeline as
+normal movies (`entertainments` with `type = movie`), so the app sees them
+through the endpoints it already uses. Third-party videos are stored as:
+
+- `video_upload_type` = `YouTube` or `Vimeo`
+- `video_url_input` = the provider watch URL
+
+The app plays them the same way it plays any other movie with those upload
+types. Cover art may be a remote `https://i.ytimg.com/...` or
+`https://i.vimeocdn.com/...` URL rather than a local file name; the app already
+handles both because `setBaseUrlWithFileName()` returns remote URLs unchanged.
+
+Provider API keys live in the server environment only and are never returned by
+any API response. See `MEDIA_RADAR.md` for the full feature documentation.
+
 ## Version History
 - **v1.0** (2025-01-16): Initial implementation with `/api/me` endpoint
+- **v1.1** (2026-02-04): Magazine / MagCloud print API and redirect contract
+- **v1.2** (2026-09-01): Media Radar added (admin only, no mobile contract change)

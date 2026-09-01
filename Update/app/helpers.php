@@ -760,10 +760,26 @@ function storeMediaFile($module, $files, $key = 'file_url')
 function getMediaUrls($searchQuery = null, $perPage = 21, $page = 1)
 {
     // $activeDisk = DB::table('settings')->where('name', 'disc_type')->value('val') ?? env('ACTIVE_STORAGE','local');
-    $activeDisk = env('ACTIVE_STORAGE'); // set on live server
+    $activeDisk = env('ACTIVE_STORAGE', config('filesystems.default', 'local')); // set on live server
+    if (!is_string($activeDisk) || $activeDisk === '') {
+        $activeDisk = 'local';
+    }
 
     $folder = $activeDisk === 'local' ? 'public/' : '';
     $files = Storage::disk($activeDisk)->allFiles($folder);
+
+    // Only show common media types (images/videos) in the media picker/library.
+    $allowedExtensions = [
+        'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'tif', 'tiff', 'ico',
+        'mp4', 'mov', 'avi', 'webm', 'mkv', 'm4v',
+    ];
+    $files = array_values(array_filter($files, function ($file) use ($allowedExtensions) {
+        if (!is_string($file) || $file === '') {
+            return false;
+        }
+        $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+        return in_array($ext, $allowedExtensions, true);
+    }));
 
     if ($searchQuery) {
         $files = array_filter($files, function ($file) use ($searchQuery) {

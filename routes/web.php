@@ -29,7 +29,9 @@ use App\Http\Controllers\Auth\WebQrLoginController;
 */
 
 // Auth Routes
-require __DIR__ . '/auth.php';
+if (file_exists(__DIR__ . '/auth.php')) {
+    require __DIR__ . '/auth.php';
+}
 
 
 Route::group(['middleware' => ['checkInstallation']], function () {

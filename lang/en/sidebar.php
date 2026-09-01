@@ -60,4 +60,15 @@ return [
     'token_users' => 'Token Users',
     'rent_history'=>'Rent History',
 
+    // Video Magazines
+    'media_radar' => 'Media Radar',
+    'media_radar_overview' => 'Overview',
+    'media_radar_queue' => 'Approval Queue',
+    'media_radar_rules' => 'Search Parameters',
+    'media_radar_sources' => 'Sources',
+    'media_radar_runs' => 'Search Runs',
+    'media_radar_settings' => 'Media Radar Settings',
+    'video_magazines' => 'Video Magazines',
+    'magazine_series' => 'Magazine Series',
+    'magazine_issues' => 'Magazine Issues',
 ];

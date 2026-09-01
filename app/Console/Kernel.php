@@ -25,6 +25,14 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('notifications:send-ppv-expiry-reminders')->dailyAt('08:00');
 
+        /*
+         * Media Radar. Discovery, trusted-creator checks and housekeeping all
+         * run from the scheduler; nothing is ever triggered by a page request.
+         */
+        $schedule->command('media-radar:discover')->hourly()->withoutOverlapping();
+        $schedule->command('media-radar:watch-sources')->everySixHours()->withoutOverlapping();
+        $schedule->command('media-radar:expire-candidates')->dailyAt('03:30');
+
     }
 
     /**

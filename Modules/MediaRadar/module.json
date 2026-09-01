@@ -1,0 +1,13 @@
+{
+    "name": "MediaRadar",
+    "alias": "mediaradar",
+    "description": "Automated YouTube + Vimeo video discovery, editorial review and publishing",
+    "keywords": ["media", "radar", "youtube", "vimeo", "discovery"],
+    "priority": 0,
+    "providers": [
+        "Modules\\MediaRadar\\Providers\\MediaRadarServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

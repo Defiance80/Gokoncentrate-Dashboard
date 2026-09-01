@@ -1,0 +1,13 @@
+{
+    "name": "Magazine",
+    "alias": "magazine",
+    "description": "Video Magazines and MagCloud print orders",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Magazine\\Providers\\MagazineServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

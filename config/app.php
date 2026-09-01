@@ -216,6 +216,8 @@ return [
         Modules\LiveTV\Providers\RouteServiceProvider::class,
         Modules\Constant\Providers\RouteServiceProvider::class,
         Modules\Banner\Providers\RouteServiceProvider::class,
+        Modules\Magazine\Providers\MagazineServiceProvider::class,
+        Modules\Magazine\Providers\RouteServiceProvider::class,
         Modules\Constant\Providers\RouteServiceProvider::class,
         Modules\Frontend\Providers\FrontendServiceProvider::class,
         App\Providers\StreamContentServiceProvider::class,

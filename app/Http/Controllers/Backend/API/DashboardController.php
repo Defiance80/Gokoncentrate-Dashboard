@@ -368,6 +368,7 @@ public function getTrandingData(Request $request){
 
         $responseData = [
            'slider' => $sliders,
+                        'slider' => $sliders,
            'continue_watch' => $continueWatch,
            'top_10' => [
               'name' => MobileSetting::where('slug', 'top-10')->value('name') ?? 'Top 10',
@@ -1241,6 +1242,7 @@ public function getTrandingData(Request $request){
                         }
 
                     return [
+                        'slider' => $sliders,
                         'continue_watch' => $continueWatch,
                         'latest_movie' => [
                                 'name' => $sectionNames['latest-movies'],

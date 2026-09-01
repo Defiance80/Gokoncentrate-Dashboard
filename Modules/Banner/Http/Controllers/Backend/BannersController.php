@@ -15,6 +15,7 @@ use Modules\LiveTV\Models\LiveTV;
 use Modules\LiveTV\Models\LiveTvChannel;
 use Modules\Banner\Services\BannerService;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 use Modules\Video\Models\Video;
 
 class BannersController extends Controller
@@ -321,6 +322,10 @@ class BannersController extends Controller
             $data['poster_tv_url'] = $data['poster_tv_url'] ? extractFileNameFromUrl($data['poster_tv_url'], 'banner') : null;
         }
 
+        if (!Schema::hasColumn('banners', 'description')) {
+            unset($data['description']);
+        }
+
         $this->bannerService->create($data, $request);
         $title = __('banner.title');
         $message = trans('messages.create_form_banner', ['form' => $title]);
@@ -412,7 +417,9 @@ class BannersController extends Controller
             $data['poster_tv_url'] = $data['poster_tv_url'] ? extractFileNameFromUrl($data['poster_tv_url'], 'banner') : null;
         }
 
-
+        if (!Schema::hasColumn('banners', 'description')) {
+            unset($data['description']);
+        }
 
         $banner->update($data);
 

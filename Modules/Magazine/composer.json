@@ -1,0 +1,10 @@
+{
+    "name": "gokoncentrate/magazine",
+    "description": "Video Magazines and MagCloud print module",
+    "type": "laravel-module",
+    "autoload": {
+        "psr-4": {
+            "Modules\\Magazine\\": ""
+        }
+    }
+}

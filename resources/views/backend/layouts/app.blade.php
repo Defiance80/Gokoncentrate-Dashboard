@@ -15,7 +15,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{{ $faviconUrl }}">
     <link rel="shortcut icon" href="{{ $faviconUrl }}">
     <meta name="setting_options" content="{{ setting('customization_json') }}">
-    <meta name="base-url" content="{{ env('APP_URL') }}">
+    <meta name="base-url" content="{{ url('/') }}">
 
     <title>@yield('title', 'Admin Dashboard')</title>
 

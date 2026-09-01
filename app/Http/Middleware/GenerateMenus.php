@@ -328,6 +328,84 @@ class GenerateMenus
                 'order' => 0,
             ]);
 
+            // Media Radar: automated YouTube + Vimeo discovery and review
+            $media_radar_menu = $this->parentMenu($menu, [
+                'icon' => 'ph ph-radar',
+                'title' => __('sidebar.media_radar'),
+                'nickname' => 'media_radar',
+                'permission' => ['view_media_radar'],
+                'order' => 0,
+            ]);
+            $this->childMain($media_radar_menu, [
+                'icon' => 'ph ph-gauge',
+                'title' => __('sidebar.media_radar_overview'),
+                'route' => 'backend.media-radar.index',
+                'active' => 'app/media-radar',
+                'permission' => ['view_media_radar'],
+                'order' => 0,
+            ]);
+            $this->childMain($media_radar_menu, [
+                'icon' => 'ph ph-tray',
+                'title' => __('sidebar.media_radar_queue'),
+                'route' => 'backend.media-radar-candidates.index',
+                'active' => 'app/media-radar/candidates',
+                'permission' => ['view_media_radar'],
+                'order' => 0,
+            ]);
+            $this->childMain($media_radar_menu, [
+                'icon' => 'ph ph-crosshair',
+                'title' => __('sidebar.media_radar_rules'),
+                'route' => 'backend.media-radar-rules.index',
+                'active' => 'app/media-radar/rules',
+                'permission' => ['view_media_radar'],
+                'order' => 0,
+            ]);
+            $this->childMain($media_radar_menu, [
+                'icon' => 'ph ph-user-focus',
+                'title' => __('sidebar.media_radar_sources'),
+                'route' => 'backend.media-radar-sources.index',
+                'active' => 'app/media-radar/sources',
+                'permission' => ['view_media_radar'],
+                'order' => 0,
+            ]);
+            $this->childMain($media_radar_menu, [
+                'icon' => 'ph ph-clock-counter-clockwise',
+                'title' => __('sidebar.media_radar_runs'),
+                'route' => 'backend.media-radar-runs.index',
+                'active' => 'app/media-radar/runs',
+                'permission' => ['view_media_radar'],
+                'order' => 0,
+            ]);
+            $this->childMain($media_radar_menu, [
+                'icon' => 'ph ph-sliders',
+                'title' => __('sidebar.media_radar_settings'),
+                'route' => 'backend.media-radar-settings.index',
+                'active' => 'app/media-radar/settings',
+                'permission' => ['manage_media_radar_settings'],
+                'order' => 0,
+            ]);
+
+            $magazine_menu = $this->parentMenu($menu, [
+                'icon' => 'ph ph-book-open',
+                'title' => __('sidebar.video_magazines'),
+                'nickname' => 'video_magazines',
+                'order' => 0,
+            ]);
+            $this->childMain($magazine_menu, [
+                'icon' => 'ph ph-books',
+                'title' => __('sidebar.magazine_series'),
+                'route' => 'backend.magazines.index',
+                'active' => 'app/magazines',
+                'order' => 0,
+            ]);
+            $this->childMain($magazine_menu, [
+                'icon' => 'ph ph-file-text',
+                'title' => __('sidebar.magazine_issues'),
+                'route' => 'backend.magazine-issues.index',
+                'active' => 'app/magazine-issues',
+                'order' => 0,
+            ]);
+
             $this->mainRoute($menu, [
                 'icon' => 'fa-brands fa-intercom',
                 'title' => __('sidebar.cont'),

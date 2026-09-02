@@ -40,6 +40,8 @@ class RequireLogin
         'login/*',
 
         // --- Admin sign-in, kept on its own original URL ----------------
+        // /admin itself only redirects to /admin/login.
+        'admin',
         'admin/login',
         'admin/forgot-password',
         'admin/reset-password/*',

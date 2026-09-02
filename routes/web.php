@@ -33,6 +33,9 @@ if (file_exists(__DIR__ . '/auth.php')) {
     require __DIR__ . '/auth.php';
 }
 
+// The admin sign-in lives at /admin/login; send anyone who types /admin there.
+Route::redirect('/admin', '/admin/login');
+
 
 Route::group(['middleware' => ['checkInstallation']], function () {
 

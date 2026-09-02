@@ -36,6 +36,7 @@ class RequireLoginTest extends TestCase
             'google redirect' => ['auth/google'],
             'google callback' => ['auth/google/callback'],
             'apple callback' => ['auth/apple/callback'],
+            'admin shortcut' => ['admin'],
             'admin login' => ['admin/login'],
             'admin forgot password' => ['admin/forgot-password'],
             'admin reset password' => ['admin/reset-password/tok3n'],
@@ -82,6 +83,8 @@ class RequireLoginTest extends TestCase
             'subscription plan' => ['subscription-plan'],
             'account settings' => ['account-setting'],
             'admin dashboard' => ['app/dashboard'],
+            'admin-ish content path' => ['administrators'],
+            'admin sub path' => ['admin/users'],
             'media radar' => ['app/media-radar'],
             'stream' => ['video/stream/abc'],
         ];

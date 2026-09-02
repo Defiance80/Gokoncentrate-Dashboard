@@ -35,6 +35,8 @@
 
     @include('frontend::components.partials.head.plugins')
 
+    @stack('styles')
+
 </head>
 
 <body>

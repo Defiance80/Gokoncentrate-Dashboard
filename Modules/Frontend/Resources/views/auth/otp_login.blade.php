@@ -5,9 +5,11 @@
 @endsection
 
 @section('content')
+    @include('frontend::components.partials.auth_backdrop')
+
     <div id="login">
 
-        <div class="vh-100" style="background-image: url('{{ asset('/dummy-images/login_banner.jpg') }}')">
+        <div class="vh-100 gk-auth-stage">
             <div class="container">
                 <div class="row justify-content-center align-items-center height-self-center vh-100">
 

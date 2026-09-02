@@ -17,7 +17,9 @@ class CheckUser
     public function handle($request, Closure $next)
     {
         if (!Auth::check()) {
-            return redirect()->route('login-page');
+            // Same screen as login-page, but /login is the canonical sign-in
+            // URL, so every signed-out redirect lands on one address.
+            return redirect()->route('login');
          }
         
         return $next($request);

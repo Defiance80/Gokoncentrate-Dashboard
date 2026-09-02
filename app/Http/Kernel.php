@@ -13,6 +13,32 @@ class Kernel extends HttpKernel
      *
      * @var array<int, class-string|string>
      */
+    /**
+     * The priority-sorted list of middleware.
+     *
+     * Laravel's default list is reproduced here with one addition: RequireLogin
+     * is placed after the session starts but *before* AuthenticatesRequests.
+     * Without that, "auth" runs first on admin routes, throws, and the
+     * exception handler sends every signed-out visitor to the admin sign-in,
+     * including subscribers who were only trying to reach the front end.
+     *
+     * @var array<int, class-string|string>
+     */
+    protected $middlewarePriority = [
+        \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
+        \Illuminate\Cookie\Middleware\EncryptCookies::class,
+        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        \App\Http\Middleware\RequireLogin::class,
+        \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class,
+        \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        \Illuminate\Routing\Middleware\ThrottleRequestsWithRedis::class,
+        \Illuminate\Contracts\Session\Middleware\AuthenticatesSessions::class,
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        \Illuminate\Auth\Middleware\Authorize::class,
+    ];
+
     protected $middleware = [
         // \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
@@ -38,6 +64,9 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\SetLocale::class,
+            // Gates the public site behind a login; see RequireLogin for the
+            // short list of paths that stay reachable when signed out.
+            \App\Http\Middleware\RequireLogin::class,
            // \App\Http\Middleware\SetActiveStorage::class,
         //    \App\Http\Middleware\Authenticate::class,
             // \App\Http\Middleware\CheckDeviceAuthorization::class,

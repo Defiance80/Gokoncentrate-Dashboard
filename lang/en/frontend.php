@@ -5,6 +5,7 @@ return [
     'sign_sub_title' => 'Create Your Account for unforgettable Experience',
     'sign_up' => 'Sign up',
     'sign_in' => 'Sign In',
+    'sign_in_required' => 'Please sign in to continue.',
     'already_have_account' => 'Already have an account?',
     'login' => 'Login',
     'logout' => 'Logout',

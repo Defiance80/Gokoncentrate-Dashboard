@@ -498,11 +498,21 @@ if (!function_exists('setting')) {
     }
 }
 
+/**
+ * Application name shown across the site.
+ *
+ * Declared at the top level, so it is compiled before the guarded declaration
+ * earlier in this file and is the one that actually runs.
+ *
+ * Falls back to config('app.name') (APP_NAME) when the setting row is missing,
+ * rather than dereferencing null, which used to throw on any page that shows
+ * the brand name.
+ */
 function app_name()
 {
-        $value = App\Models\Setting::where('name','app_name')->select('val')->first();
-        $app_name = $value->val;
-        return is_null($app_name) ? : $app_name;
+    $app_name = App\Models\Setting::where('name', 'app_name')->value('val');
+
+    return filled($app_name) ? $app_name : config('app.name');
 }
 
 

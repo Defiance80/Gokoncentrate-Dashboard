@@ -5,10 +5,11 @@
 @endsection
 
 @section('content')
+    @include('frontend::components.partials.auth_backdrop')
+
     <div id="login">
 
-        <div class="vh-100"
-            style="background: url('{{ asset('/dummy-images/login_banner.jpg') }}'); background-size: cover; background-repeat: no-repeat; position: relative;min-height:500px; overflow-y:auto;">
+        <div class="vh-100 gk-auth-stage">
             <div class="container">
                 <div class="row justify-content-center align-items-center height-self-center vh-100">
                     <div class="col-lg-5 col-md-8 col-11 align-self-center">

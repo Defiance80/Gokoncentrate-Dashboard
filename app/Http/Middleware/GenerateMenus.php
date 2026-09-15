@@ -353,6 +353,14 @@ class GenerateMenus
                 'order' => 0,
             ]);
             $this->childMain($media_radar_menu, [
+                'icon' => 'ph ph-link',
+                'title' => __('sidebar.media_radar_import'),
+                'route' => 'backend.media-radar-candidates.import.create',
+                'active' => 'app/media-radar/candidates/import',
+                'permission' => ['add_media_radar'],
+                'order' => 0,
+            ]);
+            $this->childMain($media_radar_menu, [
                 'icon' => 'ph ph-crosshair',
                 'title' => __('sidebar.media_radar_rules'),
                 'route' => 'backend.media-radar-rules.index',

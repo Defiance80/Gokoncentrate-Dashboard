@@ -71,4 +71,5 @@ return [
     'video_magazines' => 'Video Magazines',
     'magazine_series' => 'Magazine Series',
     'magazine_issues' => 'Magazine Issues',
+    'media_radar_import' => 'Add by URL',
 ];

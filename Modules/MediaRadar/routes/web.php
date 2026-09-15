@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\MediaRadar\Http\Controllers\Backend\MediaCandidatesController;
+use Modules\MediaRadar\Http\Controllers\Backend\MediaImportController;
 use Modules\MediaRadar\Http\Controllers\Backend\MediaDiscoveryRulesController;
 use Modules\MediaRadar\Http\Controllers\Backend\MediaRadarDashboardController;
 use Modules\MediaRadar\Http\Controllers\Backend\MediaRadarSettingsController;
@@ -28,6 +29,9 @@ Route::group(['prefix' => 'app', 'as' => 'backend.', 'middleware' => ['auth', 'a
     Route::group(['prefix' => 'media-radar/candidates', 'as' => 'media-radar-candidates.'], function () {
         Route::get('/', [MediaCandidatesController::class, 'index'])->name('index');
         Route::get('index_data', [MediaCandidatesController::class, 'index_data'])->name('index_data');
+        Route::get('import', [MediaImportController::class, 'create'])->name('import.create');
+        Route::post('import/preview', [MediaImportController::class, 'preview'])->name('import.preview');
+        Route::post('import', [MediaImportController::class, 'store'])->name('import.store');
         Route::post('bulk-action', [MediaCandidatesController::class, 'bulk_action'])->name('bulk_action');
         Route::get('{candidate}', [MediaCandidatesController::class, 'show'])->whereNumber('candidate')->name('show');
         Route::put('{candidate}', [MediaCandidatesController::class, 'update'])->whereNumber('candidate')->name('update');

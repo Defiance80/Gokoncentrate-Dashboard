@@ -11,7 +11,7 @@ return [
     'show' => 'Shows',
     'seasons' => 'Seasons',
     'episodes' => 'Episodes',
-    'live_tv' => 'Live TV',
+    'live_tv' => 'Media Series',
     'tv_category' => 'TV Category',
     'tv_channel' => 'TV Channel',
     'cast' => 'Cast & Crew',

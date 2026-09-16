@@ -11,7 +11,7 @@ return [
     'show' => 'عرض',
     'seasons' => 'مواسم',
     'episodes' => 'حلقات',
-    'live_tv' => 'تلفاز مباشر',
+    'live_tv' => 'Media Series',
     'tv_category' => 'فئة التلفاز',
     'tv_channel' => 'قناة تلفزيونية',
     'cast' => 'طاقم العمل',

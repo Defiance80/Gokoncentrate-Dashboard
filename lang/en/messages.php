@@ -688,7 +688,7 @@ return [
     'tvshow' => 'TV Show',
     'mobile' => 'Mobile',
     'mail' => 'Mail',
-    'channel' => 'Live TV',
+    'channel' => 'Media Series',
     'home_page' => 'Home Page',
     'player' => 'Player',
     'header' => 'Header',

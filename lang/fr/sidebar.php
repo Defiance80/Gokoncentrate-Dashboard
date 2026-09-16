@@ -11,7 +11,7 @@ return [
     'show' => 'Émissions',
     'seasons' => 'Saisons',
     'episodes' => 'Épisodes',
-    'live_tv' => 'TV en direct',
+    'live_tv' => 'Media Series',
     'tv_category' => 'Catégorie TV',
     'tv_channel' => 'Chaîne TV',
     'cast' => 'Distribution & Équipe',

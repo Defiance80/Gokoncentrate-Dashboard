@@ -11,7 +11,7 @@ return [
     'show' => 'Εμφάνιση',
     'seasons' => 'Σεζόν',
     'episodes' => 'Επεισόδια',
-    'live_tv' => 'Ζωντανή TV',
+    'live_tv' => 'Media Series',
     'tv_category' => 'Κατηγορία τηλεόρασης',
     'tv_channel' => 'Κανάλι TV',
     'cast' => 'Καστ & Crew',

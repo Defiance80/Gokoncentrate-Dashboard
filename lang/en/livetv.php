@@ -7,7 +7,7 @@ return[
     'add_tvchannel'=>'New TV Channel',
     'edit_tvchannel'=>'Edit TV Channel',
     'checkall' => 'Check All',
-    'title-livetv' => 'Live TV',
+    'title-livetv' => 'Media Series',
     'lbl_name' => 'Name',
     'livetv_category_list' => 'LiveTV Category List',
     'tvchannel' => 'TV Channel',

@@ -23,7 +23,7 @@ Route::prefix('studio')->name('studio.')->group(function () {
     });
 
     Route::middleware('publisher.auth')->group(function () {
-        Route::get('/', [StudioController::class, 'dashboard'])->name('dashboard');
+        Route::get('dashboard', [StudioController::class, 'dashboard'])->name('dashboard');
         Route::post('logout', [PublisherAuthController::class, 'logout'])->name('logout');
 
         Route::get('submissions', [SubmissionController::class, 'index'])->name('submissions.index');

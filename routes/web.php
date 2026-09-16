@@ -36,6 +36,11 @@ if (file_exists(__DIR__ . '/auth.php')) {
 // The admin sign-in lives at /admin/login; send anyone who types /admin there.
 Route::redirect('/admin', '/admin/login');
 
+// Publisher Studio lives at /studio/*. Register the bare /studio entry here so
+// it resolves before the Page module's catch-all {slug} route; publisher.auth
+// then routes guests to the studio sign-in and publishers to their dashboard.
+Route::redirect('/studio', '/studio/dashboard');
+
 
 Route::group(['middleware' => ['checkInstallation']], function () {
 

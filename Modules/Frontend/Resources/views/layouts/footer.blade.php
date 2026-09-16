@@ -120,6 +120,9 @@
                         <li>
                             <a href="{{ route('faq') }}">{{ __('frontend.faq') }}</a>
                         </li>
+                        <li>
+                            <a href="{{ route('studio.register') }}">Publish with us</a>
+                        </li>
                     </ul>
                 </div>
             </div>

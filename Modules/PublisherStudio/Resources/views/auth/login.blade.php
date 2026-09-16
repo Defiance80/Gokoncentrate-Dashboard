@@ -1,28 +1,84 @@
-@extends('publisherstudio::layouts.guest')
-@section('title','Publisher Sign In')
+@extends('frontend::layouts.auth_layout')
+
+@section('title', 'Publisher Studio — ' . GetSettingValue('app_name'))
+
 @section('content')
-<div class="gk-card">
-  <h1 style="margin:0 0 .3rem;font-size:1.25rem">Sign in to your studio</h1>
-  <p class="gk-muted" style="margin:0 0 1.2rem;font-size:.9rem">Create and manage your VeeMags, podcasts and short films.</p>
+    @include('frontend::components.partials.auth_backdrop')
 
-  @if($errors->any())<div class="gk-alert err">{{ $errors->first() }}</div>@endif
-  @if(session('status'))<div class="gk-alert ok">{{ session('status') }}</div>@endif
+    <div class="min-vh-100 gk-auth-stage">
+        <div class="container">
+            <div class="row justify-content-center align-items-center min-vh-100">
+                <div class="col-lg-5 col-md-8 col-11 align-self-center">
+                    <div class="user-login-card card my-5">
+                        <div class="text-center auth-heading">
+                            @php
+                                $logo = GetSettingValue('dark_logo') ? setBaseUrlWithFileName(GetSettingValue('dark_logo'),'image','logos') : asset('img/logo/dark_logo.png');
+                            @endphp
+                            <a href="{{ url('/') }}" class="d-inline-block">
+                                <img src="{{ $logo }}" class="img-fluid logo h-4 mb-4">
+                            </a>
+                            <h5>Publisher Studio</h5>
+                            <p class="fs-14">Sign in to create and manage your publications.</p>
+                        </div>
 
-  <form method="post" action="{{ route('studio.login.attempt') }}">
-    @csrf
-    <div class="gk-field">
-      <label class="gk-label" for="email">Email</label>
-      <input class="gk-input" type="email" id="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="email">
+                        @if ($errors->any())
+                            <p class="text-danger">{{ $errors->first() }}</p>
+                        @endif
+                        @if (session('status'))
+                            <p class="text-success">{{ session('status') }}</p>
+                        @endif
+
+                        <form method="post" action="{{ route('studio.login.attempt') }}" class="requires-validation" novalidate>
+                            @csrf
+                            <div class="mb-3">
+                                <div class="input-group mb-0">
+                                    <span class="input-group-text"><i class="ph ph-envelope"></i></span>
+                                    <input type="email" name="email" id="email" class="form-control"
+                                        placeholder="Enter email" value="{{ old('email') }}" required autofocus>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="input-group mb-0">
+                                    <span class="input-group-text"><i class="ph ph-lock-key"></i></span>
+                                    <input type="password" name="password" id="password" class="form-control"
+                                        placeholder="Enter password" required>
+                                    <span class="input-group-text" id="togglePassword" style="cursor:pointer;">
+                                        <i class="ph ph-eye-slash" id="toggleIcon"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <label class="d-flex align-items-center mb-3">
+                                <input class="form-check-input m-0 me-2" type="checkbox" name="remember" value="1">
+                                Keep me signed in
+                            </label>
+
+                            <div class="full-button text-center">
+                                <button type="submit" class="btn btn-primary w-100">Sign In</button>
+                                <p class="mt-2 mb-0 fw-normal">New publisher?
+                                    <a href="{{ route('studio.register') }}" class="ms-1 btn btn-link">Apply now</a>
+                                </p>
+                                <a href="{{ url('/') }}" class="d-block mt-4 btn btn-link">&larr; Back to {{ GetSettingValue('app_name') }}</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="gk-field">
-      <label class="gk-label" for="password">Password</label>
-      <input class="gk-input" type="password" id="password" name="password" required autocomplete="current-password">
-    </div>
-    <label style="display:flex;gap:.5rem;align-items:center;color:var(--mut);font-size:.85rem;margin-bottom:1.1rem">
-      <input type="checkbox" name="remember" value="1"> Keep me signed in
-    </label>
-    <button class="gk-btn block" type="submit">Sign In</button>
-  </form>
-</div>
-<div class="auth-foot">New publisher? <a href="{{ route('studio.register') }}">Apply for a studio account</a></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var t = document.getElementById('togglePassword'),
+                p = document.getElementById('password'),
+                i = document.getElementById('toggleIcon');
+            if (t && p && i) t.addEventListener('click', function () {
+                var hidden = p.type === 'password';
+                p.type = hidden ? 'text' : 'password';
+                i.classList.toggle('ph-eye', hidden);
+                i.classList.toggle('ph-eye-slash', !hidden);
+            });
+        });
+    </script>
 @endsection

@@ -51,6 +51,13 @@ class RequireLogin
         'install',
         'install/*',
 
+        // --- Publisher Studio (separate "publisher" auth guard) ---------
+        // The studio has its own sign-in and its own guard. Its authenticated
+        // pages are protected by the publisher.auth middleware, so the site-wide
+        // user login must not shadow them or block the publisher sign-in screen.
+        'studio',
+        'studio/*',
+
         // TV sign-in polls this while the viewer authorises the screen.
         'web-qr-status/*',
 

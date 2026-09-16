@@ -47,6 +47,11 @@
                 @include('frontend::components.section.veemag')
             </div>
 
+            {{-- Media Series (Podcasts) rail: appears only when podcasts exist. --}}
+            <div class="section-wraper">
+                @include('frontend::components.section.podcast')
+            </div>
+
             @if (isenablemodule('movie') == 1)
                 <div id="top-10-moive-section" class="section-wraper scroll-section section-hidden">
                     @if (isset($cachedResult['top_10']['data']) && count($cachedResult['top_10']['data']) > 0)

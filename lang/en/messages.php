@@ -2011,4 +2011,7 @@ return [
     'is_veemag_on' => 'This is a VeeMag (click to make it a TV Show)',
     'marked_veemag' => 'Marked as VeeMag.',
     'marked_tvshow' => 'Marked as TV Show.',
+    'mark_podcast' => 'Mark as Podcast',
+    'is_podcast_on' => 'This is a Podcast (click to make it a TV Show)',
+    'marked_podcast' => 'Marked as Podcast.',
 ];

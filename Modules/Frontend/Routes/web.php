@@ -95,6 +95,7 @@ Route::get('/movies', [MovieController::class, 'movieList'])->middleware('checkM
 Route::get('/movie-details/{id}', [MovieController::class, 'movieDetails'])->middleware('checkModule')->name('movie-details');
 Route::get('/tv-shows', [TvShowController::class, 'tvShowList'])->middleware('checkModule')->name('tv-shows');
 Route::get('/veemags', [TvShowController::class, 'veeMagList'])->middleware('checkModule')->name('veemags');
+Route::get('/media-series', [TvShowController::class, 'mediaSeriesList'])->middleware('checkModule')->name('media-series');
 Route::get('/veemag/{slug}', [VeeMagController::class, 'detail'])->name('veemag.detail');
 Route::get('/veemag/{slug}/watch', [VeeMagController::class, 'watch'])->name('veemag.watch');
 Route::get('/tvshow-details/{id}', [TvShowController::class, 'tvshowDetail'])->middleware('checkModule')->name('tvshow-details');

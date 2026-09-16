@@ -517,5 +517,8 @@ return [
     'mobile_already_exists' => 'The mobile number has already been taken.',
     'veemags' => 'VeeMags',
     'issues' => 'Issues',
+    'media_series' => 'Media Series',
+    'media_series_sub' => 'Podcasts and music video series — watch through the episodes.',
+    'podcast' => 'Podcast',
     'volumes' => 'Volumes',
 ];

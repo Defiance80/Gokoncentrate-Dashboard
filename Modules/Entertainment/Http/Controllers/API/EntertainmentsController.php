@@ -189,6 +189,13 @@ class EntertainmentsController extends Controller
         ->with('episodeV2')
         ->where('entertainments.type', 'tvshow')
         ->when($request->filled('is_veemag'), fn($q) => $q->where('entertainments.is_veemag', (int) $request->input('is_veemag')))
+        // Podcasts live in their own "Media Series" section: include them only when
+        // asked (is_podcast=1); otherwise keep them out of TV Shows / VeeMags.
+        ->when(
+            $request->filled('is_podcast'),
+            fn($q) => $q->where('entertainments.is_podcast', (int) $request->input('is_podcast')),
+            fn($q) => $q->where('entertainments.is_podcast', 0)
+        )
         ->where('entertainments.release_date', '<=', now()->format('Y-m-d'))
         ->whereHas('episodeV2')
         ->where('entertainments.status', 1)
@@ -220,7 +227,10 @@ class EntertainmentsController extends Controller
 
         $html = '';
         if (!empty($responseData)) {
-            $html .= view('frontend::components.card.card_tvshow', ['values' => $responseData])->render();
+            $cardView = $request->input('is_podcast')
+                ? 'frontend::components.card.card_podcast'
+                : 'frontend::components.card.card_tvshow';
+            $html .= view($cardView, ['values' => $responseData])->render();
         }
 
         return response()->json([
@@ -2140,6 +2150,11 @@ class EntertainmentsController extends Controller
         ->with('episodeV2')
         ->where('entertainments.type', 'tvshow')
         ->when($request->filled('is_veemag'), fn($q) => $q->where('entertainments.is_veemag', (int) $request->input('is_veemag')))
+        ->when(
+            $request->filled('is_podcast'),
+            fn($q) => $q->where('entertainments.is_podcast', (int) $request->input('is_podcast')),
+            fn($q) => $q->where('entertainments.is_podcast', 0)
+        )
         ->where('entertainments.release_date', '<=', Carbon::now()->format('Y-m-d'))
         ->groupBy('entertainments.id')
         ->whereHas('episodeV2');

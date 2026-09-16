@@ -16,6 +16,14 @@
                 title="{{ $data->is_veemag ? __('messages.is_veemag_on') : __('messages.mark_veemag') }}">
                 <i class="ph ph-magazine align-middle"></i></a>
         @endhasPermission
+        @hasPermission('edit_tvshows')
+            <a class="btn btn-{{ $data->is_podcast ? 'primary' : 'light' }}-subtle btn-sm fs-4 km-podcast-toggle"
+                href="javascript:void(0)" data-id="{{ $data->id }}"
+                data-url="{{ route('backend.tvshows.toggle_podcast', $data->id) }}"
+                data-bs-toggle="tooltip"
+                title="{{ $data->is_podcast ? __('messages.is_podcast_on') : __('messages.mark_podcast') }}">
+                <i class="ph ph-microphone align-middle"></i></a>
+        @endhasPermission
         <a class="btn btn-info-subtle btn-sm fs-4" data-bs-toggle="tooltip" title="{{ __('messages.details') }}"
             href="{{ route('backend.tvshows.details', $data->id) }}">
             <i class="ph ph-eye align-middle"></i>

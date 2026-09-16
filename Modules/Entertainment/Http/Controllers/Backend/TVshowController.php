@@ -577,14 +577,50 @@ class TVshowController extends Controller
         }
 
         $new = $show->is_veemag ? 0 : 1;
-        Entertainment::where('id', $id)->update(['is_veemag' => $new]);
+        // VeeMag and Podcast are mutually exclusive presentations of a tvshow.
+        $payload = ['is_veemag' => $new];
+        if ($new) {
+            $payload['is_podcast'] = 0;
+        }
+        Entertainment::where('id', $id)->update($payload);
         \Illuminate\Support\Facades\Cache::forget('nav_veemag_count');
         \Illuminate\Support\Facades\Cache::forget('nav_tvshow_count');
+        \Illuminate\Support\Facades\Cache::forget('nav_podcast_count');
 
         return response()->json([
             'status'     => true,
             'is_veemag'  => $new,
             'message'    => $new ? __('messages.marked_veemag') : __('messages.marked_tvshow'),
+        ]);
+    }
+
+    /**
+     * Flip a show between a normal TV Show and a Podcast (Media Series).
+     * Mutually exclusive with VeeMag. Query-builder update mirrors toggleVeemag.
+     */
+    public function togglePodcast($id)
+    {
+        abort_if(! auth()->user()->can('edit_tvshows'), 403);
+
+        $show = Entertainment::where('id', $id)->where('type', 'tvshow')->first();
+        if (! $show) {
+            return response()->json(['status' => false, 'message' => __('messages.not_found')], 404);
+        }
+
+        $new = $show->is_podcast ? 0 : 1;
+        $payload = ['is_podcast' => $new];
+        if ($new) {
+            $payload['is_veemag'] = 0;
+        }
+        Entertainment::where('id', $id)->update($payload);
+        \Illuminate\Support\Facades\Cache::forget('nav_podcast_count');
+        \Illuminate\Support\Facades\Cache::forget('nav_veemag_count');
+        \Illuminate\Support\Facades\Cache::forget('nav_tvshow_count');
+
+        return response()->json([
+            'status'      => true,
+            'is_podcast'  => $new,
+            'message'     => $new ? __('messages.marked_podcast') : __('messages.marked_tvshow'),
         ]);
     }
 }

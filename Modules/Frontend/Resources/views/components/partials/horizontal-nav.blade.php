@@ -5,6 +5,11 @@
     $kmVeeMagCount = \Illuminate\Support\Facades\Cache::remember('nav_veemag_count', 300, function () {
         return \Illuminate\Support\Facades\DB::table('entertainments')->where('type', 'tvshow')->where('is_veemag', 1)->where('status', 1)->whereNull('deleted_at')->count();
     });
+    $kmPodcastCount = \Illuminate\Support\Facades\Cache::remember('nav_podcast_count', 300, function () {
+        return \Illuminate\Support\Facades\Schema::hasColumn('entertainments', 'is_podcast')
+            ? \Illuminate\Support\Facades\DB::table('entertainments')->where('type', 'tvshow')->where('is_podcast', 1)->where('status', 1)->whereNull('deleted_at')->count()
+            : 0;
+    });
 @endphp
 <!-- Horizontal Menu Start -->
 <nav id="navbar_main" class="offcanvas mobile-offcanvas nav navbar navbar-expand-xl hover-nav horizontal-nav py-xl-0">
@@ -86,10 +91,10 @@
           <span class="item-name">{{__('frontend.coming_soon')}}</span>
         </a>
       </li>
-      @if(isenablemodule('livetv'))
+      @if($kmPodcastCount > 0)
       <li class="nav-item">
-        <a class="nav-link"  href="{{route('livetv')}}">
-          <span class="item-name">{{__('frontend.livetv')}}</span>
+        <a class="nav-link"  href="{{ route('media-series') }}">
+          <span class="item-name">{{__('frontend.media_series')}}</span>
         </a>
       </li>
       @endif

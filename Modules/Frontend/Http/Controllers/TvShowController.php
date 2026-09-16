@@ -236,7 +236,22 @@ class TvShowController extends Controller
             }
         }
 
+        // Podcasts reuse the same data but present a distinct "shift through the
+        // episodes" layout.
+        if (! empty($movieGuard->is_podcast)) {
+            return view('frontend::podcastDetail', compact('data', 'entertainment'));
+        }
+
         return view('frontend::tvshowDetail', compact('data', 'entertainment'));
+    }
+
+    /**
+     * Media Series (Podcasts) listing — same engine as TV Shows, filtered to
+     * podcasts. The view pins the API call to is_podcast=1.
+     */
+    public function mediaSeriesList($language = null)
+    {
+        return view('frontend::mediaSeries');
     }
 
     public function episodeDetail(Request $request, $slug)

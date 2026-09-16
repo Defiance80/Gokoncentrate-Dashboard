@@ -578,6 +578,8 @@ class TVshowController extends Controller
 
         $new = $show->is_veemag ? 0 : 1;
         Entertainment::where('id', $id)->update(['is_veemag' => $new]);
+        \Illuminate\Support\Facades\Cache::forget('nav_veemag_count');
+        \Illuminate\Support\Facades\Cache::forget('nav_tvshow_count');
 
         return response()->json([
             'status'     => true,

@@ -1,3 +1,11 @@
+@php
+    $kmTvShowCount = \Illuminate\Support\Facades\Cache::remember('nav_tvshow_count', 300, function () {
+        return \Illuminate\Support\Facades\DB::table('entertainments')->where('type', 'tvshow')->where('is_veemag', 0)->where('status', 1)->whereNull('deleted_at')->count();
+    });
+    $kmVeeMagCount = \Illuminate\Support\Facades\Cache::remember('nav_veemag_count', 300, function () {
+        return \Illuminate\Support\Facades\DB::table('entertainments')->where('type', 'tvshow')->where('is_veemag', 1)->where('status', 1)->whereNull('deleted_at')->count();
+    });
+@endphp
 <!-- Horizontal Menu Start -->
 <nav id="navbar_main" class="offcanvas mobile-offcanvas nav navbar navbar-expand-xl hover-nav horizontal-nav py-xl-0">
   <div class="container-fluid p-lg-0">
@@ -51,16 +59,20 @@
       </li>
       @endif
       @if(isenablemodule('tvshow'))
+@if($kmTvShowCount > 0)
       <li class="nav-item">
         <a class="nav-link"  href="{{ route('tv-shows') }}">
           <span class="item-name">{{__('frontend.tvshows')}}</span>
         </a>
       </li>
+      @endif
+@if($kmVeeMagCount > 0)
       <li class="nav-item">
         <a class="nav-link"  href="{{ route('veemags') }}">
           <span class="item-name">{{__('frontend.veemags')}}</span>
         </a>
       </li>
+      @endif
       @endif
       @if(isenablemodule('video'))
       <li class="nav-item">

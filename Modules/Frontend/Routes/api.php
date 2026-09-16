@@ -6,6 +6,7 @@ use Modules\Frontend\Http\Controllers\DashboardController;
 use Modules\Frontend\Http\Controllers\PerviewPaymentController;
 use Modules\Frontend\Http\Controllers\API\TransactionController;
 use Modules\Frontend\Http\Controllers\TvShowController;
+use Modules\Frontend\Http\Controllers\API\VeeMagApiController;
 
 /*
     |--------------------------------------------------------------------------
@@ -41,6 +42,10 @@ Route::get('v2/top-10-movie', [DashboardController::class, 'Top10MoviesV2']);
 Route::post('save-payment-pay-per-view', [PerviewPaymentController::class, 'savePaymentPayperview']);
 Route::post('start-date', [PerviewPaymentController::class, 'setStartDate']);
 Route::get('/transaction-history', [TransactionController::class, 'transactionHistory'])->name('api.transaction-history');
+
+// VeeMag platform (mobile): list of published issues + one issue with sections.
+Route::get('veemags', [VeeMagApiController::class, 'index'])->name('api.veemags.index');
+Route::get('veemags/{slug}', [VeeMagApiController::class, 'show'])->name('api.veemags.show');
 
 Route::get('/check-episode-purchase', [TvShowController::class, 'checkEpisodePurchase'])->name('check.episode.purchase');
 Route::get('/check-movie-purchase', [TvShowController::class, 'checkMoviePurchase'])->name('check.movie.purchase');

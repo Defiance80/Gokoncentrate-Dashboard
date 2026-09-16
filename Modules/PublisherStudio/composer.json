@@ -1,0 +1,9 @@
+{
+    "name": "gokoncentrate/publisher-studio",
+    "description": "Publisher Studio module",
+    "autoload": {
+        "psr-4": {
+            "Modules\PublisherStudio\\": ""
+        }
+    }
+}

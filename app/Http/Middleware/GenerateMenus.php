@@ -414,6 +414,29 @@ class GenerateMenus
                 'order' => 0,
             ]);
 
+            // Publisher Studio: review queue for publisher-submitted VeeMags,
+            // podcasts and short films + storage connection options.
+            $publisher_menu = $this->parentMenu($menu, [
+                'icon' => 'ph ph-users-three',
+                'title' => 'Publisher Studio',
+                'nickname' => 'publisher_studio',
+                'order' => 0,
+            ]);
+            $this->childMain($publisher_menu, [
+                'icon' => 'ph ph-tray',
+                'title' => 'Review Queue',
+                'route' => 'backend.publisher-submissions.index',
+                'active' => 'app/publisher-submissions',
+                'order' => 0,
+            ]);
+            $this->childMain($publisher_menu, [
+                'icon' => 'ph ph-hard-drives',
+                'title' => 'Storage Connections',
+                'route' => 'backend.publisher-storage.edit',
+                'active' => 'app/publisher-storage',
+                'order' => 0,
+            ]);
+
             $this->mainRoute($menu, [
                 'icon' => 'fa-brands fa-intercom',
                 'title' => __('sidebar.cont'),

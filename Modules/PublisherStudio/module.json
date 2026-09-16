@@ -1,0 +1,13 @@
+{
+    "name": "PublisherStudio",
+    "alias": "publisherstudio",
+    "description": "Publisher-facing studio: publishers register/login and submit VeeMags, podcasts and short films to an approval queue.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\PublisherStudio\Providers\PublisherStudioServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -224,7 +224,7 @@
                                                                         
                                                                         // If no specific thumbnail, use loader GIF from settings
                                                                         if (!$thumbnailImage) {
-                                                                            $thumbnailImage = GetSettingValue('loader_gif') ? setBaseUrlWithFileName(GetSettingValue('loader_gif'), 'image', 'logos') : asset('img/logo/loader.gif');
+                                                                            $thumbnailImage = GetSettingValue('loader_gif') ? setBaseUrlWithFileName(GetSettingValue('loader_gif'), 'image', 'logos') : asset('img/logo/loader.gif').'?v=gk2';
                                                                         }
                                                                     @endphp
 

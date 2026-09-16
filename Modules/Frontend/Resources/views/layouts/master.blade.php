@@ -161,7 +161,7 @@
     <div id="page-loader">
         <div class="loader-wrapper">
             @php
-                $loader_gif = GetSettingValue('loader_gif') ? setBaseUrlWithFileName(GetSettingValue('loader_gif'), 'image', 'logos') : asset('img/logo/loader.gif');
+                $loader_gif = GetSettingValue('loader_gif') ? setBaseUrlWithFileName(GetSettingValue('loader_gif'), 'image', 'logos') : asset('img/logo/loader.gif').'?v=gk2';
             @endphp
             <img src="{{ $loader_gif }}" alt="Loading..."
                 class="loader-gif" width="100" height="100">

@@ -106,7 +106,7 @@
                                     <select name="audience_size" class="form-select">
                                         @php $aud = old('audience_size'); @endphp
                                         <option value="" {{ $aud?'':'selected' }}>Select…</option>
-                                        @foreach (['Just starting','1K–10K','10K–100K','100K–1M','1M+'] as $a)
+                                        @foreach (['Just starting','1K-10K','10K-100K','100K-1M','1M+'] as $a)
                                             <option value="{{ $a }}" {{ $aud===$a?'selected':'' }}>{{ $a }}</option>
                                         @endforeach
                                     </select>

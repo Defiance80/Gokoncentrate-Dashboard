@@ -2007,4 +2007,8 @@ return [
 
     'genres_reports' => 'Genres Reports',
 
+    'mark_veemag' => 'Mark as VeeMag',
+    'is_veemag_on' => 'This is a VeeMag (click to make it a TV Show)',
+    'marked_veemag' => 'Marked as VeeMag.',
+    'marked_tvshow' => 'Marked as TV Show.',
 ];

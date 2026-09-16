@@ -67,6 +67,17 @@ class TvShowController extends Controller
         ));
     }
 
+    /**
+     * VeeMags listing — same engine as TV Shows, filtered to periodicals.
+     * The view pins the API call to is_veemag=1.
+     */
+    public function veeMagList($language = null)
+    {
+        $sliders = [];
+
+        return view('frontend::veeMags', compact('sliders'));
+    }
+
     public function tvshowDetail(Request $request, $slug)
     {
         $user_id = Auth::id();

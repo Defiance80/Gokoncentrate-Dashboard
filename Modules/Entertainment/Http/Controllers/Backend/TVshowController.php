@@ -561,4 +561,28 @@ class TVshowController extends Controller
 
 
 
+
+    /**
+     * Flip a show between a normal TV Show and a VeeMag (periodical).
+     * Uses a query-builder update to avoid the Entertainment model's
+     * constructor quirks.
+     */
+    public function toggleVeemag($id)
+    {
+        abort_if(! auth()->user()->can('edit_tvshows'), 403);
+
+        $show = Entertainment::where('id', $id)->where('type', 'tvshow')->first();
+        if (! $show) {
+            return response()->json(['status' => false, 'message' => __('messages.not_found')], 404);
+        }
+
+        $new = $show->is_veemag ? 0 : 1;
+        Entertainment::where('id', $id)->update(['is_veemag' => $new]);
+
+        return response()->json([
+            'status'     => true,
+            'is_veemag'  => $new,
+            'message'    => $new ? __('messages.marked_veemag') : __('messages.marked_tvshow'),
+        ]);
+    }
 }

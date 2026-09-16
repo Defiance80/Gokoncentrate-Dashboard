@@ -56,6 +56,11 @@
           <span class="item-name">{{__('frontend.tvshows')}}</span>
         </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link"  href="{{ route('veemags') }}">
+          <span class="item-name">{{__('frontend.veemags')}}</span>
+        </a>
+      </li>
       @endif
       @if(isenablemodule('video'))
       <li class="nav-item">

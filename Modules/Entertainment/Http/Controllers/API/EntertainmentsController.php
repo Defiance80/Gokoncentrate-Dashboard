@@ -188,6 +188,7 @@ class EntertainmentsController extends Controller
         ->leftJoin('plan', 'plan.id', '=', 'entertainments.plan_id')
         ->with('episodeV2')
         ->where('entertainments.type', 'tvshow')
+        ->when($request->filled('is_veemag'), fn($q) => $q->where('entertainments.is_veemag', (int) $request->input('is_veemag')))
         ->where('entertainments.release_date', '<=', now()->format('Y-m-d'))
         ->whereHas('episodeV2')
         ->where('entertainments.status', 1)
@@ -2138,6 +2139,7 @@ class EntertainmentsController extends Controller
         ->leftJoin('plan','plan.id','=','entertainments.plan_id')
         ->with('episodeV2')
         ->where('entertainments.type', 'tvshow')
+        ->when($request->filled('is_veemag'), fn($q) => $q->where('entertainments.is_veemag', (int) $request->input('is_veemag')))
         ->where('entertainments.release_date', '<=', Carbon::now()->format('Y-m-d'))
         ->groupBy('entertainments.id')
         ->whereHas('episodeV2');

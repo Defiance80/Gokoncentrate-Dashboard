@@ -415,5 +415,21 @@
                 showPlanSelection(true);
             }
         });
+    
+        // VeeMag toggle: flip a show between TV Show and VeeMag, then redraw.
+        $(document).on('click', '.km-veemag-toggle', function () {
+            var url = $(this).data('url');
+            $.ajax({
+                url: url, method: 'POST',
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                success: function (res) {
+                    if (window.toastr && res.message) { toastr.success(res.message); }
+                    if (window.LaravelDataTables) {
+                        Object.values(window.LaravelDataTables).forEach(function (t) { try { t.ajax.reload(null, false); } catch (e) {} });
+                    } else { location.reload(); }
+                },
+                error: function () { location.reload(); }
+            });
+        });
     </script>
 @endpush

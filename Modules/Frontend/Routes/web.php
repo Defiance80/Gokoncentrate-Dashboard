@@ -93,6 +93,7 @@ Route::get('movies/{language}', [MovieController::class, 'moviesListBylanguage']
 Route::get('/movies', [MovieController::class, 'movieList'])->middleware('checkModule')->name('movies');
 Route::get('/movie-details/{id}', [MovieController::class, 'movieDetails'])->middleware('checkModule')->name('movie-details');
 Route::get('/tv-shows', [TvShowController::class, 'tvShowList'])->middleware('checkModule')->name('tv-shows');
+Route::get('/veemags', [TvShowController::class, 'veeMagList'])->middleware('checkModule')->name('veemags');
 Route::get('/tvshow-details/{id}', [TvShowController::class, 'tvshowDetail'])->middleware('checkModule')->name('tvshow-details');
 Route::get('/episode-details/{id}', [TvShowController::class, 'episodeDetail'])->middleware('checkModule')->name('episode-details');
 Route::get('/videos', [VideoController::class, 'videoList'])->middleware('checkModule')->name('videos');

@@ -76,6 +76,7 @@ Route::group(['prefix' => 'app', 'as' => 'backend.', 'middleware' => ['auth','ad
       Route::get("index_data", [TVshowController::class, 'index_data'])->name("index_data");
       Route::post('bulk-action', [TVshowController::class, 'bulk_action'])->name('bulk_action');
       Route::get('/import-tvshow/{id}', [TVshowController::class, 'ImportTVshow'])->name('import-tvshow');
+      Route::post('{id}/toggle-veemag', [TVshowController::class, 'toggleVeemag'])->name('toggle_veemag');
       Route::get('tv-show/{id}', [EntertainmentsController::class, 'details'])->name("details");
     });
     Route::resource("tvshows", TVshowController::class);

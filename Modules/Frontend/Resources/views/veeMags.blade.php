@@ -1,7 +1,7 @@
 @extends('frontend::layouts.master')
 
 @section('title')
-    {{ __('frontend.tvshows') }}
+    {{ __('frontend.veemags') }}
 @endsection
 
 @section('content')
@@ -117,7 +117,7 @@
                                 <div class="container-fluid h-100">
                                     <div class="row align-items-center h-100">
                                         <div class="col-12 text-center">
-                                            <h2>No TV Shows Available</h2>
+                                            <h2>No VeeMags Available</h2>
                                         </div>
                                     </div>
                                 </div>
@@ -131,7 +131,7 @@
     <div class="list-page">
         <div class="movie-lists section-spacing-bottom">
             <div class="container-fluid">
-                <h4 class="mb-1">{{ __('frontend.tvshows') }}</h4>
+                <h4 class="mb-1">{{ __('frontend.veemags') }}</h4>
                 <div class="row gy-4 row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6"
                     id="entertainment-list">
 
@@ -166,7 +166,7 @@
 
         const baseUrl = document.querySelector('meta[name="baseUrl"]').getAttribute('content');
 
-        const apiUrl = `${baseUrl}/api/v3/tvshow-list?is_ajax=1&per_page=${per_page}&is_veemag=0`;
+        const apiUrl = `${baseUrl}/api/v3/tvshow-list?is_ajax=1&per_page=${per_page}&is_veemag=1`;
         const csrf_token = '{{ csrf_token() }}'
 
         const showNoDataImage = () => {

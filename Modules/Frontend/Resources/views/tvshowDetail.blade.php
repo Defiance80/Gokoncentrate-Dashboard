@@ -42,7 +42,7 @@
                                 <a href="#seasons" class="link-body-emphasis">
                                     <span class="d-inline-flex align-items-center gap-2">
                                         <span><i class="ph ph-film-reel align-middle"></i></span>
-                                        <span class="font-size-18">{{ __('frontend.episodes') }}</span>
+                                        <span class="font-size-18">{{ (isset($entertainment) && $entertainment->is_veemag) ? __('frontend.issues') : __('frontend.episodes') }}</span>
                                     </span>
                                 </a>
                             </li>

@@ -57,7 +57,7 @@ return [
     'most_view'=>'Most Viewed Movies',
     'movies' => 'Short Films',
     'movie' => 'Movie',
-    'tvshows' => 'VeeMags',
+    'tvshows' => 'TV Shows',
     'tvshow' => 'TV Show',
     'watch_now' => 'Watch now',
     'rate_this' => 'Rate this',
@@ -515,4 +515,7 @@ return [
 
     'email_invalid_format' => 'The email must be a valid email address.',
     'mobile_already_exists' => 'The mobile number has already been taken.',
+    'veemags' => 'VeeMags',
+    'issues' => 'Issues',
+    'volumes' => 'Volumes',
 ];

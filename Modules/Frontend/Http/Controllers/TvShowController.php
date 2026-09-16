@@ -73,9 +73,12 @@ class TvShowController extends Controller
      */
     public function veeMagList($language = null)
     {
-        $sliders = [];
+        // VeeMags come from the VeeMag platform (published issues) — the same
+        // source as the home rail — so the list matches what the site shows.
+        $issues = \App\Models\VeeMagIssue::published()
+            ->orderByDesc('release_date')->orderByDesc('id')->get();
 
-        return view('frontend::veeMags', compact('sliders'));
+        return view('frontend::veeMags', compact('issues'));
     }
 
     public function tvshowDetail(Request $request, $slug)

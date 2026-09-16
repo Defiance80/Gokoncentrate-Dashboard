@@ -186,6 +186,7 @@ class SettingController extends Controller
         $response['enable_movie'] = isset($settings['movie']) ? intval($settings['movie']) : 0;
         $response['enable_livetv'] = isset($settings['livetv']) ? intval($settings['livetv']) : 0;
         $response['enable_tvshow'] = isset($settings['tvshow']) ? intval($settings['tvshow']) : 0;
+        $response['enable_veemag'] = \Illuminate\Support\Facades\DB::table('entertainments')->where('type', 'tvshow')->where('is_veemag', 1)->where('status', 1)->whereNull('deleted_at')->exists() ? 1 : 0;
         $response['enable_video'] = isset($settings['video']) ? intval($settings['video']) : 0;
         $response['enable_ads'] = isset($ads_val->value) ? (int) $ads_val->value : 0;
         $response['continue_watch'] = isset($continue_watch->value) ? (int) $continue_watch->value : 0;
@@ -314,6 +315,7 @@ class SettingController extends Controller
         $response['enable_movie'] = isset($settings['movie']) ? intval($settings['movie']) : 0;
         $response['enable_livetv'] = isset($settings['livetv']) ? intval($settings['livetv']) : 0;
         $response['enable_tvshow'] = isset($settings['tvshow']) ? intval($settings['tvshow']) : 0;
+        $response['enable_veemag'] = \Illuminate\Support\Facades\DB::table('entertainments')->where('type', 'tvshow')->where('is_veemag', 1)->where('status', 1)->whereNull('deleted_at')->exists() ? 1 : 0;
         $response['enable_video'] = isset($settings['video']) ? intval($settings['video']) : 0;
         $response['enable_ads'] = isset($ads_val->value) ? (int) $ads_val->value : 0;
         $response['continue_watch'] = isset($continue_watch->value) ? (int) $continue_watch->value : 0;

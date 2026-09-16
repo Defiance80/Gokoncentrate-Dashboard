@@ -42,6 +42,11 @@
             @endif
 
 
+            {{-- VeeMags rail: appears only when published issues exist. --}}
+            <div class="section-wraper">
+                @include('frontend::components.section.veemag')
+            </div>
+
             @if (isenablemodule('movie') == 1)
                 <div id="top-10-moive-section" class="section-wraper scroll-section section-hidden">
                     @if (isset($cachedResult['top_10']['data']) && count($cachedResult['top_10']['data']) > 0)

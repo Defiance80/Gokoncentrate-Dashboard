@@ -8,6 +8,7 @@ use Modules\Frontend\Http\Controllers\Auth\AuthController;
 use Modules\Frontend\Http\Controllers\Auth\OTPController;
 use App\Http\Controllers\LanguageController;
 use Modules\Frontend\Http\Controllers\TvShowController;
+use Modules\Frontend\Http\Controllers\VeeMagController;
 use Modules\Frontend\Http\Controllers\CastCrewController;
 use Modules\Frontend\Http\Controllers\VideoController;
 use Illuminate\Support\Facades\Crypt;
@@ -94,6 +95,8 @@ Route::get('/movies', [MovieController::class, 'movieList'])->middleware('checkM
 Route::get('/movie-details/{id}', [MovieController::class, 'movieDetails'])->middleware('checkModule')->name('movie-details');
 Route::get('/tv-shows', [TvShowController::class, 'tvShowList'])->middleware('checkModule')->name('tv-shows');
 Route::get('/veemags', [TvShowController::class, 'veeMagList'])->middleware('checkModule')->name('veemags');
+Route::get('/veemag/{slug}', [VeeMagController::class, 'detail'])->name('veemag.detail');
+Route::get('/veemag/{slug}/watch', [VeeMagController::class, 'watch'])->name('veemag.watch');
 Route::get('/tvshow-details/{id}', [TvShowController::class, 'tvshowDetail'])->middleware('checkModule')->name('tvshow-details');
 Route::get('/episode-details/{id}', [TvShowController::class, 'episodeDetail'])->middleware('checkModule')->name('episode-details');
 Route::get('/videos', [VideoController::class, 'videoList'])->middleware('checkModule')->name('videos');

@@ -30,6 +30,7 @@
     @push('styles')
         <style>
             .gk-auth-backdrop {
+                pointer-events: none;
                 position: fixed;
                 inset: 0;
                 z-index: 0;

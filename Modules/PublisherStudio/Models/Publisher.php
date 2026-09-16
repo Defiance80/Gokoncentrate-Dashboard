@@ -14,8 +14,9 @@ class Publisher extends Authenticatable
     protected $table = 'publishers';
 
     protected $fillable = [
-        'name', 'company', 'email', 'phone', 'password', 'status',
-        'bio', 'avatar_url', 'approved_at', 'approved_by',
+        'name', 'company', 'email', 'phone', 'website', 'content_focus',
+        'password', 'status', 'bio', 'avatar_url', 'profile',
+        'approved_at', 'approved_by',
     ];
 
     protected $hidden = [
@@ -24,6 +25,7 @@ class Publisher extends Authenticatable
 
     protected $casts = [
         'password'    => 'hashed',
+        'profile'     => 'array',
         'approved_at' => 'datetime',
     ];
 

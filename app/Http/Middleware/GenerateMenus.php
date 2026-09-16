@@ -423,6 +423,13 @@ class GenerateMenus
                 'order' => 0,
             ]);
             $this->childMain($publisher_menu, [
+                'icon' => 'ph ph-identification-card',
+                'title' => 'Publishers',
+                'route' => 'backend.publishers.index',
+                'active' => 'app/publishers',
+                'order' => 0,
+            ]);
+            $this->childMain($publisher_menu, [
                 'icon' => 'ph ph-tray',
                 'title' => 'Review Queue',
                 'route' => 'backend.publisher-submissions.index',

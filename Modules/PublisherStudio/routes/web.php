@@ -5,6 +5,7 @@ use Modules\PublisherStudio\Http\Controllers\Auth\PublisherAuthController;
 use Modules\PublisherStudio\Http\Controllers\StudioController;
 use Modules\PublisherStudio\Http\Controllers\SubmissionController;
 use Modules\PublisherStudio\Http\Controllers\Backend\PublisherReviewController;
+use Modules\PublisherStudio\Http\Controllers\Backend\PublishersController;
 use Modules\PublisherStudio\Http\Controllers\Backend\StorageSettingsController;
 
 /*
@@ -46,6 +47,13 @@ Route::group(['prefix' => 'app', 'as' => 'backend.', 'middleware' => ['auth', 'a
     Route::get('publisher-submissions/{submission}', [PublisherReviewController::class, 'show'])->name('publisher-submissions.show');
     Route::post('publisher-submissions/{submission}/approve', [PublisherReviewController::class, 'approve'])->name('publisher-submissions.approve');
     Route::post('publisher-submissions/{submission}/reject', [PublisherReviewController::class, 'reject'])->name('publisher-submissions.reject');
+
+    Route::get('publishers/index_data', [PublishersController::class, 'index_data'])->name('publishers.index_data');
+    Route::get('publishers', [PublishersController::class, 'index'])->name('publishers.index');
+    Route::get('publishers/{publisher}', [PublishersController::class, 'show'])->name('publishers.show');
+    Route::post('publishers/{publisher}/approve', [PublishersController::class, 'approve'])->name('publishers.approve');
+    Route::post('publishers/{publisher}/suspend', [PublishersController::class, 'suspend'])->name('publishers.suspend');
+    Route::post('publishers/{publisher}/reactivate', [PublishersController::class, 'reactivate'])->name('publishers.reactivate');
 
     Route::get('publisher-storage', [StorageSettingsController::class, 'edit'])->name('publisher-storage.edit');
     Route::put('publisher-storage', [StorageSettingsController::class, 'update'])->name('publisher-storage.update');

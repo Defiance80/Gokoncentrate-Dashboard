@@ -124,7 +124,14 @@ class MediaImportController extends Controller
         // Same as discovery: persisted first, analysed second so an AI outage
         // can never lose the import.
         if ($result['created']) {
-            AnalyzeCandidateJob::dispatch($candidate->id, null);
+            // Analyse inline (no queue worker on shared hosting) so the candidate
+            // reaches READY_FOR_REVIEW immediately and the Accept buttons appear.
+            try {
+                AnalyzeCandidateJob::dispatchSync($candidate->id, null);
+            } catch (\Throwable $e) {
+                // Analysis failure lands the candidate in ANALYSIS_ERROR, which is
+                // still reviewable — the admin can accept it manually.
+            }
             $message = __('mediaradar::mediaradar.import_added');
         } else {
             $message = __('mediaradar::mediaradar.import_existing');

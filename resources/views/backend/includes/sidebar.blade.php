@@ -10,7 +10,7 @@
             {{ !empty(getCustomizationSetting('sidebar_type')) ? implode(' ',getCustomizationSetting('sidebar_type')) : '' }}
             "
             data-toggle="main-sidebar" id="sidebar" data-sidebar="responsive">
-    <div class="d-flex align-items-center justify-content-start">
+    <div class="d-flex align-items-center justify-content-start" style="padding-left:14px;">
         <div class="logo-main">
             <a href="{{route('backend.home')}}" class="navbar-brand">
                 @php

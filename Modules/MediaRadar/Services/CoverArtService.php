@@ -98,6 +98,47 @@ class CoverArtService
     }
 
     /**
+     * Compose a blurred-fill poster from any image URL and store it with the
+     * movie artwork. Returns the stored file name (resolves via
+     * setBaseUrlWithFileName($fileName, 'image', 'movie')), or null on failure.
+     * Reusable for rebuilding covers on existing content.
+     */
+    public function composePosterFromUrl(string $sourceUrl, string $fileName, string $ratio = '2:3'): ?string
+    {
+        if (! function_exists('imagecreatetruecolor')) {
+            return null;
+        }
+
+        try {
+            $response = Http::timeout(20)->get($sourceUrl);
+            if (! $response->successful()) {
+                return null;
+            }
+
+            $source = @imagecreatefromstring($response->body());
+            if ($source === false) {
+                return null;
+            }
+
+            $poster = $this->blurredFit($source, $ratio);
+            imagedestroy($source);
+
+            if ($poster === null) {
+                return null;
+            }
+
+            $stored = $this->store($poster, $fileName);
+            imagedestroy($poster);
+
+            return $stored ? $fileName : null;
+        } catch (\Throwable $e) {
+            Log::warning('[MediaRadar] composePosterFromUrl failed: '.$e->getMessage());
+
+            return null;
+        }
+    }
+
+    /**
      * Centre-crop the provider artwork to poster ratio and store it with the
      * other movie images. Returns the stored file name, or null on failure.
      */

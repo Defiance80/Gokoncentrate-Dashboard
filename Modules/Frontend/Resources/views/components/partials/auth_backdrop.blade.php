@@ -88,7 +88,14 @@
                 position: relative;
                 z-index: 1;
                 min-height: 100vh;
+                min-height: 100dvh; /* respects the mobile keyboard / browser chrome */
                 overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            /* On phones the card sits at the top and the page scrolls, so the
+               submit button is never trapped under the on-screen keyboard. */
+            @media (max-width: 991.98px) {
+                .gk-auth-stage .row { min-height: 0 !important; }
             }
 
             @media (max-width: 767.98px) {

@@ -10,9 +10,9 @@
     <div>
         <div class="min-vh-100 gk-auth-stage">
             <div class="container">
-                <div class="row justify-content-center align-items-center height-self-center min-vh-100">
-                    <div class="col-lg-5 col-md-12 align-self-center">
-                        <div class="user-login-card card my-5">
+                <div class="row justify-content-center align-items-lg-center min-vh-100">
+                    <div class="col-lg-5 col-md-12 align-self-lg-center">
+                        <div class="user-login-card card my-4">
 
 
                             <div class="text-center auth-heading">

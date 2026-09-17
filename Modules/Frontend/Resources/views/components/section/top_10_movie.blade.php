@@ -1,3 +1,19 @@
+@once
+@push('after-styles')
+<style>
+    /* Show the full poster in the Top 10 rail (no cropping), instead of the
+       fixed-height cover crop. Uniform 2:3 poster box with the art contained. */
+    .iq-top-ten-block .block-image .overly-images .top-ten-img {
+        height: auto !important;
+        aspect-ratio: 2 / 3;
+        width: 100%;
+        object-fit: contain !important;
+        object-position: center !important;
+        background: #0b0b0f;
+    }
+</style>
+@endpush
+@endonce
 <div class="top-ten-block">
     <div class="d-flex align-items-center justify-content-between my-3">
         <h5 class="main-title text-capitalize mb-0">{{ $sectionName }}</h5>

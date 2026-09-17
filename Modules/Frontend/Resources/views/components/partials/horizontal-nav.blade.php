@@ -28,6 +28,16 @@
             ? \Illuminate\Support\Facades\DB::table('entertainments')->where('type', 'tvshow')->where('is_podcast', 1)->where('status', 1)->whereNull('deleted_at')->count()
             : 0;
     });
+    // Documentaries = content in the Documentary genre (shown only when it has content).
+    $kmDocGenreId = \Illuminate\Support\Facades\Cache::remember('nav_doc_genre_id', 300, function () {
+        return \Illuminate\Support\Facades\DB::table('genres')->whereRaw('LOWER(name) = ?', ['documentary'])->value('id');
+    });
+    $kmDocCount = \Illuminate\Support\Facades\Cache::remember('nav_doc_count', 300, function () use ($kmDocGenreId) {
+        if (! $kmDocGenreId) { return 0; }
+        return \Illuminate\Support\Facades\DB::table('entertainment_gener_mapping as egm')
+            ->join('entertainments as e', 'e.id', '=', 'egm.entertainment_id')
+            ->where('egm.genre_id', $kmDocGenreId)->where('e.status', 1)->whereNull('e.deleted_at')->count();
+    });
 @endphp
 <!-- Horizontal Menu Start -->
 <nav id="navbar_main" class="offcanvas mobile-offcanvas nav navbar navbar-expand-xl hover-nav horizontal-nav py-xl-0">
@@ -73,6 +83,13 @@
       <li class="nav-item">
         <a class="nav-link" href="{{ route('media-series') }}">
           <span class="item-name">{{__('frontend.media_series')}}</span>
+        </a>
+      </li>
+      @endif
+      @if($kmDocCount > 0 && $kmDocGenreId)
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('movies.genre', ['genre_id' => $kmDocGenreId]) }}">
+          <span class="item-name">{{ __('frontend.documentaries') }}</span>
         </a>
       </li>
       @endif

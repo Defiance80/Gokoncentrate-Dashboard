@@ -42,6 +42,16 @@
             @endif
 
 
+            {{-- Top 10 rail sits first, above VeeMags. --}}
+            @if (isenablemodule('movie') == 1 && isset($cachedResult['top_10']['data']) && count($cachedResult['top_10']['data']) > 0)
+                <div id="top-10-moive-section" class="section-wraper scroll-section section-hidden">
+                    @include('frontend::components.section.top_10_movie', [
+                        'top10' => $cachedResult['top_10']['data'] ?? [],
+                        'sectionName' => $cachedResult['top_10']['name'] ?? __('frontend.top_10'),
+                    ])
+                </div>
+            @endif
+
             {{-- VeeMags rail: appears only when published issues exist. --}}
             <div class="section-wraper">
                 @include('frontend::components.section.veemag')
@@ -53,14 +63,6 @@
             </div>
 
             @if (isenablemodule('movie') == 1)
-                <div id="top-10-moive-section" class="section-wraper scroll-section section-hidden">
-                    @if (isset($cachedResult['top_10']['data']) && count($cachedResult['top_10']['data']) > 0)
-                        @include('frontend::components.section.top_10_movie', [
-                            'top10' => $cachedResult['top_10']['data'] ?? [],
-                            'sectionName' => $cachedResult['top_10']['name'] ?? __('frontend.top_10'),
-                        ])
-                    @endif
-                </div>
 
                 <!-- Custom Ad Section: Only for placement 'home_page' -->
                 @if (isset($cachedResult['custom_ads']) && count($cachedResult['custom_ads']) > 0)

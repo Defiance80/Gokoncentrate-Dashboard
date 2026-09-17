@@ -14,6 +14,10 @@
         $canSources = auth()->user()->can('manage_media_radar_sources');
         $reviewable = $candidate->isReviewable();
         $approved = in_array($candidate->status, [\Modules\MediaRadar\Support\CandidateStatus::APPROVED, \Modules\MediaRadar\Support\CandidateStatus::SCHEDULED], true);
+        // An editor can accept from any non-terminal, not-yet-approved status.
+        $canAccept = $canApprove
+            && ! \Modules\MediaRadar\Support\CandidateStatus::isTerminal((string) $candidate->status)
+            && ! $approved;
     @endphp
 
     <div class="row g-3">
@@ -147,15 +151,16 @@
                     <span class="badge bg-primary-subtle">{{ \Modules\MediaRadar\Support\CandidateStatus::label((string) $candidate->status) }}</span>
                 </div>
                 <div class="card-body d-grid gap-2">
-                    @if ($canApprove && $reviewable)
-                        <button type="button" class="btn btn-success media-radar-action"
-                            data-url="{{ route('backend.media-radar-candidates.approve', $candidate->id) }}">
-                            <i class="ph ph-check-circle"></i> {{ __('mediaradar::mediaradar.approve') }}
-                        </button>
-                        <button type="button" class="btn btn-outline-success media-radar-action"
+                    @if ($canAccept)
+                        {{-- Primary action: accept and publish straight to the library. --}}
+                        <button type="button" class="btn btn-success btn-lg media-radar-action"
                             data-url="{{ route('backend.media-radar-candidates.approve', $candidate->id) }}"
                             data-payload="publish_now=1">
-                            <i class="ph ph-broadcast"></i> {{ __('mediaradar::mediaradar.approve_and_publish') }}
+                            <i class="ph ph-check-circle"></i> {{ __('mediaradar::mediaradar.approve_and_publish') }}
+                        </button>
+                        <button type="button" class="btn btn-outline-success media-radar-action"
+                            data-url="{{ route('backend.media-radar-candidates.approve', $candidate->id) }}">
+                            <i class="ph ph-clock"></i> {{ __('mediaradar::mediaradar.accept_hold') }}
                         </button>
                     @endif
 

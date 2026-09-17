@@ -79,6 +79,19 @@ class EditorialWorkflowService
     ): bool {
         $previous = (string) $candidate->status;
 
+        // An editor can accept a candidate from ANY non-terminal status (e.g.
+        // DEDUPLICATED, ANALYZING, DISCOVERED). Promote it into READY_FOR_REVIEW
+        // first so the state machine allows the move to APPROVED.
+        $acceptableFrom = [
+            CandidateStatus::READY_FOR_REVIEW,
+            CandidateStatus::ANALYSIS_ERROR,
+            CandidateStatus::APPROVED,
+            CandidateStatus::SCHEDULED,
+        ];
+        if (! CandidateStatus::isTerminal($previous) && ! in_array($previous, $acceptableFrom, true)) {
+            $candidate->forceFill(['status' => CandidateStatus::READY_FOR_REVIEW])->save();
+        }
+
         if (! $this->candidates->transition($candidate, CandidateStatus::APPROVED, [
             'approved_by' => $editorId,
             'approved_at' => now(),

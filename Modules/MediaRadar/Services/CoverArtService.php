@@ -180,16 +180,20 @@ class CoverArtService
         $sx = (int) floor(($srcW - $winW) / 2);
         $sy = (int) floor(($srcH - $winH) / 2);
 
-        $smallW = max(1, (int) round($outW / 6));
-        $smallH = max(1, (int) round($outH / 6));
+        $smallW = max(1, (int) round($outW / 3));
+        $smallH = max(1, (int) round($outH / 3));
         $small = imagecreatetruecolor($smallW, $smallH);
         if ($small !== false) {
             imagecopyresampled($small, $source, 0, 0, $sx, $sy, $smallW, $smallH, $winW, $winH);
-            for ($i = 0; $i < 6; $i++) {
+            for ($i = 0; $i < 8; $i++) {
                 imagefilter($small, IMG_FILTER_GAUSSIAN_BLUR);
             }
             imagecopyresampled($canvas, $small, 0, 0, 0, 0, $outW, $outH, $smallW, $smallH);
             imagedestroy($small);
+            // Smooth out any upscale blockiness, then darken so the art pops.
+            for ($i = 0; $i < 4; $i++) {
+                imagefilter($canvas, IMG_FILTER_GAUSSIAN_BLUR);
+            }
             imagefilter($canvas, IMG_FILTER_BRIGHTNESS, -40);
         }
 

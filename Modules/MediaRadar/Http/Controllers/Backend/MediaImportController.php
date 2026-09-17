@@ -47,8 +47,16 @@ class MediaImportController extends Controller
     {
         abort_if(! auth()->user()->can('add_media_radar'), 403);
 
+        $hasTier = \Illuminate\Support\Facades\Schema::hasColumn('genres', 'is_primary');
+
         return view('mediaradar::backend.candidates.import', [
             'genres' => Genres::where('status', 1)->orderBy('name')->pluck('name', 'id'),
+            'primaryGenres' => Genres::where('status', 1)
+                ->when($hasTier, fn ($q) => $q->where('is_primary', 1))
+                ->orderBy('name')->pluck('name', 'id'),
+            'subGenres' => Genres::where('status', 1)
+                ->when($hasTier, fn ($q) => $q->where('is_primary', 0))
+                ->orderBy('name')->pluck('name', 'id'),
         ]);
     }
 
@@ -96,6 +104,7 @@ class MediaImportController extends Controller
             'genre_id' => 'required|integer|exists:genres,id',
             'secondary_genre_ids' => 'nullable|array',
             'secondary_genre_ids.*' => 'integer|exists:genres,id',
+            'target_section' => 'required|string|in:short_film,tvshow,podcast',
             'editorial_title' => 'nullable|string|max:255',
         ]);
 
@@ -115,11 +124,15 @@ class MediaImportController extends Controller
         $candidate = $result['candidate'];
 
         // Apply the admin's categorisation on top of the stored candidate.
-        $candidate->forceFill([
+        $fill = [
             'genre_id' => $data['genre_id'],
             'secondary_genre_ids' => $data['secondary_genre_ids'] ?? null,
             'editorial_title' => $data['editorial_title'] ?: $candidate->editorial_title,
-        ])->save();
+        ];
+        if (\Illuminate\Support\Facades\Schema::hasColumn('media_candidates', 'target_section')) {
+            $fill['target_section'] = $data['target_section'];
+        }
+        $candidate->forceFill($fill)->save();
 
         // Same as discovery: persisted first, analysed second so an AI outage
         // can never lose the import.

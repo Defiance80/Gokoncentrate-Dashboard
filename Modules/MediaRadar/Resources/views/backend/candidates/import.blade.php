@@ -49,25 +49,42 @@
                     </div>
                 </div>
 
-                {{-- Categorisation --}}
+                {{-- Destination: which section of the media stand it appears in --}}
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
-                        <label for="km-genre" class="form-label">{{ __('mediaradar::mediaradar.import_genre_label') }} <span class="text-danger">*</span></label>
+                        <label for="km-section" class="form-label">Category (where it appears) <span class="text-danger">*</span></label>
+                        <select name="target_section" id="km-section" class="form-control" style="width:100%" required>
+                            @php $sections = ['short_film' => 'Short Films', 'tvshow' => 'TV Shows', 'podcast' => 'Media Series (Podcast)']; @endphp
+                            @foreach ($sections as $val => $label)
+                                <option value="{{ $val }}" @selected(old('target_section', 'short_film') == $val)>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        <span class="text-secondary small">The GoKoncentrate section this video is published into. (VeeMags are built as multi-section issues in Publisher Studio; Music arrives with the Music section.)</span>
+                        <span class="text-danger small">@error('target_section'){{ $message }}@enderror</span>
+                    </div>
+                </div>
+
+                {{-- Genre (type) + sub-genres --}}
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label for="km-genre" class="form-label">Genre (type) <span class="text-danger">*</span></label>
                         <select name="genre_id" id="km-genre" class="form-control select2" style="width:100%" required>
                             <option value="">{{ __('mediaradar::mediaradar.import_genre_placeholder') }}</option>
-                            @foreach ($genres as $id => $name)
+                            @foreach ($primaryGenres as $id => $name)
                                 <option value="{{ $id }}" @selected(old('genre_id') == $id)>{{ $name }}</option>
                             @endforeach
                         </select>
+                        <span class="text-secondary small">Drama, Documentary, Action, Horror, Sci-Fi, Romance, Thriller, Suspense.</span>
                         <span class="text-danger small">@error('genre_id'){{ $message }}@enderror</span>
                     </div>
                     <div class="col-md-6">
-                        <label for="km-secondary" class="form-label">{{ __('mediaradar::mediaradar.import_secondary_label') }}</label>
+                        <label for="km-secondary" class="form-label">Sub-genres (optional)</label>
                         <select name="secondary_genre_ids[]" id="km-secondary" class="form-control select2" multiple style="width:100%">
-                            @foreach ($genres as $id => $name)
+                            @foreach ($subGenres as $id => $name)
                                 <option value="{{ $id }}" @selected(collect(old('secondary_genre_ids'))->contains($id))>{{ $name }}</option>
                             @endforeach
                         </select>
+                        <span class="text-secondary small">Interview, Lifecast, Cipher Session, etc.</span>
                     </div>
                 </div>
 

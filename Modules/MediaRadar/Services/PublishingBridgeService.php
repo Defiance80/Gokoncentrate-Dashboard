@@ -9,6 +9,8 @@ use Modules\CastCrew\Models\CastCrew;
 use Modules\Entertainment\Models\Entertainment;
 use Modules\Entertainment\Models\EntertainmentGenerMapping;
 use Modules\Entertainment\Models\EntertainmentTalentMapping;
+use Modules\Season\Models\Season;
+use Modules\Episode\Models\Episode;
 use Modules\MediaRadar\Models\MediaCandidate;
 use Modules\MediaRadar\Models\MediaDiscoveryRule;
 use Modules\MediaRadar\Models\MediaRadarSetting;
@@ -92,7 +94,53 @@ class PublishingBridgeService
         $movie->forceFill($payload);
         $movie->save();
 
+        // tvshow-engine sections (VeeMag / Media Series / TV Show) need a season +
+        // episode carrying the video, otherwise the detail page has nothing to play.
+        if (($payload['type'] ?? 'movie') === 'tvshow') {
+            $this->createSeasonEpisode($movie, $candidate, $payload);
+        }
+
         return $movie;
+    }
+
+    /** Wrap an imported single video as Season 1 / Episode 1 so it is playable. */
+    private function createSeasonEpisode(Entertainment $movie, MediaCandidate $candidate, array $payload): void
+    {
+        $season = new Season();
+        $season->forceFill([
+            'name' => 'Season 1',
+            'slug' => Str::slug($movie->slug . '-season-1'),
+            'season_index' => 1,
+            'entertainment_id' => $movie->id,
+            'poster_url' => $candidate->poster_url,
+            'description' => $candidate->displayDescription(),
+            'access' => $payload['movie_access'] ?? 'free',
+            'plan_id' => $payload['plan_id'] ?? null,
+            'status' => 1,
+        ])->save();
+
+        $episode = new Episode();
+        $episode->forceFill([
+            'name' => $payload['name'],
+            'slug' => Str::slug($movie->slug . '-episode-1'),
+            'entertainment_id' => $movie->id,
+            'season_id' => $season->id,
+            'episode_number' => 1,
+            'poster_url' => $candidate->poster_url,
+            'description' => $candidate->displayDescription(),
+            'short_desc' => $candidate->editorial_summary,
+            'access' => $payload['movie_access'] ?? 'free',
+            'plan_id' => $payload['plan_id'] ?? null,
+            'is_restricted' => $payload['is_restricted'] ?? 0,
+            'video_upload_type' => $payload['video_upload_type'] ?? $this->uploadType($candidate->provider),
+            'video_url_input' => $payload['video_url_input'] ?? $candidate->playbackUrl(),
+            'enable_quality' => 0,
+            'download_status' => 0,
+            'enable_download_quality' => 0,
+            'duration' => $payload['duration'] ?? null,
+            'release_date' => $payload['release_date'] ?? null,
+            'status' => 1,
+        ])->save();
     }
 
     /**
@@ -106,10 +154,18 @@ class PublishingBridgeService
     ): array {
         $title = $candidate->displayTitle();
 
+        // Route to the section the editor chose. VeeMags / Media Series (Podcast)
+        // / TV Shows use the tvshow engine (with an episode created on publish);
+        // Short Films and Music use the movie engine (played directly).
+        $section = $candidate->target_section ?? 'short_film';
+        $isTvEngine = in_array($section, ['tvshow', 'veemag', 'podcast'], true);
+
         return [
             'name' => $title,
             'slug' => $slug ?? Str::slug(trim($title)),
-            'type' => 'movie',
+            'type' => $isTvEngine ? 'tvshow' : 'movie',
+            'is_veemag' => $section === 'veemag' ? 1 : 0,
+            'is_podcast' => $section === 'podcast' ? 1 : 0,
             'description' => $candidate->displayDescription(),
             'short_description' => $candidate->editorial_summary,
 

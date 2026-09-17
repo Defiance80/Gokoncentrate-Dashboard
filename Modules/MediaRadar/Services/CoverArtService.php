@@ -122,7 +122,7 @@ class CoverArtService
                 return null;
             }
 
-            $cropped = $this->centreCrop($source, $ratio);
+            $cropped = $this->blurredFit($source, $ratio);
             imagedestroy($source);
 
             if ($cropped === null) {
@@ -139,6 +139,69 @@ class CoverArtService
 
             return null;
         }
+    }
+
+    /**
+     * Compose a poster at the target ratio WITHOUT cropping the artwork: the
+     * source image is drawn fully (contained, centered) on top of a blurred,
+     * enlarged copy of itself that fills the frame — so any source ratio fits.
+     *
+     * @param  \GdImage  $source
+     * @return \GdImage|null
+     */
+    private function blurredFit($source, string $ratio)
+    {
+        [$ratioWidth, $ratioHeight] = $this->parseRatio($ratio);
+
+        $srcW = imagesx($source);
+        $srcH = imagesy($source);
+        if ($srcW < 1 || $srcH < 1) {
+            return null;
+        }
+
+        $target = $ratioWidth / $ratioHeight;
+        $outW = max(400, (int) config('mediaradar.cover_art.poster_width', 1000));
+        $outH = (int) round($outW / $target);
+
+        $canvas = imagecreatetruecolor($outW, $outH);
+        if ($canvas === false) {
+            return null;
+        }
+
+        // --- Blurred background that fills the frame (cover) ---
+        // Cover-crop the source to the target ratio, render small, blur, upscale
+        // (cheaper + smoother than blurring at full size), then darken slightly.
+        $winW = $srcW;
+        $winH = (int) round($srcW / $target);
+        if ($winH > $srcH) {
+            $winH = $srcH;
+            $winW = (int) round($srcH * $target);
+        }
+        $sx = (int) floor(($srcW - $winW) / 2);
+        $sy = (int) floor(($srcH - $winH) / 2);
+
+        $smallW = max(1, (int) round($outW / 6));
+        $smallH = max(1, (int) round($outH / 6));
+        $small = imagecreatetruecolor($smallW, $smallH);
+        if ($small !== false) {
+            imagecopyresampled($small, $source, 0, 0, $sx, $sy, $smallW, $smallH, $winW, $winH);
+            for ($i = 0; $i < 6; $i++) {
+                imagefilter($small, IMG_FILTER_GAUSSIAN_BLUR);
+            }
+            imagecopyresampled($canvas, $small, 0, 0, 0, 0, $outW, $outH, $smallW, $smallH);
+            imagedestroy($small);
+            imagefilter($canvas, IMG_FILTER_BRIGHTNESS, -40);
+        }
+
+        // --- Foreground: the full artwork, contained and centered ---
+        $fit = min($outW / $srcW, $outH / $srcH);
+        $fgW = max(1, (int) round($srcW * $fit));
+        $fgH = max(1, (int) round($srcH * $fit));
+        $fx = (int) floor(($outW - $fgW) / 2);
+        $fy = (int) floor(($outH - $fgH) / 2);
+        imagecopyresampled($canvas, $source, $fx, $fy, 0, 0, $fgW, $fgH, $srcW, $srcH);
+
+        return $canvas;
     }
 
     /**

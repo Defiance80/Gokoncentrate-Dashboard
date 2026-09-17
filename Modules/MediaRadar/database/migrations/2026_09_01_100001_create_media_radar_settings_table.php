@@ -28,7 +28,7 @@ return new class extends Migration
             $table->boolean('default_is_restricted')->default(false);
 
             // provider_link or cropped_local
-            $table->string('cover_art_mode')->default('provider_link');
+            $table->string('cover_art_mode')->default('cropped_local');
             $table->string('cover_crop_ratio')->default('2:3');
 
             $table->boolean('ai_enabled')->default(true);

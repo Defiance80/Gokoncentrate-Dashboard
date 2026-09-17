@@ -61,7 +61,7 @@ return [
     */
     'cover_art' => [
         'poster_ratio' => env('MEDIA_RADAR_POSTER_RATIO', '2:3'),
-        'poster_width' => (int) env('MEDIA_RADAR_POSTER_WIDTH', 600),
+        'poster_width' => (int) env('MEDIA_RADAR_POSTER_WIDTH', 1000),
         'jpeg_quality' => (int) env('MEDIA_RADAR_POSTER_QUALITY', 85),
         'storage_folder' => 'movie',
     ],

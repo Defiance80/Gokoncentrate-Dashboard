@@ -76,6 +76,12 @@ final class CandidateStatus
 
     public static function label(string $status): string
     {
+        // DEDUPLICATED is a screening stage, not a "this is a duplicate" flag —
+        // label it clearly so editors don't read queued items as duplicates.
+        if ($status === self::DEDUPLICATED) {
+            return 'Screened';
+        }
+
         return ucwords(strtolower(str_replace('_', ' ', $status)));
     }
 }

@@ -13,6 +13,8 @@ use Modules\Genres\Models\Genres;
 use Modules\MediaRadar\Jobs\AnalyzeCandidateJob;
 use Modules\MediaRadar\Models\MediaRadarSetting;
 use Modules\MediaRadar\Services\CandidateService;
+use Modules\MediaRadar\Services\DeduplicationService;
+use Modules\MediaRadar\Support\CandidateStatus;
 use Modules\MediaRadar\Sources\ProviderManager;
 use Modules\MediaRadar\Sources\Support\NormalizedCandidate;
 use Modules\MediaRadar\Sources\Support\ProviderException;
@@ -34,6 +36,7 @@ class MediaImportController extends Controller
     public function __construct(
         private CandidateService $candidates,
         private ProviderManager $providers,
+        private DeduplicationService $deduplication,
     ) {
         $this->traitInitializeModuleTrait(
             'mediaradar::mediaradar.import',
@@ -119,6 +122,24 @@ class MediaImportController extends Controller
         }
 
         $settings = MediaRadarSetting::getInstance();
+
+        // Status-aware duplicate handling:
+        //  - already approved/published (in the library) -> it's a real duplicate, do not re-add
+        //  - already pending in the review queue          -> auto-reject this duplicate submission
+        //  - previously rejected/archived (terminal)      -> allow re-adding (falls through)
+        $existing = $this->deduplication->existing($normalized, (int) $settings->publication_id);
+        if ($existing !== null) {
+            if (in_array($existing->status, [CandidateStatus::APPROVED, CandidateStatus::SCHEDULED, CandidateStatus::PUBLISHED], true)) {
+                return redirect()
+                    ->route('backend.media-radar-candidates.show', $existing->id)
+                    ->with('error', 'This video is already in your library, so it was not added again.');
+            }
+            if (! CandidateStatus::isTerminal($existing->status)) {
+                return redirect()
+                    ->route('backend.media-radar-candidates.show', $existing->id)
+                    ->with('error', 'This video is already in the review queue — the duplicate submission was rejected. Opening the existing item.');
+            }
+        }
 
         $result = $this->candidates->store($normalized, $settings);
         $candidate = $result['candidate'];

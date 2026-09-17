@@ -46,41 +46,43 @@
           <span class="item-name">{{__('frontend.home')}}</span>
         </a>
       </li>
+      {{-- Categories listed directly across the nav (not inside a dropdown);
+           each appears only when it has content. --}}
+      @if(isenablemodule('movie') && $kmMovieCount > 0)
       <li class="nav-item">
-        <a class="nav-link" href="#">
-          <span class="item-name">{{__('frontend.all_content')}}</span>
+        <a class="nav-link" href="{{ route('movies') }}">
+          <span class="item-name">{{__('frontend.movies')}}</span>
         </a>
-        <ul class="sub-menu list-unstyled">
-          @if(isenablemodule('movie') && $kmMovieCount > 0)
-          <li class="nav-item">
-            <a class="nav-link"  href="{{ route('movies') }}">
-              <span class="item-name">{{__('frontend.movies')}}</span>
-            </a>
-          </li>
-          @endif
-          @if(isenablemodule('tvshow') && $kmTvShowCount > 0)
-          <li class="nav-item">
-            <a class="nav-link"  href="{{ route('tv-shows') }}">
-              <span class="item-name">{{__('frontend.tvshows')}}</span>
-            </a>
-          </li>
-          @endif
-          @if($kmVeeMagCount > 0)
-          <li class="nav-item">
-            <a class="nav-link"  href="{{ route('veemags') }}">
-              <span class="item-name">{{__('frontend.veemags')}}</span>
-            </a>
-          </li>
-          @endif
-          @if(isenablemodule('video') && $kmVideoCount > 0)
-          <li class="nav-item">
-            <a class="nav-link"  href="{{ route('videos') }}">
-              <span class="item-name">{{__('frontend.video')}}</span>
-            </a>
-          </li>
-          @endif
-        </ul>
       </li>
+      @endif
+      @if($kmVeeMagCount > 0)
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('veemags') }}">
+          <span class="item-name">{{__('frontend.veemags')}}</span>
+        </a>
+      </li>
+      @endif
+      @if(isenablemodule('tvshow') && $kmTvShowCount > 0)
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('tv-shows') }}">
+          <span class="item-name">{{__('frontend.tvshows')}}</span>
+        </a>
+      </li>
+      @endif
+      @if($kmPodcastCount > 0)
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('media-series') }}">
+          <span class="item-name">{{__('frontend.media_series')}}</span>
+        </a>
+      </li>
+      @endif
+      @if(isenablemodule('video') && $kmVideoCount > 0)
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('videos') }}">
+          <span class="item-name">{{__('frontend.video')}}</span>
+        </a>
+      </li>
+      @endif
       <!-- @if(isenablemodule('movie'))
       <li class="nav-item">
         <a class="nav-link"  href="{{ route('movies') }}">
@@ -115,13 +117,6 @@
       <li class="nav-item">
         <a class="nav-link"  href="{{ route('comingsoon') }}">
           <span class="item-name">{{__('frontend.coming_soon')}}</span>
-        </a>
-      </li>
-      @endif
-      @if($kmPodcastCount > 0)
-      <li class="nav-item">
-        <a class="nav-link"  href="{{ route('media-series') }}">
-          <span class="item-name">{{__('frontend.media_series')}}</span>
         </a>
       </li>
       @endif

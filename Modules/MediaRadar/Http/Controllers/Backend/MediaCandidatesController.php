@@ -256,7 +256,13 @@ class MediaCandidatesController extends Controller
     {
         abort_if(! auth()->user()->can('edit_media_radar'), 403);
 
-        AnalyzeCandidateJob::dispatch($candidate->id, optional($candidate->rules()->first())->id);
+        // Run inline (no queue worker on shared hosting) so the candidate reaches
+        // READY_FOR_REVIEW right away and can be accepted.
+        try {
+            AnalyzeCandidateJob::dispatchSync($candidate->id, optional($candidate->rules()->first())->id);
+        } catch (\Throwable $e) {
+            // ANALYSIS_ERROR is still reviewable — the admin can accept manually.
+        }
 
         return response()->json([
             'status' => true,

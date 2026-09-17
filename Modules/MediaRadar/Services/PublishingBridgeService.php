@@ -167,7 +167,6 @@ class PublishingBridgeService
             'is_veemag' => $section === 'veemag' ? 1 : 0,
             'is_podcast' => $section === 'podcast' ? 1 : 0,
             'description' => $candidate->displayDescription(),
-            'short_description' => $candidate->editorial_summary,
 
             'poster_url' => $candidate->poster_url,
             'thumbnail_url' => $candidate->thumbnail_url,

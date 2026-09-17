@@ -93,7 +93,10 @@ class EditorialWorkflowService
         $this->bumpTrustedSource($candidate, 'approval_count');
 
         if ($publishNow) {
-            PublishCandidateJob::dispatch($candidate->id, $editorId);
+            // Publish synchronously so a manual "Accept & publish" goes live
+            // immediately, even when no queue worker is running (shared hosting).
+            $candidate->refresh();
+            $this->publishing->publish($candidate, $editorId);
         }
 
         return true;

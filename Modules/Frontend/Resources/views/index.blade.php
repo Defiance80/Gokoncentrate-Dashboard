@@ -62,6 +62,11 @@
                 @include('frontend::components.section.podcast')
             </div>
 
+            {{-- Music rail: appears only when music videos exist. --}}
+            <div class="section-wraper">
+                @include('frontend::components.section.music')
+            </div>
+
             @if (isenablemodule('movie') == 1)
 
                 <!-- Custom Ad Section: Only for placement 'home_page' -->

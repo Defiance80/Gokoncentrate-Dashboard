@@ -75,6 +75,16 @@ class EntertainmentsController extends Controller
             $movieList->where('type', 'movie');
         }
 
+        // Music videos live in their own Music section: include only when asked
+        // (is_music=1); otherwise keep them out of Short Films and genre lists.
+        if (\Illuminate\Support\Facades\Schema::hasColumn('entertainments', 'is_music')) {
+            if ($request->filled('is_music')) {
+                $movieList->where('is_music', (int) $request->input('is_music'));
+            } else {
+                $movieList->where('is_music', 0);
+            }
+        }
+
         if ($request->has('is_restricted')) {
             $movieList->where('is_restricted', $request->is_restricted);
         }

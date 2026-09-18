@@ -28,6 +28,11 @@
             ? \Illuminate\Support\Facades\DB::table('entertainments')->where('type', 'tvshow')->where('is_podcast', 1)->where('status', 1)->whereNull('deleted_at')->count()
             : 0;
     });
+    $kmMusicCount = \Illuminate\Support\Facades\Cache::remember('nav_music_count', 300, function () {
+        return \Illuminate\Support\Facades\Schema::hasColumn('entertainments', 'is_music')
+            ? \Illuminate\Support\Facades\DB::table('entertainments')->where('type', 'movie')->where('is_music', 1)->where('status', 1)->whereNull('deleted_at')->count()
+            : 0;
+    });
     // Documentaries = content in the Documentary genre (shown only when it has content).
     $kmDocGenreId = \Illuminate\Support\Facades\Cache::remember('nav_doc_genre_id', 300, function () {
         return \Illuminate\Support\Facades\DB::table('genres')->whereRaw('LOWER(name) = ?', ['documentary'])->value('id');
@@ -83,6 +88,13 @@
       <li class="nav-item">
         <a class="nav-link" href="{{ route('media-series') }}">
           <span class="item-name">{{__('frontend.media_series')}}</span>
+        </a>
+      </li>
+      @endif
+      @if($kmMusicCount > 0)
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('music') }}">
+          <span class="item-name">{{ __('frontend.music') }}</span>
         </a>
       </li>
       @endif

@@ -298,6 +298,12 @@ public function moviesListBylanguage($language)
         return view('frontend::tvchannelList', compact('categoryName', 'tvcategory_id'));
     }
 
+    public function musicList($language = null)
+    {
+        // Music videos = movies flagged is_music; the view pins is_music=1.
+        return view('frontend::music');
+    }
+
     public function comingSoonList()
     {
 

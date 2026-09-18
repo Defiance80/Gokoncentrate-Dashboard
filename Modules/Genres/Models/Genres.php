@@ -14,7 +14,7 @@ class Genres extends BaseModel
      */
     protected $table = 'genres';
 
-    protected $fillable = ['name','slug','file_url', 'description', 'status', 'is_primary', 'parent_id'];
+    protected $fillable = ['name','slug','file_url', 'description', 'status', 'is_primary', 'parent_id', 'is_music_genre'];
 
 
     public function setSlugAttribute($value)

@@ -166,6 +166,7 @@ class PublishingBridgeService
             'type' => $isTvEngine ? 'tvshow' : 'movie',
             'is_veemag' => $section === 'veemag' ? 1 : 0,
             'is_podcast' => $section === 'podcast' ? 1 : 0,
+            'is_music' => $section === 'music' ? 1 : 0,
             'description' => $candidate->displayDescription(),
 
             'poster_url' => $candidate->poster_url,

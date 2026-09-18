@@ -58,8 +58,11 @@ class MediaImportController extends Controller
                 ->when($hasTier, fn ($q) => $q->where('is_primary', 1))
                 ->orderBy('name')->pluck('name', 'id'),
             'subGenres' => Genres::where('status', 1)
-                ->when($hasTier, fn ($q) => $q->where('is_primary', 0))
+                ->when($hasTier, fn ($q) => $q->where('is_primary', 0)->where('is_music_genre', 0))
                 ->orderBy('name')->pluck('name', 'id'),
+            'musicGenres' => \Illuminate\Support\Facades\Schema::hasColumn('genres', 'is_music_genre')
+                ? Genres::where('status', 1)->where('is_music_genre', 1)->orderBy('name')->pluck('name', 'id')
+                : collect(),
         ]);
     }
 
@@ -104,12 +107,23 @@ class MediaImportController extends Controller
 
         $data = $request->validate([
             'url' => 'required|string|max:2048',
-            'genre_id' => 'required|integer|exists:genres,id',
+            'genre_id' => 'nullable|integer|exists:genres,id',
             'secondary_genre_ids' => 'nullable|array',
             'secondary_genre_ids.*' => 'integer|exists:genres,id',
-            'target_section' => 'required|string|in:short_film,tvshow,podcast',
+            'target_section' => 'required|string|in:short_film,tvshow,podcast,music',
+            'music_genre_id' => 'nullable|integer|exists:genres,id',
             'editorial_title' => 'nullable|string|max:255',
         ]);
+
+        // Music uses its music sub-genre as the genre; everything else needs a type genre.
+        if ($data['target_section'] === 'music') {
+            if (empty($data['music_genre_id'])) {
+                return back()->withInput()->withErrors(['music_genre_id' => 'Choose a music sub-category.']);
+            }
+            $data['genre_id'] = $data['music_genre_id'];
+        } elseif (empty($data['genre_id'])) {
+            return back()->withInput()->withErrors(['genre_id' => 'Choose a genre.']);
+        }
 
         try {
             $normalized = $this->fetch($data['url']);

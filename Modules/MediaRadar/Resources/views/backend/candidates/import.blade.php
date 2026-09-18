@@ -54,7 +54,7 @@
                     <div class="col-md-6">
                         <label for="km-section" class="form-label">Category (where it appears) <span class="text-danger">*</span></label>
                         <select name="target_section" id="km-section" class="form-control" style="width:100%" required>
-                            @php $sections = ['short_film' => 'Short Films', 'tvshow' => 'TV Shows', 'podcast' => 'Media Series (Podcast)']; @endphp
+                            @php $sections = ['short_film' => 'Short Films', 'tvshow' => 'TV Shows', 'podcast' => 'Media Series (Podcast)', 'music' => 'Music']; @endphp
                             @foreach ($sections as $val => $label)
                                 <option value="{{ $val }}" @selected(old('target_section', 'short_film') == $val)>{{ $label }}</option>
                             @endforeach
@@ -64,8 +64,23 @@
                     </div>
                 </div>
 
-                {{-- Genre (type) + sub-genres --}}
-                <div class="row g-3 mb-4">
+                {{-- Music sub-category: only relevant when Category = Music --}}
+                <div class="row g-3 mb-4" id="km-music-wrap" style="display:none;">
+                    <div class="col-md-6">
+                        <label for="km-music-genre" class="form-label">Music sub-category <span class="text-danger">*</span></label>
+                        <select name="music_genre_id" id="km-music-genre" class="form-control select2" style="width:100%">
+                            <option value="">Choose a style…</option>
+                            @foreach ($musicGenres as $id => $name)
+                                <option value="{{ $id }}" @selected(old('music_genre_id') == $id)>{{ $name }}</option>
+                            @endforeach
+                        </select>
+                        <span class="text-secondary small">Hip Hop, R&amp;B, Rock &amp; Roll, Jazz, Country, Soul, Funk, Reggae, Pop, EDM…</span>
+                        <span class="text-danger small">@error('music_genre_id'){{ $message }}@enderror</span>
+                    </div>
+                </div>
+
+                {{-- Genre (type) + sub-genres (hidden for Music) --}}
+                <div class="row g-3 mb-4" id="km-genre-wrap">
                     <div class="col-md-6">
                         <label for="km-genre" class="form-label">Genre (type) <span class="text-danger">*</span></label>
                         <select name="genre_id" id="km-genre" class="form-control select2" style="width:100%" required>
@@ -106,6 +121,20 @@
     </div>
 
     @push('scripts')
+        <script>
+            // Show the Music sub-category (and hide the type genre) when Category = Music.
+            (function () {
+                const section = document.getElementById('km-section');
+                const musicWrap = document.getElementById('km-music-wrap');
+                const genreWrap = document.getElementById('km-genre-wrap');
+                function sync() {
+                    const isMusic = section && section.value === 'music';
+                    if (musicWrap) musicWrap.style.display = isMusic ? '' : 'none';
+                    if (genreWrap) genreWrap.style.display = isMusic ? 'none' : '';
+                }
+                if (section) { section.addEventListener('change', sync); sync(); }
+            })();
+        </script>
         <script>
             (function () {
                 const btn = document.getElementById('km-fetch-btn');

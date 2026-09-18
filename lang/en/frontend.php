@@ -521,5 +521,6 @@ return [
     'media_series_sub' => 'Podcasts and music video series — watch through the episodes.',
     'podcast' => 'Podcast',
     'documentaries' => 'Documentaries',
+    'music' => 'Music',
     'volumes' => 'Volumes',
 ];

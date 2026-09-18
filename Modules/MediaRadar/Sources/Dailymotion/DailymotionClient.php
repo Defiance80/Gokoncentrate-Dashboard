@@ -12,8 +12,9 @@ use Modules\MediaRadar\Sources\Support\ProviderException;
  */
 class DailymotionClient
 {
+    // NB: 'embeddable' is not a valid Data API field (returns HTTP 400).
     public const FIELDS = 'id,title,description,duration,created_time,views_total,thumbnail_720_url,'
-        .'thumbnail_480_url,owner.screenname,owner.id,embeddable,private,tags,url,language';
+        .'thumbnail_480_url,owner.screenname,owner.id,private,tags,url,language';
 
     private int $requestCount = 0;
 

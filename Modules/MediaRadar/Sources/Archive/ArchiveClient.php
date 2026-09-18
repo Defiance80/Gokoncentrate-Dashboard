@@ -44,16 +44,23 @@ class ArchiveClient
         // Restrict to public-domain / freely-viewable movies.
         $q = '('.$query.') AND mediatype:(movies)';
 
-        $params = [
+        // advancedsearch expects fl[] as REPEATED keys, which http_build_query
+        // can't produce — so the field list is appended to the URL by hand.
+        $fields = ['identifier', 'title', 'description', 'year', 'downloads', 'creator', 'subject', 'runtime'];
+        $fl = '';
+        foreach ($fields as $f) {
+            $fl .= '&fl[]='.$f;
+        }
+        $fl .= '&sort[]='.rawurlencode('downloads desc');
+
+        $base = http_build_query([
             'q' => $q,
-            'fl[]' => ['identifier', 'title', 'description', 'year', 'downloads', 'creator', 'subject', 'runtime'],
             'rows' => max(1, min($rows, (int) ($this->config['max_results'] ?? 15))),
             'page' => 1,
             'output' => 'json',
-            'sort[]' => 'downloads desc',
-        ];
+        ]);
 
-        $response = $this->get('/advancedsearch.php', $params);
+        $response = $this->getUrl($this->base().'/advancedsearch.php?'.$base.$fl);
 
         return (array) ($response['response']['docs'] ?? []);
     }
@@ -111,12 +118,20 @@ class ArchiveClient
      */
     private function get(string $path, array $params): array
     {
+        return $this->getUrl($this->base().$path.(empty($params) ? '' : '?'.http_build_query($params)));
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function getUrl(string $url): array
+    {
         $this->requestCount++;
 
         try {
             $response = Http::timeout((int) ($this->config['timeout'] ?? 20))
                 ->withHeaders(['Accept' => 'application/json'])
-                ->get($this->base().$path, $params);
+                ->get($url);
         } catch (ConnectionException $e) {
             throw new ProviderException('Archive.org connection failed: '.$e->getMessage(), 'archive', null, true);
         }

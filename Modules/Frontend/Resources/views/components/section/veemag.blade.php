@@ -5,7 +5,7 @@
         ->orderByDesc('release_date')->orderByDesc('id')->limit(18)->get();
 @endphp
 
-@if ($veemagIssues->count() > 0)
+@if ($veemagIssues->count() >= 6)
     <div class="GoKoncentrate-block">
         <div class="d-flex align-items-center justify-content-between my-2 me-2">
             <h5 class="main-title text-capitalize mb-0">{{ __('frontend.veemags') }}</h5>

@@ -70,7 +70,7 @@
         </a>
       </li>
       @endif
-      @if($kmVeeMagCount > 0)
+      @if($kmVeeMagCount >= 6)
       <li class="nav-item">
         <a class="nav-link" href="{{ route('veemags') }}">
           <span class="item-name">{{__('frontend.veemags')}}</span>
@@ -127,7 +127,7 @@
         </a>
       </li>
       @endif
-@if($kmVeeMagCount > 0)
+@if($kmVeeMagCount >= 6)
       <li class="nav-item">
         <a class="nav-link"  href="{{ route('veemags') }}">
           <span class="item-name">{{__('frontend.veemags')}}</span>

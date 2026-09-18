@@ -13,7 +13,7 @@
             data-center="false" data-infinite="false" data-navigation="true" data-pagination="false" data-spacing="12">
             @foreach ($top_channel as $data)
                 <div class="slick-item">
-                    <a href="{{ route('livetv-details', ['id' => $data['slug']]) }}"
+                    <a href="{{ $data['link'] ?? route('livetv-details', ['id' => $data['slug']]) }}"
                         class="channel-card d-flex align-content-center align-items-center justify-content-center rounded">
                         <img src="{{ $data['poster_image'] }}" alt="channel icon"
                             class="img-fluid object-cover rounded channel-img">

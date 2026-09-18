@@ -134,22 +134,44 @@
             @endif
 
 
-            @if (isenablemodule('livetv') == 1)
+            @php
+                // Media Series rail = the admin's networks (top-channels) with the
+                // music videos folded in, but only until Music has 6+ of its own —
+                // then Music breaks out into its own category rail (see section.music).
+                $kmMediaSeries = $cachedResult['top-channels']['data'] ?? [];
+                $kmMediaSeriesName = $cachedResult['top-channels']['name'] ?? __('frontend.top_channels');
+
+                if (\Illuminate\Support\Facades\Schema::hasColumn('entertainments', 'is_music')) {
+                    $kmMusicItems = \Modules\Entertainment\Models\Entertainment::query()
+                        ->where('type', 'movie')->where('is_music', 1)->where('status', 1)
+                        ->whereNull('deleted_at')->orderByDesc('id')->limit(18)->get();
+
+                    if ($kmMusicItems->count() >= 1 && $kmMusicItems->count() < 6) {
+                        $kmMusicRows = \Modules\Entertainment\Transformers\Backend\CommonContentResourceV3::collection($kmMusicItems)
+                            ->toArray(request());
+                        foreach ($kmMusicRows as $kmRow) {
+                            // Shape each music video like a Media Series card, but link it
+                            // to its own movie page instead of a live channel.
+                            $kmMediaSeries[] = [
+                                'slug' => $kmRow['slug'] ?? null,
+                                'poster_image' => $kmRow['poster_image'] ?? null,
+                                'link' => isset($kmRow['slug']) ? route('movie-details', ['id' => $kmRow['slug']]) : '#',
+                            ];
+                        }
+                    }
+                }
+            @endphp
+
+            @if (isenablemodule('livetv') == 1 || count($kmMediaSeries) > 0)
                 <div id="topchannel-section" class="section-wraper scroll-section section-hidden">
-                    @if (isset($cachedResult['top-channels']['data']) && count($cachedResult['top-channels']['data']) > 0)
+                    @if (count($kmMediaSeries) > 0)
                         @include('frontend::components.section.tvchannel', [
-                            'top_channel' => $cachedResult['top-channels']['data'] ?? [],
-                            'title' => $cachedResult['top-channels']['name'] ?? __('frontend.top_channels'),
+                            'top_channel' => $kmMediaSeries,
+                            'title' => $kmMediaSeriesName,
                         ])
                     @endif
                 </div>
             @endif
-
-            {{-- Music fallback sub-row: sits in the media area (with Media Series) and
-                 appears only when the dedicated Music category rail (6+) is hidden. --}}
-            <div class="section-wraper">
-                @include('frontend::components.section.music', ['fallback' => true])
-            </div>
 
 
             @if (isenablemodule('tvshow') == 1)

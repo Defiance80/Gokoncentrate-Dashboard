@@ -100,7 +100,45 @@ class PublishingBridgeService
             $this->createSeasonEpisode($movie, $candidate, $payload);
         }
 
+        // Covers are composed into the "movie" image folder, but the front end
+        // resolves a poster from storage/<type>/image/. For tvshow-engine content
+        // mirror the composed cover into the tvshow image folders so cards and the
+        // detail page find it.
+        $this->mirrorCoverToTypeFolders($movie->type, $candidate->poster_url);
+
         return $movie;
+    }
+
+    /**
+     * Copy the composed poster from the movie image folder into the folders the
+     * given entertainment type reads from, so nothing shows a broken cover.
+     */
+    private function mirrorCoverToTypeFolders(string $type, ?string $posterUrl): void
+    {
+        if ($type === 'movie' || empty($posterUrl)) {
+            return;
+        }
+
+        $file = basename($posterUrl);
+        $source = storage_path('app/public/movie/image/' . $file);
+
+        if (! is_file($source)) {
+            return;
+        }
+
+        // Card poster + season/episode posters all live under the tvshow tree.
+        $targets = ['tvshow/image', 'tvshow/season/image', 'tvshow/episode/image'];
+
+        foreach ($targets as $dir) {
+            $destDir = storage_path('app/public/' . $dir);
+            if (! is_dir($destDir)) {
+                @mkdir($destDir, 0755, true);
+            }
+            $dest = $destDir . '/' . $file;
+            if (! is_file($dest)) {
+                @copy($source, $dest);
+            }
+        }
     }
 
     /** Wrap an imported single video as Season 1 / Episode 1 so it is playable. */

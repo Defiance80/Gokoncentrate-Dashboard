@@ -111,13 +111,14 @@ class VideoController extends Controller
 
             $data = (new VideoDetailResource($video))->toArray(request());
             $data['type'] = 'video';
+            $seoRow = \Modules\SEO\Models\Seo::where('slug', $video->slug)->first();
             $data['seoData'] = (object) [
-                "seo_image" => $video->seo_image,
-                "google_site_verification" => $video->google_site_verification,
-                "canonical_url" => $video->canonical_url,
-                "short_description" => $video->short_description,
-                "meta_title" => $video->meta_title,
-                "meta_keywords" => $video->meta_keywords,
+                "seo_image" => $seoRow->seo_image ?? $video->poster_url ?? null,
+                "google_site_verification" => $seoRow->google_site_verification ?? null,
+                "canonical_url" => $seoRow->canonical_url ?? null,
+                "short_description" => $seoRow->short_description ?? $video->description ?? null,
+                "meta_title" => $seoRow->meta_title ?? $video->name ?? null,
+                "meta_keywords" => $seoRow->meta_keywords ?? null,
             ];
 
             return $data;

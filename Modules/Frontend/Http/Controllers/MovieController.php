@@ -192,13 +192,16 @@ public function moviesListBylanguage($language)
             }
             $data = (new MovieDetailResource($movie))->toArray(request());
             $data['more_items'] = CommonContentResourceV3::collection($related)->toArray(request());
+            // Per-content SEO lives in the `seo` table keyed by slug; fall back to
+            // the content's own name/description so a page always has real meta.
+            $seoRow = \Modules\SEO\Models\Seo::where('slug', $movie->slug)->first();
             $data['seoData'] = (object) [
-                "seo_image" => $movie->seo_image,
-                "google_site_verification" => $movie->google_site_verification,
-                "canonical_url" => $movie->canonical_url,
-                "short_description" => $movie->short_description,
-                "meta_title" => $movie->meta_title,
-                "meta_keywords" => $movie->meta_keywords,
+                "seo_image" => $seoRow->seo_image ?? $movie->poster_url ?? null,
+                "google_site_verification" => $seoRow->google_site_verification ?? null,
+                "canonical_url" => $seoRow->canonical_url ?? null,
+                "short_description" => $seoRow->short_description ?? $movie->description ?? null,
+                "meta_title" => $seoRow->meta_title ?? $movie->name ?? null,
+                "meta_keywords" => $seoRow->meta_keywords ?? null,
             ];
 
             return $data;

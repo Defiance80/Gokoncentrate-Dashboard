@@ -193,13 +193,14 @@ class TvShowController extends Controller
 
             $data = (new TvshowDetailResource($tvshow))->toArray(request());
             $data['episodeData'] = (new EpisodeDetailResource($episode))->toArray(request());
+            $seoRow = \Modules\SEO\Models\Seo::where('slug', $tvshow->slug)->first();
             $data['seoData'] = (object) [
-                "seo_image" => $tvshow->seo_image,
-                "google_site_verification" => $tvshow->google_site_verification,
-                "canonical_url" => $tvshow->canonical_url,
-                "short_description" => $tvshow->short_description,
-                "meta_title" => $tvshow->meta_title,
-                "meta_keywords" => $tvshow->meta_keywords,
+                "seo_image" => $seoRow->seo_image ?? $tvshow->poster_url ?? null,
+                "google_site_verification" => $seoRow->google_site_verification ?? null,
+                "canonical_url" => $seoRow->canonical_url ?? null,
+                "short_description" => $seoRow->short_description ?? $tvshow->description ?? null,
+                "meta_title" => $seoRow->meta_title ?? $tvshow->name ?? null,
+                "meta_keywords" => $seoRow->meta_keywords ?? null,
             ];
 
             return $data;
@@ -336,13 +337,14 @@ class TvShowController extends Controller
             }
 
             $data = (new EpisodeDetailResource($episode))->toArray(request());
+            $seoRow = \Modules\SEO\Models\Seo::where('slug', $episode->slug)->first();
             $data['seoData'] = (object) [
-                "seo_image" => $episode->seo_image,
-                "google_site_verification" => $episode->google_site_verification,
-                "canonical_url" => $episode->canonical_url,
-                "short_description" => $episode->short_description,
-                "meta_title" => $episode->meta_title,
-                "meta_keywords" => $episode->meta_keywords,
+                "seo_image" => $seoRow->seo_image ?? $episode->poster_url ?? null,
+                "google_site_verification" => $seoRow->google_site_verification ?? null,
+                "canonical_url" => $seoRow->canonical_url ?? null,
+                "short_description" => $seoRow->short_description ?? $episode->description ?? null,
+                "meta_title" => $seoRow->meta_title ?? $episode->name ?? null,
+                "meta_keywords" => $seoRow->meta_keywords ?? null,
             ];
             return $data;
         });

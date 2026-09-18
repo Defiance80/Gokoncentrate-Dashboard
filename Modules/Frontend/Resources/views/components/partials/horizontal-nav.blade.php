@@ -63,7 +63,7 @@
       </li>
       {{-- Categories listed directly across the nav (not inside a dropdown);
            each appears only when it has content. --}}
-      @if(isenablemodule('movie') && $kmMovieCount > 0)
+      @if(isenablemodule('movie') && $kmMovieCount >= 6)
       <li class="nav-item">
         <a class="nav-link" href="{{ route('movies') }}">
           <span class="item-name">{{__('frontend.movies')}}</span>
@@ -77,35 +77,35 @@
         </a>
       </li>
       @endif
-      @if(isenablemodule('tvshow') && $kmTvShowCount > 0)
+      @if(isenablemodule('tvshow') && $kmTvShowCount >= 6)
       <li class="nav-item">
         <a class="nav-link" href="{{ route('tv-shows') }}">
           <span class="item-name">{{__('frontend.tvshows')}}</span>
         </a>
       </li>
       @endif
-      @if($kmPodcastCount > 0)
+      @if($kmPodcastCount >= 6)
       <li class="nav-item">
         <a class="nav-link" href="{{ route('media-series') }}">
           <span class="item-name">{{__('frontend.media_series')}}</span>
         </a>
       </li>
       @endif
-      @if($kmMusicCount > 0)
+      @if($kmMusicCount >= 6)
       <li class="nav-item">
         <a class="nav-link" href="{{ route('music') }}">
           <span class="item-name">{{ __('frontend.music') }}</span>
         </a>
       </li>
       @endif
-      @if($kmDocCount > 0 && $kmDocGenreId)
+      @if($kmDocCount >= 6 && $kmDocGenreId)
       <li class="nav-item">
         <a class="nav-link" href="{{ route('movies.genre', ['genre_id' => $kmDocGenreId]) }}">
           <span class="item-name">{{ __('frontend.documentaries') }}</span>
         </a>
       </li>
       @endif
-      @if(isenablemodule('video') && $kmVideoCount > 0)
+      @if(isenablemodule('video') && $kmVideoCount >= 6)
       <li class="nav-item">
         <a class="nav-link" href="{{ route('videos') }}">
           <span class="item-name">{{__('frontend.video')}}</span>
@@ -120,7 +120,7 @@
       </li>
       @endif
       @if(isenablemodule('tvshow'))
-@if($kmTvShowCount > 0)
+@if($kmTvShowCount >= 6)
       <li class="nav-item">
         <a class="nav-link"  href="{{ route('tv-shows') }}">
           <span class="item-name">{{__('frontend.tvshows')}}</span>
@@ -142,7 +142,7 @@
         </a>
       </li>
       @endif -->
-      @if($kmComingSoonCount > 0)
+      @if($kmComingSoonCount >= 6)
       <li class="nav-item">
         <a class="nav-link"  href="{{ route('comingsoon') }}">
           <span class="item-name">{{__('frontend.coming_soon')}}</span>

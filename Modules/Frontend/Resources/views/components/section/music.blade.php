@@ -1,49 +1,45 @@
-{{-- Self-contained Music rail for the home gallery, next to Media Series. Loads
-     music videos (movies flagged is_music) and stays hidden until content exists. --}}
+{{-- Music rail for the home gallery, sitting with Media Series in the media/network
+     area. Rendered server-side (like every other rail) so the global slick init
+     sizes the cards correctly and they match the other rails' aspect ratio.
+     Appears only when there are 6 or more music videos. --}}
 @php
-    $kmHasMusic = \Illuminate\Support\Facades\Schema::hasColumn('entertainments', 'is_music')
-        && \Illuminate\Support\Facades\DB::table('entertainments')
-            ->where('type', 'movie')->where('is_music', 1)->where('status', 1)
-            ->whereNull('deleted_at')->exists();
+    $kmMusic = [];
+    if (\Illuminate\Support\Facades\Schema::hasColumn('entertainments', 'is_music')) {
+        $kmMusicItems = \Modules\Entertainment\Models\Entertainment::query()
+            ->where('type', 'movie')
+            ->where('is_music', 1)
+            ->where('status', 1)
+            ->whereNull('deleted_at')
+            ->orderByDesc('id')
+            ->limit(18)
+            ->get();
+
+        if ($kmMusicItems->count() >= 6) {
+            $kmMusic = \Modules\Entertainment\Transformers\Backend\CommonContentResourceV3::collection($kmMusicItems)
+                ->toArray(request());
+        }
+    }
 @endphp
 
-@if ($kmHasMusic)
-    <div class="GoKoncentrate-block music-scope" id="music-rail-block" style="display:none;">
+@if (count($kmMusic) >= 6)
+    <div class="GoKoncentrate-block">
         <div class="d-flex align-items-center justify-content-between my-2 me-2">
             <h5 class="main-title text-capitalize mb-0">{{ __('frontend.music') }}</h5>
-            <a href="{{ route('music') }}" class="btn btn-link p-0">{{ __('frontend.view_all') ?? 'View all' }}</a>
+            @if (count($kmMusic) > 6)
+                <a href="{{ route('music') }}" class="view-all-button text-decoration-none flex-none">
+                    <span>{{ __('frontend.view_all') }}</span>
+                    <i class="ph ph-caret-right"></i>
+                </a>
+            @endif
         </div>
-        <div class="card-style-slider">
-            <div class="slick-general slick-general-music" id="music-rail" data-items="7.5" data-items-desktop="6.5"
-                data-items-laptop="5.5" data-items-tab="4.5" data-items-mobile-sm="3.5"
-                data-items-mobile="2.5" data-speed="1000" data-autoplay="false" data-center="false"
-                data-infinite="false" data-navigation="true" data-pagination="false" data-spacing="10"></div>
+
+        <div class="card-style-slider {{ count($kmMusic) <= 6 ? 'slide-data-less' : '' }}">
+            <div class="slick-general" data-items="6.5" data-items-desktop="5.5" data-items-laptop="4.5"
+                data-items-tab="3.5" data-items-mobile-sm="3.5" data-items-mobile="2.5" data-speed="1000"
+                data-autoplay="false" data-center="false" data-infinite="false" data-navigation="true"
+                data-pagination="false" data-spacing="12">
+                @include('frontend::components.card.card_movie', ['values' => $kmMusic])
+            </div>
         </div>
     </div>
-
-    @push('after-styles')
-    <style>
-        .music-scope .iq-card .image-box{border-radius:12px;overflow:hidden;}
-        .music-scope .iq-card img{aspect-ratio:1/1;object-fit:cover;}
-    </style>
-    @endpush
-
-    @push('after-scripts')
-    <script>
-        (function () {
-            var base = document.querySelector('meta[name="baseUrl"]').getAttribute('content');
-            fetch(base + '/api/v3/movie-list?is_ajax=1&per_page=18&is_music=1')
-                .then(function (r) { return r.json(); })
-                .then(function (d) {
-                    if (d && d.html) {
-                        var rail = document.getElementById('music-rail');
-                        rail.innerHTML = d.html;
-                        document.getElementById('music-rail-block').style.display = '';
-                        if (window.initTrailerHover) window.initTrailerHover();
-                    }
-                })
-                .catch(function () {});
-        })();
-    </script>
-    @endpush
 @endif

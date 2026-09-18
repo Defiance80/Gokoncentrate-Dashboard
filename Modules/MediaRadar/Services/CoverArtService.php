@@ -139,6 +139,193 @@ class CoverArtService
     }
 
     /**
+     * Compose a branded movie-poster from a source image: the frame is
+     * fill-cropped to poster ratio (edge to edge), dark frames are lifted so the
+     * image always reads, a cinematic gradient is laid over the lower half, and
+     * the title (plus an optional genre kicker) is set in the poster font.
+     *
+     * Use this only where the source has no usable cover of its own; a
+     * fully-designed thumbnail should be kept via blurredFit instead.
+     * Returns the stored file name, or null on failure.
+     */
+    public function composeBrandedPoster(string $sourceUrl, string $fileName, string $title, ?string $kicker = null, string $ratio = '2:3'): ?string
+    {
+        if (! function_exists('imagecreatetruecolor') || ! function_exists('imagettftext')) {
+            return null;
+        }
+
+        try {
+            $response = Http::timeout(20)->get($sourceUrl);
+            if (! $response->successful()) {
+                return null;
+            }
+
+            $source = @imagecreatefromstring($response->body());
+            if ($source === false) {
+                return null;
+            }
+
+            $poster = $this->brandedPoster($source, $title, $kicker, $ratio);
+            imagedestroy($source);
+
+            if ($poster === null) {
+                return null;
+            }
+
+            $stored = $this->store($poster, $fileName);
+            imagedestroy($poster);
+
+            return $stored ? $fileName : null;
+        } catch (\Throwable $e) {
+            Log::warning('[MediaRadar] composeBrandedPoster failed: '.$e->getMessage());
+
+            return null;
+        }
+    }
+
+    /** Resolve the bundled poster font, or null if it is missing. */
+    private function posterFontPath(): ?string
+    {
+        $path = public_path('fonts/posters/BebasNeue-Regular.ttf');
+
+        return is_file($path) ? $path : null;
+    }
+
+    /**
+     * @param  \GdImage  $source
+     * @return \GdImage|null
+     */
+    private function brandedPoster($source, string $title, ?string $kicker, string $ratio)
+    {
+        [$rw, $rh] = $this->parseRatio($ratio);
+        $srcW = imagesx($source);
+        $srcH = imagesy($source);
+        if ($srcW < 1 || $srcH < 1) {
+            return null;
+        }
+
+        $outW = max(600, (int) config('mediaradar.cover_art.poster_width', 1000));
+        $outH = (int) round($outW * $rh / $rw);
+
+        $canvas = imagecreatetruecolor($outW, $outH);
+        imagealphablending($canvas, true);
+
+        // Fill-crop (cover), biased upward so faces/subjects stay in frame.
+        $scale = max($outW / $srcW, $outH / $srcH);
+        $dw = (int) round($srcW * $scale);
+        $dh = (int) round($srcH * $scale);
+        $dx = (int) round(($outW - $dw) / 2);
+        $dy = (int) round(($outH - $dh) * 0.28);
+        imagecopyresampled($canvas, $source, $dx, $dy, 0, 0, $dw, $dh, $srcW, $srcH);
+
+        // Lift dark frames so the image is always legible.
+        $lum = $this->averageLuminance($canvas, $outW, $outH);
+        if ($lum < 105) {
+            imagefilter($canvas, IMG_FILTER_BRIGHTNESS, (int) min(85, round(105 - $lum)));
+            imagefilter($canvas, IMG_FILTER_CONTRAST, -6);
+        } else {
+            imagefilter($canvas, IMG_FILTER_CONTRAST, -4);
+            imagefilter($canvas, IMG_FILTER_BRIGHTNESS, -4);
+        }
+
+        // Top vignette + bottom cinematic gradient.
+        $topH = (int) ($outH * 0.15);
+        for ($y = 0; $y < $topH; $y++) {
+            $a = (int) round(80 * (1 - $y / $topH));
+            $c = imagecolorallocatealpha($canvas, 0, 0, 0, 127 - (int) round($a / 2));
+            imageline($canvas, 0, $y, $outW, $y, $c);
+        }
+        $gs = (int) ($outH * 0.48);
+        for ($y = $gs; $y < $outH; $y++) {
+            $t = ($y - $gs) / ($outH - $gs);
+            $al = (int) round(pow($t, 1.25) * 238);
+            $c = imagecolorallocatealpha($canvas, 8, 8, 12, max(0, 127 - (int) round($al / 2.02)));
+            imageline($canvas, 0, $y, $outW, $y, $c);
+        }
+
+        $font = $this->posterFontPath();
+        if ($font === null) {
+            return $canvas; // graceful: image + gradient, no text, rather than fail
+        }
+
+        $m = (int) round($outW * 0.06);
+        $maxW = $outW - $m * 2;
+        $white = imagecolorallocate($canvas, 255, 255, 255);
+        $shadow = imagecolorallocatealpha($canvas, 0, 0, 0, 45);
+        $gold = imagecolorallocate($canvas, 232, 181, 77);
+
+        $title = strtoupper(trim($title));
+        $size = (int) round($outW * 0.104);
+        do {
+            $lines = $this->wrapToWidth($title, $font, $size, $maxW);
+            $fits = count($lines) <= 3;
+            if (! $fits) {
+                $size -= 6;
+            }
+        } while (! $fits && $size > 44);
+
+        $lh = (int) round($size * 1.02);
+        $block = $lh * count($lines);
+        $startY = ($outH - $m) - $block + $lh - (int) round($size * 0.18);
+
+        if (! empty($kicker)) {
+            $ks = (int) round($outW * 0.03);
+            $kk = implode(' ', str_split(strtoupper($kicker)));
+            $ky = $startY - $lh + (int) round($size * 0.05) - 26;
+            imagettftext($canvas, $ks, 0, $m + 1, $ky + 1, $shadow, $font, $kk);
+            imagettftext($canvas, $ks, 0, $m, $ky, $gold, $font, $kk);
+        }
+
+        $y = $startY;
+        foreach ($lines as $ln) {
+            imagettftext($canvas, $size, 0, $m + 2, $y + 2, $shadow, $font, $ln);
+            imagettftext($canvas, $size, 0, $m, $y, $white, $font, $ln);
+            $y += $lh;
+        }
+
+        return $canvas;
+    }
+
+    /** @param \GdImage $im */
+    private function averageLuminance($im, int $w, int $h): float
+    {
+        $sum = 0.0;
+        $n = 0;
+        for ($y = 0; $y < $h; $y += 18) {
+            for ($x = 0; $x < $w; $x += 18) {
+                $rgb = imagecolorat($im, $x, $y);
+                $sum += 0.299 * (($rgb >> 16) & 255) + 0.587 * (($rgb >> 8) & 255) + 0.114 * ($rgb & 255);
+                $n++;
+            }
+        }
+
+        return $n ? $sum / $n : 128.0;
+    }
+
+    /** @return list<string> */
+    private function wrapToWidth(string $text, string $font, int $size, int $maxW): array
+    {
+        $words = preg_split('/\s+/', trim($text));
+        $lines = [];
+        $cur = '';
+        foreach ($words as $w) {
+            $try = $cur === '' ? $w : "$cur $w";
+            $bb = imagettfbbox($size, 0, $font, $try);
+            if (abs($bb[2] - $bb[0]) > $maxW && $cur !== '') {
+                $lines[] = $cur;
+                $cur = $w;
+            } else {
+                $cur = $try;
+            }
+        }
+        if ($cur !== '') {
+            $lines[] = $cur;
+        }
+
+        return $lines;
+    }
+
+    /**
      * Centre-crop the provider artwork to poster ratio and store it with the
      * other movie images. Returns the stored file name, or null on failure.
      */

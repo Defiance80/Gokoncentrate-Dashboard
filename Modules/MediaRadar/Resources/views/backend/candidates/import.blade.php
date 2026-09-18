@@ -127,10 +127,16 @@
                 const section = document.getElementById('km-section');
                 const musicWrap = document.getElementById('km-music-wrap');
                 const genreWrap = document.getElementById('km-genre-wrap');
+                const genreSel = document.getElementById('km-genre');
+                const musicSel = document.getElementById('km-music-genre');
                 function sync() {
                     const isMusic = section && section.value === 'music';
                     if (musicWrap) musicWrap.style.display = isMusic ? '' : 'none';
                     if (genreWrap) genreWrap.style.display = isMusic ? 'none' : '';
+                    // A hidden `required` field cannot be focused, so the browser
+                    // blocks submit silently. Move `required` to the visible field.
+                    if (genreSel) { isMusic ? genreSel.removeAttribute('required') : genreSel.setAttribute('required', 'required'); }
+                    if (musicSel) { isMusic ? musicSel.setAttribute('required', 'required') : musicSel.removeAttribute('required'); }
                 }
                 if (section) { section.addEventListener('change', sync); sync(); }
             })();

@@ -3,7 +3,15 @@
      sizes the cards correctly and they match the other rails' aspect ratio.
      Appears only when there are 6 or more music videos. --}}
 @php
+    // Two placements share this rail:
+    //  - Category rail (default): the standalone Music category, shown only with 6+.
+    //  - Fallback sub-row ($fallback = true): shown in the media area for 1..5 items,
+    //    i.e. only when the dedicated Music category rail is hidden, so the videos
+    //    are never lost.
+    $kmFallback = $fallback ?? false;
     $kmMusic = [];
+    $kmMusicShow = false;
+
     if (\Illuminate\Support\Facades\Schema::hasColumn('entertainments', 'is_music')) {
         $kmMusicItems = \Modules\Entertainment\Models\Entertainment::query()
             ->where('type', 'movie')
@@ -14,14 +22,17 @@
             ->limit(18)
             ->get();
 
-        if ($kmMusicItems->count() >= 6) {
+        $kmCount = $kmMusicItems->count();
+        $kmMusicShow = $kmFallback ? ($kmCount >= 1 && $kmCount < 6) : ($kmCount >= 6);
+
+        if ($kmMusicShow) {
             $kmMusic = \Modules\Entertainment\Transformers\Backend\CommonContentResourceV3::collection($kmMusicItems)
                 ->toArray(request());
         }
     }
 @endphp
 
-@if (count($kmMusic) >= 6)
+@if ($kmMusicShow && count($kmMusic) >= 1)
     <div class="GoKoncentrate-block">
         <div class="d-flex align-items-center justify-content-between my-2 me-2">
             <h5 class="main-title text-capitalize mb-0">{{ __('frontend.music') }}</h5>

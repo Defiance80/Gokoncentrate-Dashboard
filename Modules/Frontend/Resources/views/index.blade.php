@@ -145,6 +145,12 @@
                 </div>
             @endif
 
+            {{-- Music fallback sub-row: sits in the media area (with Media Series) and
+                 appears only when the dedicated Music category rail (6+) is hidden. --}}
+            <div class="section-wraper">
+                @include('frontend::components.section.music', ['fallback' => true])
+            </div>
+
 
             @if (isenablemodule('tvshow') == 1)
                 <div id="popular-tvshow-section" class="section-wraper scroll-section section-hidden">

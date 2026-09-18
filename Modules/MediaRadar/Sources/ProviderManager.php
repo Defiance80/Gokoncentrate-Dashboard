@@ -2,7 +2,13 @@
 
 namespace Modules\MediaRadar\Sources;
 
+use Modules\MediaRadar\Sources\Archive\ArchiveClient;
+use Modules\MediaRadar\Sources\Archive\ArchiveNormalizer;
+use Modules\MediaRadar\Sources\Archive\ArchiveProvider;
 use Modules\MediaRadar\Sources\Contracts\MediaProviderInterface;
+use Modules\MediaRadar\Sources\Dailymotion\DailymotionClient;
+use Modules\MediaRadar\Sources\Dailymotion\DailymotionNormalizer;
+use Modules\MediaRadar\Sources\Dailymotion\DailymotionProvider;
 use Modules\MediaRadar\Sources\Vimeo\VimeoClient;
 use Modules\MediaRadar\Sources\Vimeo\VimeoNormalizer;
 use Modules\MediaRadar\Sources\Vimeo\VimeoProvider;
@@ -19,7 +25,7 @@ class ProviderManager
     /** @var array<string, MediaProviderInterface> */
     private array $resolved = [];
 
-    public const SUPPORTED = ['youtube', 'vimeo'];
+    public const SUPPORTED = ['youtube', 'vimeo', 'archive', 'dailymotion'];
 
     public function make(string $slug): MediaProviderInterface
     {
@@ -37,6 +43,14 @@ class ProviderManager
             'vimeo' => new VimeoProvider(
                 new VimeoClient((array) config('mediaradar.providers.vimeo', [])),
                 new VimeoNormalizer(),
+            ),
+            'archive' => new ArchiveProvider(
+                new ArchiveClient((array) config('mediaradar.providers.archive', [])),
+                new ArchiveNormalizer(),
+            ),
+            'dailymotion' => new DailymotionProvider(
+                new DailymotionClient((array) config('mediaradar.providers.dailymotion', [])),
+                new DailymotionNormalizer(),
             ),
             default => throw new \InvalidArgumentException('Unknown media provider ['.$slug.'].'),
         };

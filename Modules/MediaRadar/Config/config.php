@@ -43,6 +43,24 @@ return [
             'max_results' => (int) env('VIMEO_MAX_RESULTS', 25),
             'timeout' => (int) env('VIMEO_HTTP_TIMEOUT', 20),
         ],
+
+        // Internet Archive — no API key; public-domain / freely-viewable movies.
+        // Playback is a direct MP4 resolved from the item metadata.
+        'archive' => [
+            'enabled' => env('ARCHIVE_API_ENABLED', true),
+            'base_url' => 'https://archive.org',
+            'max_results' => (int) env('ARCHIVE_MAX_RESULTS', 15),
+            'timeout' => (int) env('ARCHIVE_HTTP_TIMEOUT', 25),
+        ],
+
+        // Dailymotion — public Data API, no key for search. Playback via the
+        // Dailymotion embed iframe (the existing "embedded" player path).
+        'dailymotion' => [
+            'enabled' => env('DAILYMOTION_API_ENABLED', true),
+            'base_url' => 'https://api.dailymotion.com',
+            'max_results' => (int) env('DAILYMOTION_MAX_RESULTS', 25),
+            'timeout' => (int) env('DAILYMOTION_HTTP_TIMEOUT', 20),
+        ],
     ],
 
     /*

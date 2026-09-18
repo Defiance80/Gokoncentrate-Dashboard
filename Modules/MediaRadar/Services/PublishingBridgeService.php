@@ -234,7 +234,12 @@ class PublishingBridgeService
     public function uploadType(string $provider): string
     {
         // Matches the dashboard's upload_type constants.
-        return strtolower($provider) === 'vimeo' ? 'Vimeo' : 'YouTube';
+        return match (strtolower($provider)) {
+            'vimeo' => 'Vimeo',
+            'archive' => 'URL',          // direct MP4, played via the external-URL path
+            'dailymotion' => 'Embedded', // iframe, played via the embedded path
+            default => 'YouTube',
+        };
     }
 
     /**

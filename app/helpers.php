@@ -1031,6 +1031,12 @@ function decryptVideoUrl($encryptedUrl)
             return ['platform' => 'vimeo', 'videoId' => $vimeoMatches[1]];
         }
 
+        // Check if the URL is a Dailymotion link -> play as an embedded iframe
+        if (preg_match('#dailymotion\.com/(?:video|embed/video)/([A-Za-z0-9]+)#i', $decryptedUrl, $dmMatches)
+            || preg_match('#dai\.ly/([A-Za-z0-9]+)#i', $decryptedUrl, $dmMatches)) {
+            return ['platform' => 'embedded', 'url' => 'https://www.dailymotion.com/embed/video/'.$dmMatches[1]];
+        }
+
         // Check if the URL is an HLS stream (m3u8)
         if (preg_match('/\.m3u8$/', $decryptedUrl)) {
             return ['platform' => 'hls', 'url' => $decryptedUrl];

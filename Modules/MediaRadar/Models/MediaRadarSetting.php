@@ -68,6 +68,9 @@ class MediaRadarSetting extends Model
         return match (strtolower($slug)) {
             'youtube' => (bool) $this->youtube_enabled,
             'vimeo' => (bool) $this->vimeo_enabled,
+            // No dedicated settings column yet; gated by config (env) instead.
+            'archive' => (bool) config('mediaradar.providers.archive.enabled', true),
+            'dailymotion' => (bool) config('mediaradar.providers.dailymotion.enabled', true),
             default => false,
         };
     }

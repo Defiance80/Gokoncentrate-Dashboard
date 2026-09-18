@@ -120,7 +120,7 @@
         </div>
     </div>
 
-    @push('scripts')
+    @push('after-scripts')
         <script>
             // Show the Music sub-category (and hide the type genre) when Category = Music.
             (function () {

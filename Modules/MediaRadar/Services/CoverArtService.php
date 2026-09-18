@@ -244,8 +244,8 @@ class CoverArtService
         }
 
         $font = $this->posterFontPath();
-        if ($font === null) {
-            return $canvas; // graceful: image + gradient, no text, rather than fail
+        if ($font === null || trim($title) === '') {
+            return $canvas; // clean graded image, no text (title-less tiles / missing font)
         }
 
         $m = (int) round($outW * 0.06);

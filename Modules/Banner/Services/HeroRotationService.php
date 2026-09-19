@@ -88,13 +88,20 @@ class HeroRotationService
                 continue;
             }
 
-            $slide->update([
+            // The slide renders banners.file_url, so the artwork has to travel
+            // with the title. Otherwise the slot would show the previous
+            // title's art under a new name.
+            $update = [
                 'title'           => $pick->name,
                 'type'            => $pick->type,
                 'type_id'         => $pick->id,
                 'type_name'       => $pick->name,
                 'last_rotated_at' => now(),
-            ]);
+            ];
+            if ($file = $this->installHeroArtwork($pick, $minWidth)) {
+                $update['file_url'] = $file;
+            }
+            $slide->update($update);
         }
 
         Log::info('Hero rotation complete', compact('replaced', 'skipped', 'locked', 'dryRun'));
@@ -121,37 +128,87 @@ class HeroRotationService
                 'e.name',
                 'e.type',
                 'e.poster_url',
+                'e.poster_tv_url',
+                'e.thumbnail_url',
                 DB::raw('COUNT(v.id) as view_count')
             )
-            ->groupBy('e.id', 'e.name', 'e.type', 'e.poster_url')
+            ->groupBy('e.id', 'e.name', 'e.type', 'e.poster_url', 'e.poster_tv_url', 'e.thumbnail_url')
             ->havingRaw('COUNT(v.id) >= ?', [$minViews])
             ->orderByDesc('view_count')
             ->limit(40)
             ->get();
     }
 
-    /**
-     * Is this title's artwork good enough for a full-bleed hero slot?
-     *
-     * Checked on disk rather than trusted, because a stored path can outlive
-     * the file and a missing hero image is the most visible failure there is.
-     */
+    /** Does this title have artwork good enough for a full-bleed hero slot? */
     private function artworkIsAdequate(object $candidate, int $minWidth): bool
     {
-        if (empty($candidate->poster_url)) {
-            return false;
+        return $this->heroArtworkPath($candidate, $minWidth) !== null;
+    }
+
+    /**
+     * Absolute path to a landscape image usable as hero art, or null.
+     *
+     * Deliberately does NOT consider poster_url: that is the 2:3 library
+     * poster and can never fill a 16:9 hero. Only the landscape fields are
+     * eligible, and only when the file is actually on disk at a usable size —
+     * a stored path can outlive its file, and a broken hero is the most
+     * visible failure on the site.
+     */
+    private function heroArtworkPath(object $candidate, int $minWidth): ?string
+    {
+        foreach (['poster_tv_url', 'thumbnail_url'] as $field) {
+            $value = $candidate->$field ?? null;
+            if (empty($value) || preg_match('~^https?://~i', (string) $value)) {
+                continue; // remote artwork is not ours to serve from the hero
+            }
+
+            $path = storage_path('app/public/movie/image/' . $value);
+            if (! is_file($path)) {
+                continue;
+            }
+
+            $size = @getimagesize($path);
+            if (! $size || $size[0] < $minWidth) {
+                continue;
+            }
+            if (($size[0] / max($size[1], 1)) < self::MIN_ASPECT) {
+                continue;
+            }
+
+            return $path;
         }
 
-        $path = storage_path('app/public/movie/image/' . $candidate->poster_url);
-        if (! is_file($path)) {
-            return false;
+        return null;
+    }
+
+    /**
+     * Copy the chosen artwork into the banner folder and return its filename.
+     *
+     * A new filename every time: overwriting in place leaves browsers and the
+     * CDN serving the previous image.
+     */
+    private function installHeroArtwork(object $candidate, int $minWidth): ?string
+    {
+        $source = $this->heroArtworkPath($candidate, $minWidth);
+        if (! $source) {
+            return null;
         }
 
-        $size = @getimagesize($path);
-        if (! $size || $size[0] < $minWidth) {
-            return false;
+        $ext = pathinfo($source, PATHINFO_EXTENSION) ?: 'jpg';
+        $name = 'hero-auto-' . $candidate->id . '-' . now()->format('YmdHis') . '.' . $ext;
+        $target = storage_path('app/public/banner/' . $name);
+
+        if (! is_dir(dirname($target))) {
+            @mkdir(dirname($target), 0755, true);
         }
 
-        return ($size[0] / max($size[1], 1)) >= self::MIN_ASPECT;
+        if (! @copy($source, $target)) {
+            Log::warning('Hero rotation: could not install artwork', ['source' => $source]);
+
+            return null;
+        }
+        @chmod($target, 0644);
+
+        return $name;
     }
 }

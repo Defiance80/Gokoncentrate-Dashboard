@@ -2125,7 +2125,13 @@ function groupedGenreOptions($genres): array
     }
 
     $primary = $genres->where('is_primary', 1)->pluck('name', 'id')->toArray();
-    $sub = $genres->where('is_primary', 0)->pluck('name', 'id')->toArray();
+
+    // Music genres (Blues, Country, EDM...) belong to music content, not to a
+    // film or show. Media Radar's import form already excludes them; do the
+    // same here so the two pickers agree.
+    $sub = $genres->where('is_primary', 0)
+        ->filter(fn ($g) => empty($g->is_music_genre))
+        ->pluck('name', 'id')->toArray();
 
     $options = [];
     if (! empty($primary)) {

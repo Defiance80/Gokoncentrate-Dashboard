@@ -196,7 +196,9 @@ class HeroRotationService
 
         $ext = pathinfo($source, PATHINFO_EXTENSION) ?: 'jpg';
         $name = 'hero-auto-' . $candidate->id . '-' . now()->format('YmdHis') . '.' . $ext;
-        $target = storage_path('app/public/banner/' . $name);
+        // Slides resolve via setBaseUrlWithFileName(file_url, 'image', 'banner'),
+        // which reads storage/app/public/banner/image - not banner/.
+        $target = storage_path('app/public/banner/image/' . $name);
 
         if (! is_dir(dirname($target))) {
             @mkdir(dirname($target), 0755, true);

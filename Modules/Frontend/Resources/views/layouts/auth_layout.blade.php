@@ -41,6 +41,16 @@
 
 <body>
 
+    {{-- Publisher recruitment: the auth pages are the only thing a signed-out
+         visitor sees, so the call to action has to live here too. --}}
+    <a href="{{ url('/studio/register') }}"
+        class="btn gk-publisher-btn gk-publisher-btn--floating font-size-14 text-uppercase px-3">
+        <span class="d-flex align-items-center gap-2">
+            <i class="ph-fill ph-broadcast"></i>
+            {{ __('frontend.join_as_publisher') }}
+        </span>
+    </a>
+
     @yield('content')
 
     @include('frontend::components.partials.scripts.plugins')

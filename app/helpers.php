@@ -2105,3 +2105,35 @@ function deleteBunnyStreamVideoByFile(string $fileName): bool
     // Delete by filename from Bunny Stream
     return bunnyDeleteVideo($fileName, false);
 }
+
+/**
+ * Genre options split into the two tiers, ready for a grouped <select>.
+ *
+ * Top-level TYPE genres (Drama, Documentary, Action...) are listed apart from
+ * the granular sub-genres (Interview, Lifecast, TruthPiece...), so a long flat
+ * list stops hiding the distinction. The submitted values are still plain
+ * genre ids, so nothing downstream changes.
+ *
+ * Falls back to a single flat group when the tier columns are absent.
+ *
+ * @param  \Illuminate\Support\Collection  $genres
+ */
+function groupedGenreOptions($genres): array
+{
+    if (! \Schema::hasColumn('genres', 'is_primary')) {
+        return $genres->pluck('name', 'id')->toArray();
+    }
+
+    $primary = $genres->where('is_primary', 1)->pluck('name', 'id')->toArray();
+    $sub = $genres->where('is_primary', 0)->pluck('name', 'id')->toArray();
+
+    $options = [];
+    if (! empty($primary)) {
+        $options[__('messages.genre_types')] = $primary;
+    }
+    if (! empty($sub)) {
+        $options[__('messages.genre_subgenres')] = $sub;
+    }
+
+    return $options ?: $genres->pluck('name', 'id')->toArray();
+}

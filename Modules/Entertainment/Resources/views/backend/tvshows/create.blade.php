@@ -322,7 +322,7 @@
                         </div>
                         <div class="col-md-6 col-lg-4">
                             {{ html()->label(__('movie.lbl_genres') . '<span class="text-danger">*</span>', 'genres')->class('form-label') }}
-                            {{ html()->select('genres[]', $genres->pluck('name', 'id')->prepend(__('placeholder.lbl_select_genre'), ''), old('genres'))->class('form-control select2')->id('genres')->multiple()->attribute('required', 'required') }}
+                            {{ html()->select('genres[]', groupedGenreOptions($genres), old('genres'))->class('form-control select2')->id('genres')->multiple()->attribute('required', 'required') }}
                             @error('genres')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror

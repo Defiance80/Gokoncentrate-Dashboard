@@ -2038,6 +2038,10 @@ return [
     'veemag_print_off'             => 'Printed edition disabled for :title.',
     'veemag_print_price_saved'     => 'Price updated for :title.',
 
+    // Two-tier genre picker.
+    'genre_types'     => 'Types',
+    'genre_subgenres' => 'Sub-genres',
+
     // Hero slider rotation (admin).
     'hero_rotation'          => 'Hero Rotation',
     'hero_rotation_intro'    => 'Refreshes unlocked hero slides from what people are actually watching. A locked slide is never touched, and a slide is only replaced when a title clears both the view floor and the artwork check — otherwise the existing slide is kept.',

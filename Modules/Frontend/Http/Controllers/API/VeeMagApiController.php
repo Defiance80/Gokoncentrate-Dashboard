@@ -83,6 +83,10 @@ class VeeMagApiController extends Controller
             'release_date'  => optional($i->release_date)->toDateString(),
             'runtime'       => (int) $i->runtime_seconds,
             'section_count' => (int) ($i->sections_count ?? $i->sections()->count()),
+            // Print companion: the app shows a Print button when this is true.
+            'print_enabled' => (bool) $i->print_enabled,
+            'print_price'   => round($i->print_price_effective, 2),
+            'print_currency' => strtoupper((string) GetcurrentCurrency() ?: 'USD'),
         ];
     }
 

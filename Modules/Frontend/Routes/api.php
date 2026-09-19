@@ -46,6 +46,9 @@ Route::get('/transaction-history', [TransactionController::class, 'transactionHi
 // VeeMag platform (mobile): list of published issues + one issue with sections.
 Route::get('veemags', [VeeMagApiController::class, 'index'])->name('api.veemags.index');
 Route::get('veemags/{slug}', [VeeMagApiController::class, 'show'])->name('api.veemags.show');
+// Print companion (mobile): returns the Stripe checkout URL for the app to open.
+Route::post('veemags/{slug}/print', [Modules\Frontend\Http\Controllers\VeeMagPrintController::class, 'checkout'])
+    ->name('api.veemags.print');
 
 Route::get('/check-episode-purchase', [TvShowController::class, 'checkEpisodePurchase'])->name('check.episode.purchase');
 Route::get('/check-movie-purchase', [TvShowController::class, 'checkMoviePurchase'])->name('check.movie.purchase');

@@ -465,6 +465,16 @@
                                     </div>
                                 </li>
 
+                                {{-- Publisher recruitment: routes to the Publisher Studio sign-up. --}}
+                                <li class="nav-item">
+                                    <a href="{{ url('/studio/register') }}"
+                                        class="btn gk-publisher-btn font-size-14 text-uppercase px-3">
+                                        <span class="d-flex align-items-center gap-2">
+                                            <i class="ph-fill ph-broadcast"></i>
+                                            {{ __('frontend.join_as_publisher') }}
+                                        </span>
+                                    </a>
+                                </li>
 
                                 @if (auth()->check() && auth()->user()->user_type == 'user' && !getCurrentProfileSession('is_child_profile'))
                                     <li class="nav-item">

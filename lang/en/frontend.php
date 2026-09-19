@@ -135,6 +135,7 @@ return [
     'subscription_history' => 'Subscription History',
     'subscribe' => 'Subscribe',
     'upgrade' => 'Upgrade',
+    'join_as_publisher' => 'Join as a Publisher',
     'membership' => 'Membership',
     'date' => 'Date',
     'plan' => 'Plan',

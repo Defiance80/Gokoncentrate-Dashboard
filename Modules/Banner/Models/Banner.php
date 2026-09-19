@@ -13,7 +13,7 @@ class Banner extends BaseModel
     use SoftDeletes;
 
     protected $table = 'banners';
-    protected $fillable = ['title', 'file_url','poster_url','type', 'type_id','type_name','description', 'status', 'created_by','banner_for','poster_tv_url'];
+    protected $fillable = ['title', 'file_url','poster_url','type', 'type_id','type_name','description', 'status', 'created_by','banner_for','poster_tv_url','is_locked','auto_managed','last_rotated_at'];
     const CUSTOM_FIELD_MODEL = 'Modules\Banner\Models\Banner';
 
     public static function get_sliderList($type=null)

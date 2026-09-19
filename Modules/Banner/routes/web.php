@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Banner\Http\Controllers\Backend\BannersController;
+use Modules\Banner\Http\Controllers\Backend\HeroRotationController;
 
 
 
@@ -50,6 +51,15 @@ Route::group(['prefix' => 'app', 'as' => 'backend.', 'middleware' => ['auth','ad
       Route::delete('force-delete/{id}', [BannersController::class, 'forceDelete'])->name('force_delete');
 
     });
+    // Hero slider rotation: weekly refresh from trending, with per-slide locks.
+    Route::group(['prefix' => 'hero-rotation', 'as' => 'hero-rotation.'], function () {
+        Route::get('/', [HeroRotationController::class, 'index'])->name('index');
+        Route::post('settings', [HeroRotationController::class, 'updateSettings'])->name('settings');
+        Route::post('{banner}/lock', [HeroRotationController::class, 'toggleLock'])->name('lock');
+        Route::post('{banner}/auto', [HeroRotationController::class, 'toggleAuto'])->name('auto');
+        Route::get('rotate', [HeroRotationController::class, 'rotateNow'])->name('rotate');
+    });
+
     Route::resource("banners", BannersController::class)->names('banners');
 });
 

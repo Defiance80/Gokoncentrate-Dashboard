@@ -414,6 +414,15 @@ class GenerateMenus
                 'order' => 0,
             ]);
 
+            // Hero slider rotation lives with the banner/slider tooling.
+            $this->childMain($magazine_menu, [
+                'icon' => 'ph ph-arrows-clockwise',
+                'title' => __('messages.hero_rotation'),
+                'route' => 'backend.hero-rotation.index',
+                'active' => 'app/hero-rotation',
+                'order' => 0,
+            ]);
+
             // VeeMag print companion: pricing + per-issue availability.
             $this->childMain($magazine_menu, [
                 'icon' => 'ph ph-printer',

@@ -33,6 +33,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('media-radar:watch-sources')->everySixHours()->withoutOverlapping();
         $schedule->command('media-radar:expire-candidates')->dailyAt('03:30');
 
+        // Hero slider: refresh unlocked slides from trending content once a
+        // week. Locked slides are never touched.
+        $schedule->command('hero:rotate')->weeklyOn(1, '04:00')->withoutOverlapping();
+
     }
 
     /**

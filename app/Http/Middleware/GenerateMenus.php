@@ -414,6 +414,15 @@ class GenerateMenus
                 'order' => 0,
             ]);
 
+            // VeeMag print companion: pricing + per-issue availability.
+            $this->childMain($magazine_menu, [
+                'icon' => 'ph ph-printer',
+                'title' => __('messages.veemag_print'),
+                'route' => 'backend.veemag-print.index',
+                'active' => 'app/veemag-print',
+                'order' => 0,
+            ]);
+
             // Publisher Studio: review queue for publisher-submitted VeeMags,
             // podcasts and short films + storage connection options.
             $publisher_menu = $this->parentMenu($menu, [

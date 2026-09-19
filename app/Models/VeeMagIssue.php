@@ -19,11 +19,13 @@ class VeeMagIssue extends Model
         'publication_id', 'volume', 'issue_number', 'title', 'subtitle', 'slug',
         'description', 'release_date', 'cover_url', 'hero_url', 'hero_type',
         'trailer_url', 'runtime_seconds', 'status', 'visibility', 'print_enabled',
+        'print_price', 'print_sku',
     ];
 
     protected $casts = [
         'release_date'  => 'date',
         'print_enabled' => 'boolean',
+        'print_price'   => 'decimal:2',
     ];
 
     public function publication()
@@ -37,6 +39,26 @@ class VeeMagIssue extends Model
         return $this->hasMany(VeeMagSection::class, 'issue_id')
             ->where('status', 1)
             ->orderBy('order_index');
+    }
+
+    /** Print orders placed for this issue. */
+    public function printOrders()
+    {
+        return $this->hasMany(VeeMagPrintOrder::class, 'issue_id');
+    }
+
+    /**
+     * Price of the printed edition, excluding shipping.
+     *
+     * Falls back to the platform default when the issue does not override it.
+     */
+    public function getPrintPriceEffectiveAttribute(): float
+    {
+        if ($this->print_price !== null && (float) $this->print_price > 0) {
+            return (float) $this->print_price;
+        }
+
+        return (float) (GetSettingValue('veemag_print_price') ?: 20);
     }
 
     public function scopePublished($query)

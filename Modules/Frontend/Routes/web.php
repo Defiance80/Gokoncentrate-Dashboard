@@ -9,6 +9,7 @@ use Modules\Frontend\Http\Controllers\Auth\OTPController;
 use App\Http\Controllers\LanguageController;
 use Modules\Frontend\Http\Controllers\TvShowController;
 use Modules\Frontend\Http\Controllers\VeeMagController;
+use Modules\Frontend\Http\Controllers\VeeMagPrintController;
 use Modules\Frontend\Http\Controllers\CastCrewController;
 use Modules\Frontend\Http\Controllers\VideoController;
 use Illuminate\Support\Facades\Crypt;
@@ -99,6 +100,9 @@ Route::get('/media-series', [TvShowController::class, 'mediaSeriesList'])->middl
 Route::get('/music', [MovieController::class, 'musicList'])->middleware('checkModule')->name('music');
 Route::get('/veemag/{slug}', [VeeMagController::class, 'detail'])->name('veemag.detail');
 Route::get('/veemag/{slug}/watch', [VeeMagController::class, 'watch'])->name('veemag.watch');
+// Print companion: order a printed copy of a specific issue.
+Route::get('/veemag/print/success', [VeeMagPrintController::class, 'success'])->name('veemag.print.success');
+Route::post('/veemag/{slug}/print', [VeeMagPrintController::class, 'checkout'])->name('veemag.print.checkout');
 Route::get('/tvshow-details/{id}', [TvShowController::class, 'tvshowDetail'])->middleware('checkModule')->name('tvshow-details');
 Route::get('/episode-details/{id}', [TvShowController::class, 'episodeDetail'])->middleware('checkModule')->name('episode-details');
 Route::get('/videos', [VideoController::class, 'videoList'])->middleware('checkModule')->name('videos');

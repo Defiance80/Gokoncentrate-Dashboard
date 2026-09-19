@@ -24,6 +24,8 @@
   .vm-row__type{font-family:ui-monospace,monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:#9a95a3;margin-bottom:.2rem;}
   .vm-row__title{font-weight:600;font-size:1.05rem;}
   .vm-row__time{font-family:ui-monospace,monospace;font-size:.85rem;color:#9a95a3;white-space:nowrap;}
+  .vm-print__price{font-family:ui-monospace,monospace;font-size:.85rem;opacity:.75;margin-left:.5rem;}
+  .vm-print__note{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.08em;color:#79747f;margin-bottom:1rem;}
   @media(max-width:640px){.vm-row{grid-template-columns:2.2rem 1fr auto;}.vm-row__thumb{display:none;}}
 </style>
 @endpush
@@ -33,6 +35,9 @@
   use Illuminate\Support\Str;
   $fmt = function($s){ $s=(int)$s; $m=intdiv($s,60); $sec=$s%60; return $m.':'.str_pad($sec,2,'0',STR_PAD_LEFT); };
   $totalMin = $issue->runtime_seconds ? ceil($issue->runtime_seconds/60) : null;
+  $printPrice = $issue->print_price_effective;
+  $printCurrency = strtoupper((string) GetcurrentCurrency() ?: 'USD');
+  $printSymbol = $printCurrency === 'USD' ? '$' : $printCurrency . ' ';
 @endphp
 
 <section class="vm-hero" style="background-image:url('{{ $issue->hero_url ?: $issue->cover_url }}')">
@@ -48,7 +53,21 @@
           <i class="ph ph-play-fill me-2"></i>Play Issue
         </a>
         <a href="#vm-contents" class="btn btn-outline-light btn-lg px-4">Contents</a>
+        @if($issue->print_enabled)
+          {{-- Print companion: opens a Stripe checkout for this issue and
+               mails the reader the same link. Price excludes shipping. --}}
+          <form method="POST" action="{{ route('veemag.print.checkout', $issue->slug) }}" class="d-inline">
+            @csrf
+            <button type="submit" class="btn btn-outline-light btn-lg px-4 vm-print">
+              <i class="ph ph-printer me-2"></i>{{ __('frontend.print_issue') }}
+              <span class="vm-print__price">{{ $printSymbol }}{{ number_format($printPrice, 2) }}</span>
+            </button>
+          </form>
+        @endif
       </div>
+      @if($issue->print_enabled)
+        <div class="vm-print__note">{{ __('frontend.print_shipping_note') }}</div>
+      @endif
       <div class="vm-meta">
         @if($totalMin){{ $totalMin }} min • @endif VeeMag • {{ optional($issue->release_date)->format('F Y') }}
       </div>

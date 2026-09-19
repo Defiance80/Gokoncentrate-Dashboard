@@ -65,6 +65,12 @@ Route::group(['prefix' => 'app', ['middleware' => ['auth','admin']]], function (
         Route::resource('permission', PermissionController::class);
         Route::resource('role', RoleController::class);
 
+        // VeeMag print companion: pricing + which issues offer a printed copy.
+        Route::get('veemag-print', [App\Http\Controllers\Backend\VeeMagPrintController::class, 'index'])->name('veemag-print.index');
+        Route::post('veemag-print/settings', [App\Http\Controllers\Backend\VeeMagPrintController::class, 'updateSettings'])->name('veemag-print.settings');
+        Route::post('veemag-print/{issue}/toggle', [App\Http\Controllers\Backend\VeeMagPrintController::class, 'toggle'])->name('veemag-print.toggle');
+        Route::post('veemag-print/{issue}/price', [App\Http\Controllers\Backend\VeeMagPrintController::class, 'price'])->name('veemag-print.price');
+
         Route::group(['prefix' => 'module', 'as' => 'module.'], function () {
             Route::get('index_data', [ModuleController::class, 'index_data'])->name('index_data');
             Route::post('update-status/{id}', [ModuleController::class, 'update_status'])->name('update_status');

@@ -668,10 +668,18 @@ function str_slug($title, $separator = '-', $language = 'en')
 function formatDuration($duration)
 {
     if (strpos($duration, ':') !== false) {
-        list($hours, $minutes) = explode(':', $duration);
-        $hours = intval($hours);
-        $minutes = intval($minutes);
-        // Format as "05h 20m" with leading zeros for hours
+        $parts = explode(':', $duration);
+        $hours = intval($parts[0] ?? 0);
+        $minutes = intval($parts[1] ?? 0);
+        $seconds = intval($parts[2] ?? 0);
+
+        // Short films are minutes long, and "00h 08m" both reads badly and
+        // throws away the seconds. Drop the hours when there are none, and
+        // keep seconds when the piece is under an hour.
+        if ($hours === 0) {
+            return $seconds > 0 ? "{$minutes}m {$seconds}s" : "{$minutes}m";
+        }
+
         $hoursFormatted = str_pad($hours, 2, '0', STR_PAD_LEFT);
         $minutesFormatted = str_pad($minutes, 2, '0', STR_PAD_LEFT);
         return "{$hoursFormatted}h {$minutesFormatted}m";

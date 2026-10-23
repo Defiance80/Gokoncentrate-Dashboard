@@ -73,18 +73,31 @@ class GenerateVeeMagSynopses extends Command
         return self::SUCCESS;
     }
 
-    /** The richest text we hold for this section. */
+    /**
+     * Everything we know about this section, for the summariser to work from.
+     *
+     * Both sources are included rather than one winning outright: the stored
+     * description is often a stub shared across an issue ("BTS shot by..."),
+     * while the video's own description is what actually describes the film.
+     * Handing over both lets the summary come from whichever carries detail.
+     */
     private function sourceText(VeeMagSection $section): string
     {
-        $own = trim(strip_tags((string) $section->description));
+        $parts = [];
 
-        if (Str::length($own) >= 80) {
-            return $own;
+        $own = trim(strip_tags((string) $section->description));
+        if ($own !== '') {
+            $parts[] = "Editor's note: " . $own;
         }
 
         $remote = $this->youtubeDescription($section);
+        if ($remote !== '' && $remote !== $own) {
+            $parts[] = "Video description: " . $remote;
+        }
 
-        return Str::length($remote) > Str::length($own) ? $remote : $own;
+        return implode("
+
+", $parts);
     }
 
     /** The video's own description, via the YouTube Data API. */
@@ -124,19 +137,27 @@ class GenerateVeeMagSynopses extends Command
         }
     }
 
-    /** Reduce source text to a readable blurb of at most MAX characters. */
+    /**
+     * Turn the source material into a blurb of at most MAX characters.
+     *
+     * The summariser runs whenever a key is configured, even when the source
+     * already fits: passing a short description straight through republishes
+     * whatever was written there - stubs, typos, promo lines - rather than
+     * describing the film. Trimming is only the fallback for when there is
+     * no key, or the call fails.
+     */
     private function condense(string $text, string $title): string
     {
         $text = $this->tidy($text);
-
-        if (Str::length($text) <= self::MAX) {
-            return $text;
-        }
 
         $summary = $this->summariseWithLlm($text, $title);
 
         if ($summary !== '') {
             return Str::limit($summary, self::MAX, '');
+        }
+
+        if (Str::length($text) <= self::MAX) {
+            return $text;
         }
 
         return $this->trimToSentence($text);

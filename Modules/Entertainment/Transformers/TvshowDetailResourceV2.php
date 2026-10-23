@@ -117,8 +117,8 @@ class TvshowDetailResourceV2 extends JsonResource
             'release_date' => $this->release_date,
             'release_year' => $this->release_year,
             'is_restricted' => $this->is_restricted,
-            'video_upload_type' => $this->video_upload_type,
-            'video_url_input' => $this->video_upload_type=='Local' ? setBaseUrlWithFileName($this->video_url_input,'video',$this->type) : $this->video_url_input,
+            'video_upload_type' => $this->sourceWithEpisodeFallback()[0],
+            'video_url_input' => $this->sourceWithEpisodeFallback()[0]=='Local' ? setBaseUrlWithFileName($this->sourceWithEpisodeFallback()[1],'video',$this->type) : $this->sourceWithEpisodeFallback()[1],
             'enable_quality' => $this->enable_quality,
             'download_url' => $this->download_url,
             'poster_image' =>setBaseUrlWithFileName($this->poster_url,'image',$this->type),
@@ -206,4 +206,34 @@ class TvshowDetailResourceV2 extends JsonResource
         }
         return $result;
     }
+
+    /**
+     * A series keeps its own video source, separate from its episodes, and
+     * one built in the dashboard has no reason to carry one - which left
+     * Play opening nothing at all. Fall back to the newest live episode so
+     * a new podcast or music series works the moment it has content.
+     */
+    private function sourceWithEpisodeFallback(): array
+    {
+        if (filled($this->video_url_input)) {
+            return [(string) $this->video_upload_type, (string) $this->video_url_input];
+        }
+
+        $ep = \DB::table('episodes')
+            ->where('entertainment_id', $this->id)
+            ->where('status', 1)
+            ->whereNull('deleted_at')
+            ->whereNotNull('video_url_input')
+            ->where('video_url_input', '!=', '')
+            ->orderByDesc('release_date')
+            ->orderByDesc('id')
+            ->first(['video_upload_type', 'video_url_input']);
+
+        if (! $ep) {
+            return [(string) $this->video_upload_type, (string) $this->video_url_input];
+        }
+
+        return [(string) $ep->video_upload_type, (string) $ep->video_url_input];
+    }
+
 }

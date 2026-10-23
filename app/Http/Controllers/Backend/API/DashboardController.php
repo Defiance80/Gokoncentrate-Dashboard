@@ -584,16 +584,27 @@ public function getTrandingData(Request $request){
            $channelIds = MobileSetting::getValueBySlug('top-channels');
            $channelIdsArray = json_decode($channelIds, true);
 
-            $top_channel = (!empty($channelIdsArray)) ? LiveTvChannel::get_top_channel($channelIdsArray) : collect();
-            $top_channel->each(function ($channel) use ($user_id, $userPlanId, $deviceTypeResponse, $device_type) {
-                $channel->user_id = $user_id;
-                $channel->isDeviceSupported = $deviceTypeResponse['isDeviceSupported'] == true ? 1 : 0;
-                $channel->poster_image =  $device_type == 'tv' ? setBaseUrlWithFileName($channel->poster_tv_url,'image','livetv')  : setBaseUrlWithFileName($channel->poster_url,'image','livetv');
-                $channel->access = $channel->access;
-                $channel = setContentAccess($channel, $user_id, $userPlanId);
+            // Media Series are PODCASTS: entertainments(type=tvshow,
+            // is_podcast=1) which carry seasons and episodes. This rail used
+            // to serve live_tv_channel rows - a single stream with no episode
+            // relationship - so a cover could never open a series.
+            $top_channel = Entertainment::where('entertainments.type', 'tvshow')
+                ->where('entertainments.is_podcast', 1)
+                ->where('entertainments.status', 1)
+                ->whereHas('episodeV2')
+                ->orderByDesc('entertainments.id')
+                ->limit(15)
+                ->get();
+            $top_channel->each(function ($show) use ($user_id, $userPlanId, $deviceTypeResponse, $device_type) {
+                $show->user_id = $user_id;
+                $show->isDeviceSupported = $deviceTypeResponse['isDeviceSupported'] == true ? 1 : 0;
+                $show->poster_image = $device_type == 'tv' ? $show->poster_tv_url : $show->poster_url ?? null;
+                $show->trailer_url = $show->trailer_url_type == 'Local' ? setBaseUrlWithFileName($show->trailer_url, 'video', $show->type) : $show->trailer_url;
+                $show->access = $show->movie_access;
+                $show = setContentAccess($show, $user_id, $userPlanId);
             });
 
-           $top_channel = LiveTvChannelResourceV3::collection($top_channel)->toArray(request());
+           $top_channel = TvshowResourceV3::collection($top_channel)->toArray(request());
 
 
 

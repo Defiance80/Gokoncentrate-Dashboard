@@ -198,7 +198,12 @@ class EntertainmentsController extends Controller
         ->leftJoin('plan', 'plan.id', '=', 'entertainments.plan_id')
         ->with('episodeV2')
         ->where('entertainments.type', 'tvshow')
-        ->when($request->filled('is_veemag'), fn($q) => $q->where('entertainments.is_veemag', (int) $request->input('is_veemag')))
+        ->when(
+            $request->filled('is_veemag'),
+            fn($q) => $q->where('entertainments.is_veemag', (int) $request->input('is_veemag')),
+            // VeeMags have their own section; keep them out of TV Shows by default.
+            fn($q) => $q->where('entertainments.is_veemag', 0)
+        )
         // Podcasts live in their own "Media Series" section: include them only when
         // asked (is_podcast=1); otherwise keep them out of TV Shows / VeeMags.
         ->when(
@@ -216,6 +221,7 @@ class EntertainmentsController extends Controller
         $searchTerm = $request->search;
         $tvshowList->where(function($query) use ($searchTerm) {
             $query->where('entertainments.name', 'like', "%{$searchTerm}%")
+                ->orWhere('entertainments.description', 'like', "%{$searchTerm}%")
                 ->orWhereHas('entertainmentGenerMappings.genre', function ($genreQuery) use ($searchTerm) {
                     $genreQuery->where('name', 'like', "%{$searchTerm}%");
                 });
@@ -766,6 +772,7 @@ class EntertainmentsController extends Controller
             } else {
                 $movieList->where(function($movieList) use($searchTerm) {
                     $movieList->where('name', 'like', "%{$searchTerm}%")
+                    ->orWhere('description', 'like', "%{$searchTerm}%")
                     ->orWhereHas('entertainmentGenerMappings.genre', function ($genreQuery) use ($searchTerm) {
                         $genreQuery->where('name', 'like', "%{$searchTerm}%");
                     });
@@ -795,6 +802,7 @@ class EntertainmentsController extends Controller
 
             $searchTerm = $request->search;
             $tvshowList->where('name', 'like', "%{$searchTerm}%")
+            ->orWhere('description', 'like', "%{$searchTerm}%")
             ->orWhereHas('entertainmentGenerMappings.genre', function ($query) use ($searchTerm) {
                 $query->where('name', '=', "%{$searchTerm}%");
             });
@@ -1039,6 +1047,7 @@ class EntertainmentsController extends Controller
                 } else {
                     $movieList->where(function($query) use($searchTerm) {
                         $query->where('name', 'like', "%{$searchTerm}%")
+                        ->orWhere('description', 'like', "%{$searchTerm}%")
                         ->orWhereHas('entertainmentGenerMappings.genre', function ($genreQuery) use ($searchTerm) {
                             $genreQuery->where('name', 'like', "%{$searchTerm}%");
                         });
@@ -1173,6 +1182,7 @@ class EntertainmentsController extends Controller
             $searchTerm = $request->search;
             $tvshowList->where(function($query) use ($searchTerm) {
                 $query->where('name', 'like', "%{$searchTerm}%")
+                    ->orWhere('description', 'like', "%{$searchTerm}%")
                     ->orWhereHas('entertainmentGenerMappings.genre', function ($genreQuery) use ($searchTerm) {
                         $genreQuery->where('name', 'like', "%{$searchTerm}%");
                     });
@@ -2159,7 +2169,12 @@ class EntertainmentsController extends Controller
         ->leftJoin('plan','plan.id','=','entertainments.plan_id')
         ->with('episodeV2')
         ->where('entertainments.type', 'tvshow')
-        ->when($request->filled('is_veemag'), fn($q) => $q->where('entertainments.is_veemag', (int) $request->input('is_veemag')))
+        ->when(
+            $request->filled('is_veemag'),
+            fn($q) => $q->where('entertainments.is_veemag', (int) $request->input('is_veemag')),
+            // VeeMags have their own section; keep them out of TV Shows by default.
+            fn($q) => $q->where('entertainments.is_veemag', 0)
+        )
         ->when(
             $request->filled('is_podcast'),
             fn($q) => $q->where('entertainments.is_podcast', (int) $request->input('is_podcast')),

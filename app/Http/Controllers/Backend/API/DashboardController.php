@@ -673,15 +673,7 @@ public function getTrandingData(Request $request){
               ->where('status', 1)
               ->where('deleted_at',null)
               ->get()
-                )->map(function ($genre) {
-                    return [
-                        'id'           => $genre['id'],
-                        'name'         => $genre['name'],
-                        // Already resolved by GenreSectionResource (newest
-                        // title's poster, genre image as fallback).
-                        'poster_image' => $genre['poster_image'] ?? null,
-                    ];
-                })
+                )->toArray(request())
                 : collect();
 
             $videoIds = MobileSetting::getValueBySlug('popular-videos');

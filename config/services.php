@@ -58,6 +58,16 @@ return [
         'private_key' => env('APPLE_PRIVATE_KEY'),
     ],
 
+    // Read through config rather than env() at the call site, so these keep
+    // working after `php artisan config:cache` - env() returns null outside
+    // config files once the config is cached.
+    'youtube' => [
+        'key' => env('YOUTUBE_API_KEY'),
+    ],
 
+    'openai' => [
+        'key'   => env('OPENAI_API_KEY'),
+        'model' => env('AI_EDITORIAL_MODEL', 'gpt-4o'),
+    ],
 
 ];

@@ -94,7 +94,7 @@ class GenerateVeeMagSynopses extends Command
             return '';
         }
 
-        $key = (string) config('services.youtube.key', env('YOUTUBE_API_KEY'));
+        $key = (string) config('services.youtube.key');
 
         if ($key === '') {
             return '';
@@ -179,7 +179,7 @@ class GenerateVeeMagSynopses extends Command
      */
     private function summariseWithLlm(string $text, string $title): string
     {
-        $key = (string) env('OPENAI_API_KEY', '');
+        $key = (string) config('services.openai.key');
 
         if ($key === '') {
             return '';
@@ -189,7 +189,7 @@ class GenerateVeeMagSynopses extends Command
             $response = Http::timeout(45)
                 ->withToken($key)
                 ->post('https://api.openai.com/v1/chat/completions', [
-                    'model' => env('AI_EDITORIAL_MODEL', 'gpt-4o'),
+                    'model' => config('services.openai.model', 'gpt-4o'),
                     'messages' => [
                         [
                             'role' => 'system',

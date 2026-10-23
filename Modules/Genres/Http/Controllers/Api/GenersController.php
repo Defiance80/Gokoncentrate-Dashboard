@@ -5,7 +5,7 @@ namespace Modules\Genres\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Genres\Services\GenreService;
-use Modules\Genres\Transformers\GenresResource;
+use Modules\Genres\Transformers\GenreSectionResource;
 use Illuminate\Support\Facades\Cache;
 
 class GenersController extends Controller
@@ -32,7 +32,9 @@ class GenersController extends Controller
             Cache::put($cacheKey, $genres);
         }
 
-        $responseData = GenresResource::collection($genres);
+        // The repository already drops genres with no live content;
+        // this resource illustrates each one with its newest title.
+        $responseData = GenreSectionResource::collection($genres);
 
         if ($request->has('is_ajax') && $request->is_ajax == 1) {
 

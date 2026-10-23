@@ -16,6 +16,7 @@ use Modules\LiveTV\Transformers\LiveTvChannelResourceV3;
 use Modules\CastCrew\Models\CastCrew;
 use Modules\CastCrew\Transformers\CastCrewListResource;
 use Modules\Genres\Transformers\GenresResource;
+use Modules\Genres\Transformers\GenreSectionResource;
 use Modules\Genres\Models\Genres;
 use Modules\Video\Models\Video;
 use App\Services\RecommendationService;
@@ -177,8 +178,12 @@ class DashboardController extends Controller
 
            $genreIds = MobileSetting::getValueBySlug('genre');
            $genreIdsArray = json_decode($genreIds, true);
-           $genres = !empty($genreIdsArray) ? GenresResource::collection(
+           // Only genres that actually hold a live title reach the rail, and
+           // each one is illustrated by its newest title rather than a
+           // static image, so the row stays current by itself.
+           $genres = !empty($genreIdsArray) ? GenreSectionResource::collection(
                Genres::whereIn('id', $genreIdsArray)
+                   ->whereIn('id', GenreSectionResource::idsWithContent())
                    ->where('status', 1)
                    ->where('deleted_at', null)
                    ->get()
@@ -651,8 +656,9 @@ public function getTrandingData(Request $request){
 
            $genreIds = MobileSetting::getValueBySlug('genre');
            $genreIdsArray = json_decode($genreIds, true);
-           $genres = !empty($genreIdsArray) ? GenresResource::collection(
+           $genres = !empty($genreIdsArray) ? GenreSectionResource::collection(
             Genres::whereIn('id', $genreIdsArray)
+              ->whereIn('id', GenreSectionResource::idsWithContent())
               ->where('status', 1)
               ->where('deleted_at',null)
               ->get()
@@ -660,7 +666,9 @@ public function getTrandingData(Request $request){
                     return [
                         'id'           => $genre['id'],
                         'name'         => $genre['name'],
-                        'poster_image' =>!empty($genre['file_url']) ? setBaseUrlWithFileName($genre['file_url'],'image','genres') : null,
+                        // Already resolved by GenreSectionResource (newest
+                        // title's poster, genre image as fallback).
+                        'poster_image' => $genre['poster_image'] ?? null,
                     ];
                 })
                 : collect();

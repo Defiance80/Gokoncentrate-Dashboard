@@ -65,6 +65,10 @@ return [
         'key' => env('YOUTUBE_API_KEY'),
     ],
 
+    'vimeo' => [
+        'token' => env('VIMEO_ACCESS_TOKEN'),
+    ],
+
     'openai' => [
         'key'   => env('OPENAI_API_KEY'),
         'model' => env('AI_EDITORIAL_MODEL', 'gpt-4o'),

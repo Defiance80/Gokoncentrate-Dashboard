@@ -90,7 +90,7 @@ class GenerateVeeMagSynopses extends Command
             $parts[] = "Editor's note: " . $own;
         }
 
-        $remote = $this->youtubeDescription($section);
+        $remote = $this->providerDescription($section);
         if ($remote !== '' && $remote !== $own) {
             $parts[] = "Video description: " . $remote;
         }
@@ -100,12 +100,54 @@ class GenerateVeeMagSynopses extends Command
 ", $parts);
     }
 
+    /** The video's own description, from whichever platform hosts it. */
+    private function providerDescription(VeeMagSection $section): string
+    {
+        return match (Str::lower((string) $section->video_upload_type)) {
+            'youtube' => $this->youtubeDescription($section),
+            'vimeo'   => $this->vimeoDescription($section),
+            default   => '',
+        };
+    }
+
+    /**
+     * Vimeo's own description, via the API. Vimeo sections are a fifth of
+     * the library and were previously skipped outright, leaving them with
+     * no synopsis at all.
+     */
+    private function vimeoDescription(VeeMagSection $section): string
+    {
+        $token = (string) config('services.vimeo.token');
+
+        if ($token === '') {
+            return '';
+        }
+
+        if (! preg_match('~vimeo\.com/(?:video/)?(\d+)~', (string) $section->video_url_input, $m)) {
+            return '';
+        }
+
+        try {
+            $response = Http::timeout(15)
+                ->withToken($token, 'Bearer')
+                ->accept('application/vnd.vimeo.*+json;version=3.4')
+                ->get("https://api.vimeo.com/videos/{$m[1]}");
+
+            if (! $response->successful()) {
+                return '';
+            }
+
+            return trim((string) data_get($response->json(), 'description', ''));
+        } catch (\Throwable $e) {
+            $this->warn("  ! Vimeo lookup failed for #{$section->id}: {$e->getMessage()}");
+
+            return '';
+        }
+    }
+
     /** The video's own description, via the YouTube Data API. */
     private function youtubeDescription(VeeMagSection $section): string
     {
-        if (Str::lower((string) $section->video_upload_type) !== 'youtube') {
-            return '';
-        }
 
         $key = (string) config('services.youtube.key');
 

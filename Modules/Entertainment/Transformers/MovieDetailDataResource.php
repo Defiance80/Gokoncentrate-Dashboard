@@ -72,6 +72,21 @@ class MovieDetailDataResource  extends JsonResource
         $deviceTypeResponse = json_decode($getDeviceTypeData->getContent(), true); // Decode to associative array
         return [
             'id' => $this->id,
+            // The mobile detail screen assigns these straight onto the record
+            // it already holds, so when they were absent the response wiped
+            // the title, artwork and playback fields. Mapped exactly as
+            // CommanResource does.
+            'name' => $this->name,
+            // The blurb shown under the actions. Without it here the screen
+            // can only fall back to whatever the list handed it, which goes
+            // stale as soon as the copy is edited.
+            'description' => (string) $this->description,
+            'trailer_url_type' => $this->trailer_url_type,
+            'trailer_url' => $this->trailer_url_type == 'Local' ? setBaseUrlWithFileName($this->trailer_url, 'video', $this->type) : $this->trailer_url,
+            'video_upload_type' => $this->video_upload_type,
+            'video_url_input' => $this->video_upload_type == 'Local' ? setBaseUrlWithFileName($this->video_url_input, 'video', $this->type) : $this->video_url_input,
+            'poster_image' => setBaseUrlWithFileName($this->poster_url, 'image', $this->type),
+            'thumbnail_image' => setBaseUrlWithFileName($this->thumbnail_url, 'image', $this->type),
             'enable_quality' => $this->enable_quality,
             'is_download' => $this->is_download ?? false,
             'download_status' => $this->download_status,

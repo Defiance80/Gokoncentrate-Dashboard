@@ -41,7 +41,7 @@ class VeeMagApiController extends Controller
         }
 
         $data = $this->listItem($issue);
-        $data['description'] = $issue->description;
+        $data['description'] = $this->plainText($issue->description);
         $data['sections'] = $issue->sections->map(function ($s) {
             $provider = strtolower((string) $s->video_upload_type);
             return [
@@ -112,14 +112,32 @@ class VeeMagApiController extends Controller
         ];
     }
 
+    /**
+     * Copy is pasted into the dashboard from editors and word processors,
+     * which brings HTML with it. The app renders these fields as plain
+     * text, so markup reached the screen verbatim - <p> tags and all.
+     * Block tags become line breaks so paragraphs survive the strip.
+     */
+    private function plainText(?string $raw): string
+    {
+        $text = (string) $raw;
+        $text = preg_replace('~<\s*br\s*/?\s*>~i', PHP_EOL, $text) ?? $text;
+        $text = preg_replace('~</\s*(p|div|li|h[1-6])\s*>~i', PHP_EOL . PHP_EOL, $text) ?? $text;
+        $text = html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = preg_replace('~[^\S\r\n]+~', ' ', $text) ?? $text;
+        $text = preg_replace('~(\r?\n){3,}~', PHP_EOL . PHP_EOL, $text) ?? $text;
+
+        return trim($text);
+    }
+
     /** Prefer the generated synopsis, fall back to a trimmed description. */
     private function synopsisFor($s): string
     {
         if (filled($s->synopsis)) {
-            return (string) $s->synopsis;
+            return $this->plainText($s->synopsis);
         }
 
-        $text = trim(strip_tags((string) $s->description));
+        $text = $this->plainText($s->description);
 
         return $text === '' ? '' : Str::limit($text, 500, '...');
     }

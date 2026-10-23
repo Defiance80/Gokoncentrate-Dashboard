@@ -49,6 +49,11 @@ Route::get('veemags/{slug}', [VeeMagApiController::class, 'show'])->name('api.ve
 // Print companion (mobile): returns the Stripe checkout URL for the app to open.
 Route::post('veemags/{slug}/print', [Modules\Frontend\Http\Controllers\VeeMagPrintController::class, 'checkout'])
     ->name('api.veemags.print');
+// Focus: everything worth listening to - podcast and music episodes plus
+// VeeMag sections - in one playable list.
+Route::get('focus-list', [Modules\Frontend\Http\Controllers\API\FocusApiController::class, 'index'])
+    ->name('api.focus.list');
+
 // Advertiser enquiry raised from a house ad slot inside the reader.
 Route::post('veemag-ad-enquiry', [Modules\Frontend\Http\Controllers\API\VeeMagLeadApiController::class, 'store'])
     ->name('api.veemags.ad-enquiry');

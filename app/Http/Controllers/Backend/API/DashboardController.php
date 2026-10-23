@@ -588,8 +588,13 @@ public function getTrandingData(Request $request){
             // is_podcast=1) which carry seasons and episodes. This rail used
             // to serve live_tv_channel rows - a single stream with no episode
             // relationship - so a cover could never open a series.
+            // Music series sit here too: one card that opens a list of
+            // approved videos, the same shape as a podcast.
             $top_channel = Entertainment::where('entertainments.type', 'tvshow')
-                ->where('entertainments.is_podcast', 1)
+                ->where(function ($q) {
+                    $q->where('entertainments.is_podcast', 1)
+                      ->orWhere('entertainments.is_music', 1);
+                })
                 ->where('entertainments.status', 1)
                 ->whereHas('episodeV2')
                 ->orderByDesc('entertainments.id')
@@ -599,6 +604,26 @@ public function getTrandingData(Request $request){
                 $show->user_id = $user_id;
                 $show->isDeviceSupported = $deviceTypeResponse['isDeviceSupported'] == true ? 1 : 0;
                 $show->poster_image = $device_type == 'tv' ? $show->poster_tv_url : $show->poster_url ?? null;
+
+                // A music series is fronted by whatever landed last, so the
+                // card keeps up with the catalogue instead of being reset by
+                // hand each time a video is added.
+                if ($show->is_music) {
+                    $newest = \DB::table('episodes')
+                        ->where('entertainment_id', $show->id)
+                        ->where('status', 1)
+                        ->whereNull('deleted_at')
+                        ->whereNotNull('poster_url')
+                        ->where('poster_url', '!=', '')
+                        ->orderByDesc('release_date')
+                        ->orderByDesc('id')
+                        ->value('poster_url');
+
+                    if ($newest) {
+                        $show->poster_image = setBaseUrlWithFileName($newest, 'image', 'episode');
+                    }
+                }
+
                 $show->trailer_url = $show->trailer_url_type == 'Local' ? setBaseUrlWithFileName($show->trailer_url, 'video', $show->type) : $show->trailer_url;
                 $show->access = $show->movie_access;
                 $show = setContentAccess($show, $user_id, $userPlanId);

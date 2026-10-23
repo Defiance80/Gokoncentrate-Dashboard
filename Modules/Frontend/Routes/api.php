@@ -49,6 +49,9 @@ Route::get('veemags/{slug}', [VeeMagApiController::class, 'show'])->name('api.ve
 // Print companion (mobile): returns the Stripe checkout URL for the app to open.
 Route::post('veemags/{slug}/print', [Modules\Frontend\Http\Controllers\VeeMagPrintController::class, 'checkout'])
     ->name('api.veemags.print');
+// Advertiser enquiry raised from a house ad slot inside the reader.
+Route::post('veemag-ad-enquiry', [Modules\Frontend\Http\Controllers\API\VeeMagLeadApiController::class, 'store'])
+    ->name('api.veemags.ad-enquiry');
 
 Route::get('/check-episode-purchase', [TvShowController::class, 'checkEpisodePurchase'])->name('check.episode.purchase');
 Route::get('/check-movie-purchase', [TvShowController::class, 'checkMoviePurchase'])->name('check.movie.purchase');

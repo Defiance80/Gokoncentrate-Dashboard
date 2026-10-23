@@ -18,6 +18,7 @@ class VeeMagSection extends Model
 
     protected $fillable = [
         'issue_id', 'type', 'custom_label', 'title', 'subtitle', 'description',
+        'synopsis',
         'order_index', 'runtime_seconds', 'video_upload_type', 'video_url_input',
         'thumbnail_url', 'transition_style', 'status',
     ];

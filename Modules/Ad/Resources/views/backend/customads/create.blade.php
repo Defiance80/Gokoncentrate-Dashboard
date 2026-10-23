@@ -117,6 +117,10 @@
                                 'home_page' => __('messages.home_page'),
                                 'player' => __('messages.player'),
                                 'banner' => __('messages.banner'),
+                                // VeeMag reader: a full-page flyer, or a
+                                // horizontal strip that pairs up two to a page.
+                                'veemag_flyer' => 'VeeMags - Full Page Flyer',
+                                'veemag_banner' => 'VeeMags - Horizontal Banner',
                             ],
                             old('placement'),
                         )->class('form-control select2')->placeholder(__('messages.select_placement')) }}
@@ -473,7 +477,9 @@
             // Add this block for placement-based show/hide and validation
             function toggleTargetFields() {
                 var placement = $('#placement').val();
-                if (placement === 'home_page') {
+                // VeeMag slots run across the whole reader, so they take no
+                // content targeting - same as the home page unit.
+                if (placement === 'home_page' || String(placement).indexOf('veemag_') === 0) {
                     $('.target-fields-wrapper').hide();
                     // Remove required rules
                     $('#target_content_type').rules('remove', 'required');

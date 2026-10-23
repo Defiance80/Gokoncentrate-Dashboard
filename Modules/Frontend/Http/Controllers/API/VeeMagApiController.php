@@ -58,14 +58,70 @@ class VeeMagApiController extends Controller
                     ? setBaseUrlWithFileName($s->video_url_input, 'video', 'veemag')
                     : (string) $s->video_url_input,
                 'thumbnail'   => $s->thumbnail_url,
+                // Short blurb shown under the player. Falls back to the
+                // publisher's own description when no synopsis was generated.
+                'synopsis'    => $this->synopsisFor($s),
             ];
         })->values();
+
+        $data['ads'] = $this->adPool();
 
         return response()->json([
             'status'  => true,
             'message' => 'VeeMag issue retrieved successfully.',
             'data'    => $data,
         ]);
+    }
+
+    /**
+     * Ads available to the reader, split by shape.
+     *
+     * `flyer` is the full-page unit (one per page, portrait, like a magazine
+     * back cover); `banner` is the horizontal unit (two stack in the same
+     * space). House ads - our own "advertise with us" creative - are marked
+     * with url_type `house` and open the enquiry form instead of a link.
+     * The app decides which pages carry which; the server just supplies
+     * what is bookable today.
+     */
+    private function adPool(): array
+    {
+        $today = \Carbon\Carbon::now()->toDateString();
+
+        $rows = \Modules\Ad\Models\CustomAdsSetting::query()
+            ->where('status', 1)
+            ->whereIn('placement', ['veemag_flyer', 'veemag_banner'])
+            ->whereDate('start_date', '<=', $today)
+            ->whereDate('end_date', '>=', $today)
+            ->orderBy('id')
+            ->get(['id', 'name', 'type', 'placement', 'media', 'redirect_url', 'url_type']);
+
+        $shape = fn ($r) => [
+            'id'           => $r->id,
+            'name'         => (string) $r->name,
+            'type'         => (string) $r->type,
+            'url'          => $r->media ? setBaseUrlWithFileName($r->media, $r->type, 'ads') : null,
+            'redirect_url' => (string) $r->redirect_url,
+            // internal = open in app, external = confirm before leaving,
+            // house = open the advertiser enquiry form.
+            'url_type'     => (string) ($r->url_type ?: 'internal'),
+        ];
+
+        return [
+            'flyer'  => $rows->where('placement', 'veemag_flyer')->map($shape)->values(),
+            'banner' => $rows->where('placement', 'veemag_banner')->map($shape)->values(),
+        ];
+    }
+
+    /** Prefer the generated synopsis, fall back to a trimmed description. */
+    private function synopsisFor($s): string
+    {
+        if (filled($s->synopsis)) {
+            return (string) $s->synopsis;
+        }
+
+        $text = trim(strip_tags((string) $s->description));
+
+        return $text === '' ? '' : Str::limit($text, 500, '...');
     }
 
     private function listItem(VeeMagIssue $i): array

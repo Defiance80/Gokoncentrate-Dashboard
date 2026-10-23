@@ -135,6 +135,10 @@
                                 'home_page' => __('messages.home_page'),
                                 'player' => __('messages.player'),
                                 'banner' => __('messages.banner'),
+                                // VeeMag reader: a full-page flyer, or a
+                                // horizontal strip that pairs up two to a page.
+                                'veemag_flyer' => 'VeeMags - Full Page Flyer',
+                                'veemag_banner' => 'VeeMags - Horizontal Banner',
                             ],
                             old('placement', $data->placement ?? null),
                         )->class('form-control select2') }}
@@ -641,7 +645,9 @@
                 var targetCategories = $('#target_categories');
                 var targetContentTypeWrapper = targetContentType.closest('.col-md-6.col-lg-4');
                 var targetCategoriesWrapper = targetCategories.closest('.col-md-6.col-lg-4');
-                if (placement === 'home_page') {
+                // VeeMag slots run across the whole reader, so they take no
+                // content targeting - same as the home page unit.
+                if (placement === 'home_page' || String(placement).indexOf('veemag_') === 0) {
                     targetContentTypeWrapper.hide();
                     targetCategoriesWrapper.hide();
                     // Remove required rules

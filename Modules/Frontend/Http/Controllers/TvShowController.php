@@ -88,6 +88,17 @@ class TvShowController extends Controller
         $is_search = $request->boolean('is_search', false);
 
         $movieGuard = Entertainment::where('slug', $slug)->first();
+
+        // The mobile app shares /tvshow-details/{numeric id} while this page resolves
+        // titles by slug, so every shared link fell through to the not-found
+        // redirect below and landed on /login. Resolve the id and send the
+        // visitor on to the canonical slug URL.
+        if (empty($movieGuard) && ctype_digit((string) $slug)) {
+            $sharedById = Entertainment::find($slug);
+            if (!empty($sharedById) && (int) ($sharedById->status) === 1 && $sharedById->deleted_at === null) {
+                return redirect()->route('tvshow-details', ['id' => $sharedById->slug]);
+            }
+        }
         if (empty($movieGuard) || (int) ($movieGuard->status) !== 1 || $movieGuard->deleted_at !== null) {
             return redirect()->route('user.login');
         } else if($movieGuard->is_restricted == 1){
@@ -266,6 +277,17 @@ class TvShowController extends Controller
         $is_search = $request->boolean('is_search', false);
 
         $episodeGuard = Episode::where('slug', $slug)->with('entertainmentdata')->first();
+
+        // The mobile app shares /episode-details/{numeric id} while this page resolves
+        // titles by slug, so every shared link fell through to the not-found
+        // redirect below and landed on /login. Resolve the id and send the
+        // visitor on to the canonical slug URL.
+        if (empty($episodeGuard) && ctype_digit((string) $slug)) {
+            $sharedById = Episode::find($slug);
+            if (!empty($sharedById) && (int) ($sharedById->status) === 1 && $sharedById->deleted_at === null) {
+                return redirect()->route('episode-details', ['id' => $sharedById->slug]);
+            }
+        }
         if (empty($episodeGuard) || (int) ($episodeGuard->status) !== 1 || $episodeGuard->deleted_at !== null) {
             return redirect()->route('user.login');
         }

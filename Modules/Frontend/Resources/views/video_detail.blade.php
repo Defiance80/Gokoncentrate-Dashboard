@@ -6,6 +6,8 @@
 
 @section('content')
 
+    @include('frontend::components.section.get_the_app')
+
     @php
         $data = $data['data'];
     @endphp

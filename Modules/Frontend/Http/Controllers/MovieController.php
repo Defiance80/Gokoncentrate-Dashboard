@@ -103,6 +103,17 @@ public function moviesListBylanguage($language)
 
         $movieGuard = Entertainment::where('slug', $id)->first();
 
+        // The mobile app shares /movie-details/{numeric id} while this page resolves
+        // titles by slug, so every shared link fell through to the not-found
+        // redirect below and landed on /login. Resolve the id and send the
+        // visitor on to the canonical slug URL.
+        if (empty($movieGuard) && ctype_digit((string) $id)) {
+            $sharedById = Entertainment::find($id);
+            if (!empty($sharedById) && (int) ($sharedById->status) === 1 && $sharedById->deleted_at === null) {
+                return redirect()->route('movie-details', ['id' => $sharedById->slug]);
+            }
+        }
+
         if (empty($movieGuard) || (int) ($movieGuard->status) !== 1 || $movieGuard->deleted_at !== null) {
             return redirect()->route('user.login');
         } else if($movieGuard->is_restricted == 1){
@@ -256,6 +267,17 @@ public function moviesListBylanguage($language)
 
         // Check if channel exists and is active
         $livetvGuard = LiveTvChannel::where('slug', $livetvId)->first();
+
+        // The mobile app shares /livetv-details/{numeric id} while this page resolves
+        // titles by slug, so every shared link fell through to the not-found
+        // redirect below and landed on /login. Resolve the id and send the
+        // visitor on to the canonical slug URL.
+        if (empty($livetvGuard) && ctype_digit((string) $livetvId)) {
+            $sharedById = LiveTvChannel::find($livetvId);
+            if (!empty($sharedById) && (int) ($sharedById->status) === 1 && $sharedById->deleted_at === null) {
+                return redirect()->route('livetv-details', ['id' => $sharedById->slug]);
+            }
+        }
         if (empty($livetvGuard) || (int) ($livetvGuard->status) !== 1 || $livetvGuard->deleted_at !== null) {
             return redirect()->route('user.login');
         }

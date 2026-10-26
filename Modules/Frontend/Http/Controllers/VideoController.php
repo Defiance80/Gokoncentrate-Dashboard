@@ -48,6 +48,17 @@ class VideoController extends Controller
         $is_search = $request->boolean('is_search', false);
 
         $videoGuard = Video::where('slug', $id)->first();
+
+        // The mobile app shares /video-detail/{numeric id} while this page resolves
+        // titles by slug, so every shared link fell through to the not-found
+        // redirect below and landed on /login. Resolve the id and send the
+        // visitor on to the canonical slug URL.
+        if (empty($videoGuard) && ctype_digit((string) $id)) {
+            $sharedById = Video::find($id);
+            if (!empty($sharedById) && (int) ($sharedById->status) === 1 && $sharedById->deleted_at === null) {
+                return redirect()->route('video-detail', ['id' => $sharedById->slug]);
+            }
+        }
         if (empty($videoGuard) || (int) ($videoGuard->status) !== 1 || $videoGuard->deleted_at !== null) {
             return redirect()->route('user.login');
         } else if($videoGuard->is_restricted == 1){

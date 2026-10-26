@@ -4,6 +4,8 @@
     {{ $data['name'] ?? '' }}
 @endsection
 @section('content')
+
+    @include('frontend::components.section.get_the_app')
     <div id="thumbnail-section">
         @php
             if ($data['stream_type'] == 'Embedded') {

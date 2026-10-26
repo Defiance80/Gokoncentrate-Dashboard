@@ -5,6 +5,8 @@
 @endsection
 @section('content')
 
+    @include('frontend::components.section.get_the_app')
+
     <div id="thumbnail-section">
         @php
             $data = $data['data'];

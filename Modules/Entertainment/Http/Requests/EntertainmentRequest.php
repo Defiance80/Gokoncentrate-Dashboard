@@ -49,7 +49,10 @@ class EntertainmentRequest extends FormRequest
         if ($movieAccess !== 'pay-per-view' && !$isMusic) {
             $rules['release_date'] = ['required'];
         }
-        $trailerUrlType = $this->input('trailer_url_type');
+        // A music video has no trailer - it IS the thing a trailer advertises.
+        // Leaving this block live meant the form demanded a trailer file or URL
+        // before it would save, which is the complaint that started this.
+        $trailerUrlType = $isMusic ? null : $this->input('trailer_url_type');
 
         if ($trailerUrlType == 'Embedded') {
             $rules['trailer_embedded'] = ['required','regex:/<iframe\b[^>]*\bsrc\s*=\s*["\'“”‘’](.*?)["\'“”‘’][^>]*>[\s\S]*?<\/iframe>/i'];

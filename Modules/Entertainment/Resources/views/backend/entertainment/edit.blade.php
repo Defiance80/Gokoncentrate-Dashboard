@@ -136,7 +136,7 @@
                             <div class="invalid-feedback" id="name-error">{{ __('messages.name_field_required') }}</div>
                         </div>
                         <div class="col-md-4 col-lg-4 mb-3">
-                            {{ html()->label(__('movie.lbl_trailer_url_type') . ' <span class="text-danger">*</span>', 'type')->class('form-label') }}
+                            {{ html()->label(__('movie.lbl_trailer_url_type') . ($data->is_music ? '' : ' <span class="text-danger">*</span>'), 'type')->class('form-label') }}
                             {{ html()->select(
                                     'trailer_url_type',
                                     $upload_url_type->pluck('name', 'value')->prepend(__('placeholder.lbl_select_type'), ''),
@@ -149,7 +149,7 @@
                         </div>
 
                         <div class="col-md-4 col-lg-4 mb-3" id="url_input">
-                            {{ html()->label(__('movie.lbl_trailer_url') . ' <span class="text-danger">*</span>', 'trailer_url')->class('form-label') }}
+                            {{ html()->label(__('movie.lbl_trailer_url') . ($data->is_music ? '' : ' <span class="text-danger">*</span>'), 'trailer_url')->class('form-label') }}
                             {{ html()->text('trailer_url')->attribute('value', $data->trailer_url)->placeholder(__('placeholder.lbl_trailer_url'))->class('form-control') }}
                             @error('trailer_url')
                                 <span class="text-danger">{{ $message }}</span>
@@ -2667,6 +2667,9 @@
                         $('#submit-button').prop('disabled', false).html(
                             '{{ trans('messages.save') }}');
                     }
+                },
+                complete: function() {
+                    $('#submit-button').prop('disabled', false).html('{{ trans('messages.save') }}');
                 },
                 error: function(xhr) {
                     $('#submit-button').prop('disabled', false).html('{{ trans('messages.save') }}');

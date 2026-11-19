@@ -9,6 +9,15 @@
     @php
         $appStoreUrl = GetSettingValue('ios_url');
         $playStoreUrl = GetSettingValue('android_url');
+
+        // android_url still carries the template vendor's own demo listing
+        // (com.iqonic.streamitlaravel), which would send a visitor to someone
+        // else's app. A wrong store link is worse than none, so drop it. This
+        // guard stops applying by itself once the setting holds a real
+        // GoKoncentrate listing.
+        if (!empty($playStoreUrl) && str_contains($playStoreUrl, 'com.iqonic.')) {
+            $playStoreUrl = null;
+        }
     @endphp
 
     @if (!empty($appStoreUrl) || !empty($playStoreUrl))

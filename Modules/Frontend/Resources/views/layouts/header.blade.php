@@ -343,6 +343,16 @@
                                                 @php
                                                     $androidUrl = setting('android_url');
                                                     $iosUrl = setting('ios_url');
+
+                                                    // android_url still holds the template vendor's own demo
+                                                    // listing (com.iqonic.streamitlaravel). It would send a
+                                                    // visitor to someone else's app, and since shared title
+                                                    // pages are now public it would do so to strangers. Drop
+                                                    // it rather than publish a wrong link; the guard stops
+                                                    // applying once the setting holds a real listing.
+                                                    if (!empty($androidUrl) && str_contains($androidUrl, 'com.iqonic.')) {
+                                                        $androidUrl = null;
+                                                    }
                                                     $siteUrl = url('/');
                                                     $qrBase =
                                                         'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=';

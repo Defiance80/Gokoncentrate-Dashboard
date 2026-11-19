@@ -631,6 +631,38 @@ public function getTrandingData(Request $request){
 
            $top_channel = TvshowResourceV3::collection($top_channel)->toArray(request());
 
+            // A music video is a single playable item, not a series. Serving it
+            // as a tvshow meant the card opened an episode list - the podcast
+            // pattern - so one video sat behind a click it never needed.
+            // They belong on this rail because it is the only landscape one,
+            // but they ship as type=movie: poster_card_component already routes
+            // a movie straight to the player, so this needs no app build.
+            if (\Illuminate\Support\Facades\Schema::hasColumn('entertainments', 'is_music')) {
+                $music_videos = Entertainment::where('entertainments.type', 'movie')
+                    ->where('entertainments.is_music', 1)
+                    ->where('entertainments.status', 1)
+                    ->whereNull('entertainments.deleted_at')
+                    ->orderByDesc('entertainments.id')
+                    ->limit(15)
+                    ->get();
+
+                if ($music_videos->isNotEmpty()) {
+                    $music_videos->each(function ($video) use ($user_id, $userPlanId, $deviceTypeResponse, $device_type) {
+                        $video->user_id = $user_id;
+                        $video->isDeviceSupported = $deviceTypeResponse['isDeviceSupported'] == true ? 1 : 0;
+                        $video->poster_image = $device_type == 'tv' ? $video->poster_tv_url : $video->poster_url ?? null;
+                        $video->trailer_url = $video->trailer_url_type == 'Local' ? setBaseUrlWithFileName($video->trailer_url, 'video', $video->type) : $video->trailer_url;
+                        $video->access = $video->movie_access;
+                        $video = setContentAccess($video, $user_id, $userPlanId);
+                    });
+
+                    $top_channel = array_merge(
+                        $top_channel,
+                        MoviesResourceV3::collection($music_videos)->toArray(request())
+                    );
+                }
+            }
+
 
 
 

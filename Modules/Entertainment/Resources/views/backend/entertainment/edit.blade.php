@@ -372,8 +372,8 @@
                         </div>
 
                         <div class="col-md-6 col-lg-4">
-                            {{ html()->label(__('movie.lbl_imdb_rating') . ' <span class="text-danger">*</span>', 'IMDb_rating')->class('form-label') }}
-                            {{ html()->text('IMDb_rating')->value(old('IMDb_rating', $data->IMDb_rating))->placeholder(__('movie.lbl_imdb_rating'))->class('form-control')->required() }}
+                            {{ html()->label(__('movie.lbl_imdb_rating') . ($data->is_music ? '' : ' <span class="text-danger">*</span>'), 'IMDb_rating')->class('form-label') }}
+                            {{ html()->text('IMDb_rating')->value(old('IMDb_rating', $data->IMDb_rating))->placeholder(__('movie.lbl_imdb_rating'))->class('form-control')->attributes($data->is_music ? [] : ['required' => 'required']) }}
 
                             @error('IMDb_rating')
                                 <span class="text-danger">{{ $message }}</span>
@@ -382,8 +382,8 @@
                         </div>
 
                         <div class="col-md-6 col-lg-4">
-                            {{ html()->label(__('movie.lbl_content_rating') . '<span class="text-danger">*</span>', 'content_rating')->class('form-label') }}
-                            {{ html()->text('content_rating')->attribute('value', $data->content_rating)->placeholder(__('placeholder.lbl_content_rating'))->class('form-control')->attribute('required', 'required') }}
+                            {{ html()->label(__('movie.lbl_content_rating') . ($data->is_music ? '' : '<span class="text-danger">*</span>'), 'content_rating')->class('form-label') }}
+                            {{ html()->text('content_rating')->attribute('value', $data->content_rating)->placeholder(__('placeholder.lbl_content_rating'))->class('form-control')->attributes($data->is_music ? [] : ['required' => 'required']) }}
                             @error('content_rating')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -412,8 +412,8 @@
                             @enderror
                         </div>
                         <div class="col-md-6 col-lg-4 {{ $data->movie_access == 'pay-per-view' ? 'd-none' : '' }}" id="releaseDateWrapper">
-                            {{ html()->label(__('movie.lbl_release_date') . ' <span class="text-danger">*</span>', 'release_date')->class('form-label') }}
-                            {{ html()->date('release_date')->attribute('value', $data->release_date ? \Carbon\Carbon::parse($data->release_date)->format('Y-m-d') : '')->placeholder(__('movie.lbl_release_date'))->class('form-control datetimepicker')->attribute('required', 'required')->id('release_date') }}
+                            {{ html()->label(__('movie.lbl_release_date') . ($data->is_music ? '' : ' <span class="text-danger">*</span>'), 'release_date')->class('form-label') }}
+                            {{ html()->date('release_date')->attribute('value', $data->release_date ? \Carbon\Carbon::parse($data->release_date)->format('Y-m-d') : '')->placeholder(__('movie.lbl_release_date'))->class('form-control datetimepicker')->attributes($data->is_music ? [] : ['required' => 'required'])->id('release_date') }}
                             @error('release_date')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -456,8 +456,8 @@
                 <div class="card-body">
                     <div class="row gy-3">
                         <div class="col-md-6">
-                            {{ html()->label(__('movie.lbl_actors') . '<span class="text-danger">*</span>', 'actors')->class('form-label') }}
-                            {{ html()->select('actors[]', $actors->pluck('name', 'id'), $data->actors)->class('form-control select2')->id('actors')->multiple()->attribute('required', 'required') }}
+                            {{ html()->label(__('movie.lbl_actors') . ($data->is_music ? '' : '<span class="text-danger">*</span>'), 'actors')->class('form-label') }}
+                            {{ html()->select('actors[]', $actors->pluck('name', 'id'), $data->actors)->class('form-control select2')->id('actors')->multiple()->attributes($data->is_music ? [] : ['required' => 'required']) }}
                             @error('actors')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -465,8 +465,8 @@
                         </div>
 
                         <div class="col-md-6">
-                            {{ html()->label(__('movie.lbl_directors') . '<span class="text-danger">*</span>', 'directors')->class('form-label') }}
-                            {{ html()->select('directors[]', $directors->pluck('name', 'id'), $data->directors)->class('form-control select2')->id('directors')->multiple()->attribute('required', 'required') }}
+                            {{ html()->label(__('movie.lbl_directors') . ($data->is_music ? '' : '<span class="text-danger">*</span>'), 'directors')->class('form-label') }}
+                            {{ html()->select('directors[]', $directors->pluck('name', 'id'), $data->directors)->class('form-control select2')->id('directors')->multiple()->attributes($data->is_music ? [] : ['required' => 'required']) }}
                             @error('directors')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror

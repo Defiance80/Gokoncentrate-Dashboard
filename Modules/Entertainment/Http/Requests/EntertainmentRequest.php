@@ -390,6 +390,11 @@ class EntertainmentRequest extends FormRequest
             'type'   => $this->input('type'),
             'fields' => array_keys($validator->errors()->toArray()),
             'errors' => $validator->errors()->toArray(),
+            // Temporary: is 'language' absent from the payload, or present
+            // but empty? The two point at completely different causes.
+            'lang_present' => $this->has('language') ? 'yes' : 'NO',
+            'lang_raw'     => var_export($this->input('language'), true),
+            'post_keys'    => implode(',', array_slice(array_keys($this->all()), 0, 60)),
         ]);
 
         parent::failedValidation($validator);

@@ -375,6 +375,26 @@ class EntertainmentRequest extends FormRequest
      * @param  \Illuminate\Contracts\Validation\Validator  $validator
      * @return void
      */
+    /**
+     * Record which fields rejected a save.
+     *
+     * Laravel redirects back silently when validation fails, so an admin sees
+     * the form reload with the errors sitting on a tab they are not looking at,
+     * and nothing at all reaches the log. That turns a precise, one-field
+     * problem into "it won't save". This makes the cause answerable.
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        \Illuminate\Support\Facades\Log::warning('Entertainment save rejected', [
+            'id'     => $this->input('id'),
+            'type'   => $this->input('type'),
+            'fields' => array_keys($validator->errors()->toArray()),
+            'errors' => $validator->errors()->toArray(),
+        ]);
+
+        parent::failedValidation($validator);
+    }
+
     public function withValidator(Validator $validator)
     {
         $validator->after(function ($validator) {

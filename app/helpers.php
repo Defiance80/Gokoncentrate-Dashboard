@@ -1529,6 +1529,17 @@ if (!function_exists('getFooterData')) {
 
             $data['app_store_url'] = GetSettingValue('ios_url');
             $data['play_store_url'] = GetSettingValue('android_url');
+
+            // android_url still holds the template vendor's own demo listing
+            // (com.iqonic.streamitlaravel), so the footer was offering someone
+            // else's app as ours - and shared title pages are now public, so it
+            // was doing that to strangers. A wrong store link is worse than
+            // none. The guard stops applying once the setting holds a real
+            // listing, and can then be removed along with its two siblings in
+            // get_the_app.blade.php and layouts/header.blade.php.
+            if (!empty($data['play_store_url']) && str_contains($data['play_store_url'], 'com.iqonic.')) {
+                $data['play_store_url'] = null;
+            }
             $data['helpline_number'] = GetSettingValue('helpline_number');
             $data['inquriy_email'] = GetSettingValue('inquriy_email');
             $data['short_description'] = GetSettingValue('short_description');

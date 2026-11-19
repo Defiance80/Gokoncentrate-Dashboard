@@ -72,6 +72,19 @@ class RequireLogin
 
         // Laravel health check.
         'up',
+
+        // --- Shared title links -----------------------------------------
+        // A link shared from the mobile app has to land on the title, with
+        // the "Get the app" prompt, instead of on the sign-in splash: the
+        // splash tells a first-time visitor nothing about what was shared.
+        // Detail pages only. Browsing, search, playback and every list stay
+        // private, so the splash is still the front door for everything but
+        // a link someone was deliberately sent.
+        'movie-details/*',
+        'tvshow-details/*',
+        'episode-details/*',
+        'video-details/*',
+        'videos-details/*',
     ];
 
     public function handle(Request $request, Closure $next): Response

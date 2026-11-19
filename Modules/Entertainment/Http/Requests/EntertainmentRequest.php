@@ -12,23 +12,41 @@ class EntertainmentRequest extends FormRequest
     public function rules()
     {
         $id = request()->id;
+        // A music video is not a film: it has no trailer, no cast list, no
+        // age certificate and no IMDb rating. Demanding them made an existing
+        // music video impossible to save at all - the publish toggle could not
+        // be turned on because five unrelated fields were empty. Only the
+        // fields that actually mean something for the content type are
+        // required; anything supplied is still validated.
+        $entertainment = !empty($id)
+            ? \Modules\Entertainment\Models\Entertainment::find($id)
+            : null;
+        $isMusic = !empty($entertainment) && (int) $entertainment->is_music === 1;
+
         $rules = [
             'name' => ['required',Rule::unique('entertainments', 'name')->ignore($id)],
-            'trailer_url_type' => ['required'],
             'movie_access' => 'required',
             'language' => ['required'],
             'genres' => ['required'],
-            'content_rating' => 'required|string',
-            'actors' => ['required'],
-            'directors' => ['required'],
-            'IMDb_rating' => 'required|numeric|min:1|max:10',
             'description' => ['required', 'string'],
         ];
+
+        if (!$isMusic) {
+            $rules['trailer_url_type'] = ['required'];
+            $rules['content_rating'] = 'required|string';
+            $rules['actors'] = ['required'];
+            $rules['directors'] = ['required'];
+            $rules['IMDb_rating'] = 'required|numeric|min:1|max:10';
+        } else {
+            // Optional for music, but still checked when filled in.
+            $rules['content_rating'] = 'nullable|string';
+            $rules['IMDb_rating'] = 'nullable|numeric|min:1|max:10';
+        }
 
         $movieAccess = $this->input('movie_access');
         
         // Release date is only required when NOT pay-per-view
-        if ($movieAccess !== 'pay-per-view') {
+        if ($movieAccess !== 'pay-per-view' && !$isMusic) {
             $rules['release_date'] = ['required'];
         }
         $trailerUrlType = $this->input('trailer_url_type');

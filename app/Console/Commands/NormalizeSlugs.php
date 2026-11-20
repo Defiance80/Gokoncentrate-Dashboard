@@ -40,7 +40,9 @@ class NormalizeSlugs extends Command
         $apply = (bool) $this->option('apply');
         $maxLength = max(20, (int) $this->option('max-length'));
 
-        if (!Schema::hasTable('slug_history')) {
+        // Only a real run needs the history table; previewing should work
+        // before the migration has been run, so the change can be read first.
+        if ($apply && !Schema::hasTable('slug_history')) {
             $this->error('slug_history is missing - run php artisan migrate --force first.');
             return self::FAILURE;
         }

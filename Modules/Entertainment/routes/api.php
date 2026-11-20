@@ -64,5 +64,4 @@ Route::group(['prefix'=>'v3','middleware' => 'auth:sanctum'], function () {
     Route::get('continuewatch-list', [WatchlistController::class, 'continuewatchListV3']);
     Route::get('watch-list', [WatchlistController::class, 'watchListV3']);
 
-})
-?>
+});

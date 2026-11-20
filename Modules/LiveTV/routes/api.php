@@ -15,6 +15,3 @@ Route::prefix('v3')->middleware(['throttle:api'])->group(function () {
     Route::get('livetv-details', [LiveTVsController::class, 'liveTvDetailsV3']);
     Route::get('channel-list', [LiveTVsController::class, 'channelListV3']);
 });
-?>
-
-

@@ -14,6 +14,3 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/user-subscription_histroy', [SubscriptionController::class, 'getUserSubscriptionHistroy'])->name('api.user-subscription_histroy');
     Route::post('/cancle-subscription', [SubscriptionController::class, 'cancelSubscription']);
 });
-?>
-
-

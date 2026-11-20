@@ -38,4 +38,3 @@ Route::group(['prefix' => 'v3','middleware' => 'auth:sanctum'], function () {
       Route::get('search-list', [UserSearchHistoryController::class, 'searchHistoryListV3']);
       Route::get('popular-search-list', [UserSearchHistoryController::class, 'popularSearchListV3']);
 });
-?>

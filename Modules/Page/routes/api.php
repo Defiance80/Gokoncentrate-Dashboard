@@ -7,4 +7,3 @@ Route::get('faq-list', [PagesController::class, 'faqList']);
 
 
 
-?>

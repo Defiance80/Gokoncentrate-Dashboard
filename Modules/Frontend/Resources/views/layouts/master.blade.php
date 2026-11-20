@@ -1051,6 +1051,10 @@
                 });
         }
     </script>
+    {{-- Prompts a browser visitor to get the app. Dismissible, asks once a week,
+         and renders nothing at all unless a real store listing is configured. --}}
+    @include('frontend::components.partials.app_download_modal')
+
 </body>
 
 </html>

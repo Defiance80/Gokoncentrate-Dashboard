@@ -16,7 +16,6 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{{ $faviconUrl }}">
     <link rel="shortcut icon" href="{{ $faviconUrl }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>@yield('title', GetSettingValue('app_name'))</title>
 
     @include('frontend::layouts.head')
 

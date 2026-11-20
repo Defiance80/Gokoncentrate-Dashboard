@@ -214,6 +214,12 @@ public function moviesListBylanguage($language)
                 "meta_title" => $seoRow->meta_title ?? $movie->name ?? null,
                 "meta_keywords" => $seoRow->meta_keywords ?? null,
             ];
+            // What the page IS - type, runtime, date, genres - so the head can
+            // emit structured data instead of a generic WebSite block.
+            $data['seoData'] = (object) array_merge(
+                (array) $data['seoData'],
+                gkSeoFacts($movie, 'movie', 'VideoObject', 'video.movie')
+            );
 
             return $data;
         });

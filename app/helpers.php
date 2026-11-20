@@ -2162,3 +2162,68 @@ function groupedGenreOptions($genres): array
 
     return $options ?: $genres->pluck('name', 'id')->toArray();
 }
+
+if (!function_exists('gkSeoFacts')) {
+    /**
+     * The facts a search engine or AI crawler needs that prose cannot carry:
+     * what kind of thing the page is, how long it runs, when it came out, what
+     * it is about. Merged into the per-page "seoData" the detail controllers
+     * build, and read by Modules/Frontend/Resources/views/layouts/head.blade.php.
+     *
+     * Defensive throughout: entertainments, episodes and videos are different
+     * models with overlapping but not identical columns, and a missing field
+     * must leave the key out rather than emit an empty claim.
+     *
+     * @param  object  $model       The content record.
+     * @param  string  $pageType    Storage folder key, e.g. movie|tvshow|episode|video.
+     * @param  string  $schemaType  schema.org type, e.g. VideoObject|TVSeries|TVEpisode.
+     * @param  string  $ogType      Open Graph type, e.g. video.movie|video.episode.
+     */
+    function gkSeoFacts($model, string $pageType, string $schemaType = 'VideoObject', string $ogType = 'video.other'): array
+    {
+        $facts = [
+            'page_type'   => $pageType,
+            'schema_type' => $schemaType,
+            'og_type'     => $ogType,
+        ];
+
+        // Stored as TIME ('00:04:11'). Schema.org wants an ISO 8601 duration,
+        // which the view builds from seconds.
+        if (!empty($model->duration)) {
+            $parts = array_map('intval', explode(':', (string) $model->duration));
+            if (count($parts) === 3) {
+                $facts['duration_seconds'] = $parts[0] * 3600 + $parts[1] * 60 + $parts[2];
+            } elseif (count($parts) === 2) {
+                $facts['duration_seconds'] = $parts[0] * 60 + $parts[1];
+            }
+        }
+
+        if (!empty($model->release_date)) {
+            try {
+                $facts['release_date'] = \Carbon\Carbon::parse($model->release_date)->toDateString();
+            } catch (\Throwable $e) {
+                // An unparseable date is better omitted than emitted wrong.
+            }
+        }
+
+        if (isset($model->is_restricted)) {
+            $facts['is_restricted'] = (bool) $model->is_restricted;
+        }
+
+        // Only read the relation when it is already loaded - this runs on a
+        // cached page build and must not trigger extra queries.
+        if (method_exists($model, 'relationLoaded') && $model->relationLoaded('entertainmentGenerMappings')) {
+            $genres = collect($model->entertainmentGenerMappings)
+                ->map(fn($m) => $m->genre->name ?? null)
+                ->filter()
+                ->unique()
+                ->values()
+                ->all();
+            if ($genres !== []) {
+                $facts['genres'] = $genres;
+            }
+        }
+
+        return $facts;
+    }
+}

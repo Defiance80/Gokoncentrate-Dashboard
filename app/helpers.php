@@ -2227,3 +2227,52 @@ if (!function_exists('gkSeoFacts')) {
         return $facts;
     }
 }
+
+if (!function_exists('gkCurrentSlugFor')) {
+    /**
+     * Given a slug that no longer matches anything, find the title it used to
+     * belong to and return its current slug.
+     *
+     * Slugs are public URLs - shared in messages, linked from the app, indexed
+     * by search engines. Improving one must never cost the links already out
+     * there, so every retired slug stays resolvable and the detail pages 301
+     * to the new address.
+     *
+     * @param  string  $entityType  entertainment|episode|video
+     * @return string|null  The current slug, or null if this was never a slug.
+     */
+    function gkCurrentSlugFor(string $entityType, string $oldSlug): ?string
+    {
+        if ($oldSlug === '' || !\Illuminate\Support\Facades\Schema::hasTable('slug_history')) {
+            return null;
+        }
+
+        $row = \Illuminate\Support\Facades\DB::table('slug_history')
+            ->where('entity_type', $entityType)
+            ->where('old_slug', $oldSlug)
+            ->first();
+
+        if (!$row) {
+            return null;
+        }
+
+        $table = match ($entityType) {
+            'entertainment' => 'entertainments',
+            'episode' => 'episodes',
+            'video' => 'videos',
+            default => null,
+        };
+
+        if ($table === null || !\Illuminate\Support\Facades\Schema::hasTable($table)) {
+            return null;
+        }
+
+        $current = \Illuminate\Support\Facades\DB::table($table)
+            ->where('id', $row->entity_id)
+            ->whereNull('deleted_at')
+            ->value('slug');
+
+        // Do not bounce a visitor back to the slug they just asked for.
+        return ($current && $current !== $oldSlug) ? $current : null;
+    }
+}

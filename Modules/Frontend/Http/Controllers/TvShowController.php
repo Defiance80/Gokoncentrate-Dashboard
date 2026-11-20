@@ -89,6 +89,16 @@ class TvShowController extends Controller
 
         $movieGuard = Entertainment::where('slug', $slug)->first();
 
+        // A slug that was improved still has to work: anything shared or
+        // indexed under the old one is redirected to the current address
+        // rather than falling through to the sign-in splash below.
+        if (empty($movieGuard)) {
+            $currentSlug = gkCurrentSlugFor('entertainment', (string) $slug);
+            if ($currentSlug !== null) {
+                return redirect()->route('tvshow-details', ['id' => $currentSlug], 301);
+            }
+        }
+
         // The mobile app shares /tvshow-details/{numeric id} while this page resolves
         // titles by slug, so every shared link fell through to the not-found
         // redirect below and landed on /login. Resolve the id and send the
@@ -283,6 +293,16 @@ class TvShowController extends Controller
         $is_search = $request->boolean('is_search', false);
 
         $episodeGuard = Episode::where('slug', $slug)->with('entertainmentdata')->first();
+
+        // A slug that was improved still has to work: anything shared or
+        // indexed under the old one is redirected to the current address
+        // rather than falling through to the sign-in splash below.
+        if (empty($episodeGuard)) {
+            $currentSlug = gkCurrentSlugFor('episode', (string) $slug);
+            if ($currentSlug !== null) {
+                return redirect()->route('episode-details', ['id' => $currentSlug], 301);
+            }
+        }
 
         // The mobile app shares /episode-details/{numeric id} while this page resolves
         // titles by slug, so every shared link fell through to the not-found

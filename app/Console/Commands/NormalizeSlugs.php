@@ -148,8 +148,13 @@ class NormalizeSlugs extends Command
 
         $this->newLine();
         if ($apply) {
+            // The sitemap holds its URL list for six hours, and the detail
+            // pages cache per slug. Both would serve the old addresses.
+            \Illuminate\Support\Facades\Cache::forget('gk_sitemap_urls');
+            $this->line('  sitemap cache cleared');
+
             $this->info("Done. {$totalChanged} slugs rewritten; the old ones now 301 to the new.");
-            $this->line('Clear the caches:  php artisan optimize:clear');
+            $this->line('Clear the rest:  php artisan optimize:clear && php artisan cache:clear');
         } else {
             $this->info("{$totalChanged} slugs would change. Re-run with --apply to write them.");
         }

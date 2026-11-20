@@ -93,6 +93,10 @@ Route::post('/disable-security', function(Request $request) {
 Route::get('movies/genre/{genre_id}', [MovieController::class, 'moviesListByGenre'])->middleware('checkModule')->name('movies.genre');
 Route::get('movies/{language}', [MovieController::class, 'moviesListBylanguage'])->middleware('checkModule')->name('movies.language');
 Route::get('/movies', [MovieController::class, 'movieList'])->middleware('checkModule')->name('movies');
+// The public funnel's sitemap: title pages only, because every other
+// page redirects a signed-out visitor to /login.
+Route::get('/sitemap.xml', [\Modules\Frontend\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+
 Route::get('/movie-details/{id}', [MovieController::class, 'movieDetails'])->middleware('checkModule')->name('movie-details');
 Route::get('/tv-shows', [TvShowController::class, 'tvShowList'])->middleware('checkModule')->name('tv-shows');
 Route::get('/veemags', [TvShowController::class, 'veeMagList'])->middleware('checkModule')->name('veemags');
@@ -107,6 +111,10 @@ Route::get('/tvshow-details/{id}', [TvShowController::class, 'tvshowDetail'])->m
 Route::get('/episode-details/{id}', [TvShowController::class, 'episodeDetail'])->middleware('checkModule')->name('episode-details');
 Route::get('/videos', [VideoController::class, 'videoList'])->middleware('checkModule')->name('videos');
 Route::get('/video-details/{id}', [VideoController::class, 'videoDetails'])->middleware('checkModule')->name('video-detail');
+
+// The mobile app shares /videos-details/{id} (plural), which matched no route
+// at all. Alias it onto the real detail page so shared video links resolve.
+Route::get('/videos-details/{id}', [VideoController::class, 'videoDetails'])->middleware('checkModule')->name('videos-details');
 Route::get('/pay-per-view', [PerviewPaymentController::class, 'peyPerView'])->name('pay-per-view');
 Route::get('/comming-soon-details/{id}', [EntertainmentsController::class, 'commingSoonDetail'])->name('comming-soon-details');
 

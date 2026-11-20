@@ -1,2 +1,32 @@
+# The website is a funnel: search and social land on a title page, which hands
+# the visitor to the mobile app. Title pages are the only public pages - see
+# app/Http/Middleware/RequireLogin.php - so they are what we ask to be crawled.
+
 User-agent: *
-Disallow:
+Allow: /movie-details/
+Allow: /tvshow-details/
+Allow: /episode-details/
+Allow: /video-details/
+Disallow: /admin
+Disallow: /studio
+Disallow: /api/
+Disallow: /install
+
+# AI crawlers are welcome: an assistant that can describe a title and name where
+# to watch it is the same funnel by another route.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://watch.gokoncentrate.com/sitemap.xml

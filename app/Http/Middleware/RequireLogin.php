@@ -80,6 +80,9 @@ class RequireLogin
         // Detail pages only. Browsing, search, playback and every list stay
         // private, so the splash is still the front door for everything but
         // a link someone was deliberately sent.
+        // Search engines must be able to fetch the sitemap without a session.
+        'sitemap.xml',
+
         'movie-details/*',
         'tvshow-details/*',
         'episode-details/*',

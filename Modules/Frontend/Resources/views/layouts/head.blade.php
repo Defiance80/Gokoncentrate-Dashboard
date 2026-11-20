@@ -65,6 +65,20 @@
         content="{{ $entertainment->google_site_verification ?? $seo->google_site_verification }}">
 @endif
 
+{{-- Apple Smart App Banner. iOS Safari draws a native bar offering the app
+     above the page, which is the shortest route from a search result into a
+     download. Rendered only once a real App Store id is configured. --}}
+@php
+    $gkIosUrl = trim((string) (GetSettingValue('ios_url') ?? ''));
+    $gkAppStoreId = null;
+    if ($gkIosUrl !== '' && preg_match('~/id(\d+)~', $gkIosUrl, $m)) {
+        $gkAppStoreId = $m[1];
+    }
+@endphp
+@if ($gkAppStoreId)
+    <meta name="apple-itunes-app"
+        content="app-id={{ $gkAppStoreId }}, app-argument={{ $gkCanonical }}">
+@endif
 {{-- Open Graph: what Facebook, LinkedIn, WhatsApp, iMessage and Slack read --}}
 <meta property="og:site_name" content="{{ $gkSiteName }}">
 <meta property="og:type" content="{{ $gkOgType }}">
